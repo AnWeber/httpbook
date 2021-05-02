@@ -40,28 +40,28 @@
       }
     ],
     "configuration": {
-			"type": "object",
-			"title": "httpbook",
-			"properties": {
-				"httpbook.responseMimes": {
-					"type": "array",
-					"default": [
+      "type": "object",
+      "title": "httpbook",
+      "properties": {
+        "httpbook.responseMimes": {
+          "type": "array",
+          "default": [
             "x-application/httpbook-mime",
             "x-application/httpbook-markdown",
             "x-application/httpbook-rfc7230"
           ],
-					"scope": "resource",
-					"description": "list of mimes for response notebookOutputRenderer"
-				},
+          "scope": "resource",
+          "description": "list of mimes for response notebookOutputRenderer"
+        },
         "httpbook.testMimes": {
-					"type": "array",
-					"default": [
+          "type": "array",
+          "default": [
             "x-application/httpbook-testresults-markdown",
             "x-application/httpbook-testresults"
           ],
-					"scope": "resource",
-					"description": "list of mimes for test notebookOutputRenderer"
-				}
+          "scope": "resource",
+          "description": "list of mimes for test notebookOutputRenderer"
+        }
       }
     }
   },
@@ -69,7 +69,7 @@
     "anweber.vscode-httpyac"
   ],
   "scripts": {
-    "vscode:prepublish": "npm run package",
+    "vscode:prepublish": "npm run compile",
     "compile": "webpack --config ./webpack.config.js",
     "watch": "webpack --watch --config ./webpack.config.js",
     "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
@@ -84,8 +84,10 @@
     "@types/node": "^14.14.41",
     "@types/uuid": "^8.3.0",
     "@types/vscode": "^1.50.0",
+    "@types/vscode-notebook-renderer": "^1.55.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
+    "css-loader": "^5.2.4",
     "eslint": "^7.25.0",
     "eslint-plugin-node": "^11.1.0",
     "fork-ts-checker-webpack-plugin": "^6.2.5",
@@ -94,11 +96,15 @@
     "lint-staged": "^10.5.4",
     "lockfile-lint": "^4.6.2",
     "mkdirp": "^1.0.4",
+    "style-loader": "^2.0.0",
     "thread-loader": "^3.0.3",
     "ts-loader": "^9.1.1",
     "typescript": "^4.2.4",
     "vscode-dts": "^0.3.1",
     "webpack": "^5.35.1",
     "webpack-cli": "^4.6.0"
+  },
+  "dependencies": {
+    "preact": "^10.5.13"
   }
 }

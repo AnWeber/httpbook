@@ -1,0 +1,104 @@
+{
+  "name": "httpbook",
+  "displayName": "httpBook - Rest Client",
+  "description": "Quickly and easily send REST, SOAP, and GraphQL requests directly within Visual Studio Code",
+  "version": "0.1.0",
+  "publisher": "anweber",
+  "homepage": "https://github.com/AnWeber/httpbook",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnWeber/httpbook"
+  },
+  "bugs": {
+    "url": "https://github.com/AnWeber/httpbook/issues"
+  },
+  "qna": "https://github.com/AnWeber/httpbook/discussions",
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "icon": "icon.png",
+  "preview": true,
+  "enableProposedApi": true,
+  "categories": [
+    "Notebooks"
+  ],
+  "activationEvents": [
+    "onNotebook:http",
+    "onLanguage:http"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "notebookProvider": [
+      {
+        "viewType": "http",
+        "displayName": "HttpBook",
+        "selector": [
+          {
+            "filenamePattern": "*.http"
+          }
+        ]
+      }
+    ],
+    "configuration": {
+			"type": "object",
+			"title": "httpbook",
+			"properties": {
+				"httpbook.responseMimes": {
+					"type": "array",
+					"default": [
+            "x-application/httpbook-mime",
+            "x-application/httpbook-markdown",
+            "x-application/httpbook-rfc7230"
+          ],
+					"scope": "resource",
+					"description": "list of mimes for response notebookOutputRenderer"
+				},
+        "httpbook.testMimes": {
+					"type": "array",
+					"default": [
+            "x-application/httpbook-testresults-markdown",
+            "x-application/httpbook-testresults"
+          ],
+					"scope": "resource",
+					"description": "list of mimes for test notebookOutputRenderer"
+				}
+      }
+    }
+  },
+  "extensionDependencies": [
+    "anweber.vscode-httpyac"
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack --config ./webpack.config.js",
+    "watch": "webpack --watch --config ./webpack.config.js",
+    "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
+    "eslint": "eslint src --ext ts",
+    "lint": "npm run eslint && npm run lockfile-lint",
+    "precommit": "npm run lint",
+    "update-api": "npx vscode-dts dev"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.168",
+    "@types/mime-types": "^2.1.0",
+    "@types/node": "^14.14.41",
+    "@types/uuid": "^8.3.0",
+    "@types/vscode": "^1.50.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.25.0",
+    "eslint-plugin-node": "^11.1.0",
+    "fork-ts-checker-webpack-plugin": "^6.2.5",
+    "httpyac": "^2.6.0",
+    "husky": "^6.0.0",
+    "lint-staged": "^10.5.4",
+    "lockfile-lint": "^4.6.2",
+    "mkdirp": "^1.0.4",
+    "thread-loader": "^3.0.3",
+    "ts-loader": "^9.1.1",
+    "typescript": "^4.2.4",
+    "vscode-dts": "^0.3.1",
+    "webpack": "^5.35.1",
+    "webpack-cli": "^4.6.0"
+  }
+}

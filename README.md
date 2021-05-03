@@ -1,12 +1,12 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/AnWeber/httpbook/master/icon.png" alt="HttpYac Logo" />
+<img src="https://raw.githubusercontent.com/AnWeber/httpbook/main/icon.png" alt="HttpYac Logo" />
 </p>
 
 # Httpbook - Rest Client
 
 Quickly and easily send REST, SOAP, and GraphQL requests directly in Editor
 
-![example](https://raw.githubusercontent.com/AnWeber/vscode-httpyac/master/examples/oauth.gif)
+![example](https://raw.githubusercontent.com/AnWeber/httpbook/main/examples/oauth2.gif)
 
 
 ## Examples
@@ -93,7 +93,7 @@ Check the returns of the responses and execute them automatically using the [htt
 
 ### It's Extensible
 
-Provide custom notebook renderer
+Provide custom notebook renderer, but api is not stable at the moment
 
 ## Feature comparisons
 
@@ -119,11 +119,11 @@ Provide custom notebook renderer
 
 ## Next Steps
 
+* evaluate notebook api
 * custom renderer implementation
 * renderer api support
-* fix buggy codelens
-* current env visualization
-* better cell support
+* better env visualization
+* fix out of sync global scripts and more little accidents
 
 ## License
 [MIT License](LICENSE)

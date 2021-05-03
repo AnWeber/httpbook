@@ -1,16 +1,24 @@
 import * as vscode from 'vscode';
-import { HttpNotebookKernel } from './httpNotebookKernel';
-import { HttpNotebookContentProvider } from './httpNotebookContentProvider';
-import { HttpyacExtensionApi } from './models';
+import { HttpNotebookKernel, HttpNotebookContentProvider } from './notebook';
+import { HttpyacExtensionApi, MimeOutputProvider } from './models';
+
+export interface HttpBookApi{
+  mimeOutputProvider: Array<MimeOutputProvider>;
+}
 
 
-export function activate(context: vscode.ExtensionContext): void {
+export function activate(context: vscode.ExtensionContext): HttpBookApi | false {
 
   const httpyacExtension = vscode.extensions.getExtension<HttpyacExtensionApi>('anweber.vscode-httpyac');
   if (httpyacExtension?.isActive) {
+    const httpNotebookKernel = new HttpNotebookKernel(httpyacExtension.exports.httpyac, httpyacExtension.exports.httpFileStore);
     context.subscriptions.push(...[
-      new HttpNotebookKernel(httpyacExtension.exports.httpyac, httpyacExtension.exports.httpFileStore),
+      httpNotebookKernel,
       vscode.notebook.registerNotebookContentProvider('http', new HttpNotebookContentProvider(httpyacExtension.exports.httpFileStore)),
     ]);
+    return {
+      mimeOutputProvider: httpNotebookKernel.mimeOutputProvider
+    };
   }
+  return false;
 }

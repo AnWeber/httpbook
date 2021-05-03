@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron:  '0 0 * * 1'
 jobs:
   build:
     strategy:

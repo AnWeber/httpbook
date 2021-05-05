@@ -1,0 +1,34 @@
+.testResults{
+  font-family: var(--vscode-editor-font-family);
+  color: var(--vscode-editor-foreground);
+}
+.testTitle{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+.testTitleCell svg{
+  margin: .1rem;
+}
+.testTitleCell{
+  margin: 0;
+}
+.testTitleCell + .testTitleCell{
+  margin-left: 1rem;
+}
+.testLine{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.testLine svg{
+  margin: .1rem;
+}
+.testLineError{
+  padding: 0 1rem;
+}
+.testError{
+  color: var(--vscode-testing-iconFailed);
+}
+

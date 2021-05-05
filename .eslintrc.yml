@@ -3,6 +3,9 @@ root: true
 parser: "@typescript-eslint/parser"
 env:
   node: true
+settings:
+  react:
+    pragma: h
 globals:
   BufferEncoding: false
   NodeJS: false
@@ -22,6 +25,7 @@ ignorePatterns:
 - webpack.config.js
 - vscode.proposed.d.ts
 rules:
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "h"}]
     array-bracket-spacing: "error"
     array-callback-return: "error"
     arrow-body-style: ["error", "as-needed"]

@@ -10,11 +10,14 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
 
   onDidChangeNotebookContentOptions?: vscode.Event<vscode.NotebookDocumentContentOptions> | undefined;
 
-  async openNotebook(uri: vscode.Uri): Promise<vscode.NotebookData> {
+  async openNotebook(uri: vscode.Uri, openContext: vscode.NotebookDocumentOpenContext): Promise<vscode.NotebookData> {
     const httpFile = await this.httpFileStore.getOrCreate(uri.fsPath, async () => {
       const content = await vscode.workspace.fs.readFile(uri);
       return Buffer.from(content).toString();
     }, 0);
+    if (openContext.backupId) {
+      this.httpFileStore.rename(uri.fsPath, openContext.backupId);
+    }
     const cells = httpFile.httpRegions
       .filter(obj => obj.actions.length > 0)
       .map(this.createCell);
@@ -29,8 +32,14 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
   }
 
 
-  backupNotebook(): Promise<vscode.NotebookDocumentBackup> {
-    throw new Error('Method not implemented.');
+  backupNotebook(document: vscode.NotebookDocument): Promise<vscode.NotebookDocumentBackup> {
+    return Promise.resolve({
+      id: document.uri.fsPath,
+      delete: () => {
+        // eslint-disable-next-line no-console
+        console.info('no delete needed');
+      }
+    });
   }
 
 

@@ -111,6 +111,10 @@ module.exports = [(env, argv) => {
           },
         ],
       },
+			{
+				test: /\.svg$/,
+				loader: 'svg-sprite-loader',
+			},
     ],
   },
   devServer: {

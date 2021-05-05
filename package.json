@@ -56,7 +56,8 @@
         "entrypoint": "./dist/client.js",
         "displayName": "httpbook",
         "mimeTypes": [
-          "x-application/httpbook-testresults"
+          "x-application/httpbook-testresults",
+          "x-application/httpbook-rfc7230"
         ]
       }
     ],
@@ -67,7 +68,9 @@
         "httpbook.responseMimes": {
           "type": "array",
           "default": [
+            "x-application/httpbook-rfc7230",
             "x-application/httpbook-mime",
+            "x-application/httpbook-contenttype",
             "x-application/httpbook-markdown"
           ],
           "scope": "resource",
@@ -99,21 +102,23 @@
     "update-api": "npx vscode-dts dev"
   },
   "devDependencies": {
-    "@types/node": "^15.0.1",
+    "@types/node": "^15.0.2",
+    "@types/react": "^17.0.5",
     "@types/vscode": "^1.55.0",
-    "@types/vscode-notebook-renderer": "^1.55.0",
+    "@types/vscode-notebook-renderer": "^1.57.0",
     "@types/webpack-env": "^1.16.0",
-    "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
     "css-loader": "^5.2.4",
     "eslint": "^7.25.0",
     "eslint-plugin-node": "^11.1.0",
-    "fork-ts-checker-webpack-plugin": "^6.2.5",
+    "fork-ts-checker-webpack-plugin": "^6.2.6",
     "httpyac": "^2.7.0",
     "husky": "^6.0.0",
     "lint-staged": "^10.5.4",
     "lockfile-lint": "^4.6.2",
     "style-loader": "^2.0.0",
+    "svg-sprite-loader": "^6.0.6",
     "thread-loader": "^3.0.3",
     "ts-loader": "^9.1.1",
     "typescript": "^4.2.4",
@@ -122,6 +127,8 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
+    "preact": "^10.5.13",
+    "vscode-codicons": "^0.0.16",
     "vscode-notebook-error-overlay": "^1.0.1"
   }
 }

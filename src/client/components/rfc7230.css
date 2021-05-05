@@ -1,0 +1,63 @@
+.response{
+  font-family: var(--vscode-editor-font-family);
+  color: var(--vscode-editor-foreground);
+  background-color: var(--vscode-editor-background);
+  padding: 1rem;
+  max-height: 30rem;
+  overflow: auto;
+}
+
+.statusLine{
+  margin: .5rem 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.statusLineVersion{
+  padding-right: .5rem;
+  color: var(--vscode-symbolIcon-operatorForeground);
+}
+.statusLineCode{
+  padding-right: .5rem;
+  color: var(--vscode-symbolIcon-variableForeground);
+}
+.statusLineMessage{
+  color: var(--vscode-symbolIcon-textForeground);
+}
+
+.request + .statusLine{
+  margin-top: 2rem;
+}
+
+
+.requestLine{
+  margin: .5rem 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.requestLineMethod{
+  padding-right: .5rem;
+  color: var(--vscode-symbolIcon-operatorForeground);
+}
+.requestLineUrl{
+  color: var(--vscode-symbolIcon-textForeground);
+}
+
+
+.header{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.headerName{
+  color: var(--vscode-symbolIcon-keyForeground);
+  padding-right: .5rem;
+}
+.headerValue{
+  color: var(--vscode-symbolIcon-variableForeground);
+}
+
+.body{
+  margin: .5rem 0;
+}

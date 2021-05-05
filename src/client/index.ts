@@ -1,4 +1,4 @@
-import { render } from './render';
+import { renderCell } from './render';
 import errorOverlay from 'vscode-notebook-error-overlay';
 import { NotebookOutputEventParams } from 'vscode-notebook-renderer';
 
@@ -30,15 +30,20 @@ notebookApi.onDidCreateOutput(evt => {
   renderTag(evt);
 });
 
-// Function to render your contents in a single tag, calls the `render()`
-// function from render.ts. Also catches and displays any thrown errors.
-const renderTag = ({ element, mime, value }: NotebookOutputEventParams) =>
-  errorOverlay.wrap(element, () => {
-    element.innerHTML = '';
-    const node = document.createElement('div');
-    element.appendChild(node);
 
-    render({ container: node, mimeType: mime, data: value, notebookApi });
+const renderTag = (event: NotebookOutputEventParams) =>
+  errorOverlay.wrap(event.element, () => {
+    event.element.innerHTML = '';
+    const node = document.createElement('div');
+    event.element.appendChild(node);
+
+    renderCell({
+      container: node,
+      mimeType: event.mime,
+      data: event.value,
+      metaData: event.metadata,
+      notebookApi
+    });
   });
 
 function renderAllTags() {
@@ -48,12 +53,6 @@ function renderAllTags() {
 }
 
 renderAllTags();
-
-// When the module is hot-reloaded, rerender all tags. Webpack will update
-// update the `render` function we imported, so we just need to call it again.
 if (module.hot) {
-
-  // note: using `module.hot?.accept` breaks HMR in Webpack 4--they parse
-  // for specific syntax in the module.
   module.hot.accept(['./render'], renderAllTags);
 }

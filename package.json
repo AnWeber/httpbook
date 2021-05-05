@@ -16,22 +16,23 @@
   "engines": {
     "vscode": "^1.55.0"
   },
-	"categories": [
-		"Notebooks"
-	],
-	"keywords": [
-		"HTTP",
-		"REST",
-		"GraphQL",
-		"Intellij Http Client",
-		"Postman",
-		"Soap",
-		"ci",
-		"api",
-		"rest-client"
-	],
+  "categories": [
+    "Notebooks"
+  ],
+  "keywords": [
+    "HTTP",
+    "REST",
+    "GraphQL",
+    "Intellij Http Client",
+    "Postman",
+    "Soap",
+    "ci",
+    "api",
+    "rest-client"
+  ],
   "icon": "icon.png",
   "preview": true,
+  "enableProposedApi": true,
   "activationEvents": [
     "onNotebook:http",
     "onLanguage:http"
@@ -46,6 +47,16 @@
           {
             "filenamePattern": "*.http"
           }
+        ]
+      }
+    ],
+    "notebookOutputRenderer": [
+      {
+        "id": "httpbook",
+        "entrypoint": "./dist/client.js",
+        "displayName": "httpbook",
+        "mimeTypes": [
+          "x-application/httpbook-testresults"
         ]
       }
     ],
@@ -65,6 +76,7 @@
         "httpbook.testMimes": {
           "type": "array",
           "default": [
+            "x-application/httpbook-testresults",
             "x-application/httpbook-testresults-markdown"
           ],
           "scope": "resource",
@@ -78,8 +90,8 @@
   ],
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "webpack --config ./webpack.config.js",
-    "watch": "webpack --watch --config ./webpack.config.js",
+    "compile": "webpack --mode producation --config ./webpack.config.js",
+    "watch": "webpack --mode development --watch --config ./webpack.config.js",
     "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
     "eslint": "eslint src --ext ts",
     "lint": "npm run eslint && npm run lockfile-lint",
@@ -87,12 +99,10 @@
     "update-api": "npx vscode-dts dev"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.168",
-    "@types/mime-types": "^2.1.0",
     "@types/node": "^15.0.1",
-    "@types/uuid": "^8.3.0",
     "@types/vscode": "^1.55.0",
     "@types/vscode-notebook-renderer": "^1.55.0",
+    "@types/webpack-env": "^1.16.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "css-loader": "^5.2.4",
@@ -103,7 +113,6 @@
     "husky": "^6.0.0",
     "lint-staged": "^10.5.4",
     "lockfile-lint": "^4.6.2",
-    "mkdirp": "^1.0.4",
     "style-loader": "^2.0.0",
     "thread-loader": "^3.0.3",
     "ts-loader": "^9.1.1",
@@ -113,6 +122,6 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
-    "preact": "^10.5.13"
+    "vscode-notebook-error-overlay": "^1.0.1"
   }
 }

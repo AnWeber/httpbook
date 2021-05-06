@@ -9,7 +9,8 @@
     "jsxFactory": "h",
     "types": [
       "webpack-env",
-      "vscode-notebook-renderer"
+      "vscode-notebook-renderer",
+      "highlight.js"
     ],
   }
 }

@@ -3,6 +3,7 @@
 #### Features
 * custom renderer added
 * support for RFC7230 output
+* highlight.js added
 * extension api refactored
 * better settings support
 

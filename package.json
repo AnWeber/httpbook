@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, SOAP, and GraphQL requests directly within Visual Studio Code",
-  "version": "0.2.0",
+  "version": "0.6.0",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -32,7 +32,6 @@
   ],
   "icon": "icon.png",
   "preview": true,
-  "enableProposedApi": true,
   "activationEvents": [
     "onNotebook:http",
     "onLanguage:http"
@@ -68,65 +67,65 @@
       "type": "object",
       "title": "httpbook",
       "properties": {
-        "httpbook.outputTests":{
+        "httpbook.outputTests": {
           "type": "string",
-					"enum": [
-						"always",
-						"onlyFailed",
+          "enum": [
+            "always",
+            "onlyFailed",
             "never"
-					],
+          ],
           "default": "always",
           "scope": "resource",
           "description": "are outputs of tests visible"
         },
-        "httpbook.useRFC7230NotebookOutputRendererer":{
+        "httpbook.useRFC7230NotebookOutputRendererer": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "show request/ response in RFC7230 Format"
         },
-        "httpbook.useHeaderNotebookOutputRenderer":{
+        "httpbook.useHeaderNotebookOutputRenderer": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "show request/ response headers in RFC7230 Format"
         },
-        "httpbook.useResponseNotebookOutputRenderer":{
+        "httpbook.useResponseNotebookOutputRenderer": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "show response in RFC7230 Format"
         },
-        "httpbook.useResponseBodyNotebookOutputRenderer":{
+        "httpbook.useResponseBodyNotebookOutputRenderer": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "show response body"
         },
-        "httpbook.useMarkdownNotebookOutputRenderer":{
+        "httpbook.useMarkdownNotebookOutputRenderer": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "show request/ response and test results as markdown"
         },
-        "httpbook.useContentTypeAsNotebookOutputRendererMime":{
+        "httpbook.useContentTypeAsNotebookOutputRendererMime": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "use contentType as mimetype for NotebookOutputRenderer"
         },
         "httpbook.preferNotebookOutputRenderer": {
-					"type": "object",
+          "type": "object",
           "default": {
             "image/png": "image/png",
             "image/jpeg": "image/jpeg",
             "image/svg+xml": "image/svg+xml"
           },
-					"scope": "resource",
-					"description": "prefer NotebookOutputRenderer for mimeType (regex is possible)"
+          "scope": "resource",
+          "description": "prefer NotebookOutputRenderer for mimeType (regex is possible)"
         },
         "httpbook.mapContentTypeToNotebookOutputRendererMime": {
-					"type": "object",
+          "type": "object",
           "default": {
             "image/png": "image/png",
             "image/jpeg": "image/jpeg",
@@ -137,8 +136,8 @@
             "(application|text)/(x-)?javascript": "application/javascript",
             "(application|json)/(.*\\+|x-amz-)?json.*": "application/json"
           },
-					"scope": "resource",
-					"description": "map content type to NotebookOutputRenderer (regex is possible)"
+          "scope": "resource",
+          "description": "map content type to NotebookOutputRenderer (regex is possible)"
         }
       }
     }
@@ -182,6 +181,7 @@
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
+    "highlight.js": "^10.7.2",
     "preact": "^10.5.13",
     "vscode-codicons": "^0.0.16",
     "vscode-notebook-error-overlay": "^1.0.1"

@@ -2,6 +2,7 @@
 import { h, FunctionComponent, Fragment } from 'preact';
 import style from './rfc7230.css';
 import { HttpResponse, HttpMethod } from 'httpyac';
+import { Hljs } from './hljs';
 
 
 interface NormalizedOptions {
@@ -22,7 +23,7 @@ export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, requ
     && <Headers headers={response.headers} />
   }
   {bodyVisible && typeof response.body === 'string'
-    && <Body body={response.body} />
+    && <Hljs body={response.body} mimeType={response.contentType?.mimeType}/>
   }
 </section>;
 
@@ -33,7 +34,7 @@ const Request: FunctionComponent<{ request: NormalizedOptions, bodyVisible?: boo
     && <Headers headers={request.headers} />
   }
   {bodyVisible && typeof request.body === 'string'
-    && <Body body={request.body} />
+    && <Hljs body={request.body} />
   }
 </div>;
 
@@ -58,9 +59,6 @@ const Headers: FunctionComponent<{ headers: Record<string, string | string[] | u
 </Fragment>;
 
 
-export const HttpBody: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body }) => <div className={style.response}>
-  <pre><code>{`${body}`}</code></pre>
+export const HttpBody: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body, mimeType }) => <div className={style.response}>
+  <Hljs body={body} mimeType={mimeType}/>
 </div>;
-
-
-const Body: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body }) => <pre><code>{`${body}`}</code></pre>;

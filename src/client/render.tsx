@@ -29,7 +29,7 @@ export function renderCell({ container, mimeType, data }: IRenderInfo): void {
         render(<RFC7230Response response={data.response} requestVisible={true} />, container);
         break;
       default:
-        render(<HttpBody body={data.response.body} />, container);
+        render(<HttpBody body={data.response.body} mimeType={data.response.contentType?.mimeType} />, container);
         break;
     }
 

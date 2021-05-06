@@ -147,7 +147,7 @@
   ],
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "webpack --mode producation --config ./webpack.config.js",
+    "compile": "webpack --mode production --config ./webpack.config.js",
     "watch": "webpack --mode development --watch --config ./webpack.config.js",
     "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
     "eslint": "eslint src --ext ts",

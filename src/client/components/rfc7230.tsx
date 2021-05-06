@@ -11,26 +11,28 @@ interface NormalizedOptions {
   body?: unknown;
 }
 
-export const RFC7230Response: FunctionComponent<{ response: HttpResponse }> = ({ response }) => <section className={style.response}>
-  {response.request
-    && <Request request={response.request} />
+interface RFC7230Data{ response: HttpResponse, requestVisible?: boolean, bodyVisible?: boolean }
+
+export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, requestVisible, bodyVisible }) => <section className={style.response}>
+  {requestVisible && response.request
+    && <Request request={response.request} bodyVisible={bodyVisible}/>
   }
   <StatusLine response={response} />
   {response.headers
     && <Headers headers={response.headers} />
   }
-  {typeof response.body === 'string'
+  {bodyVisible && typeof response.body === 'string'
     && <Body body={response.body} />
   }
 </section>;
 
 
-const Request: FunctionComponent<{ request: NormalizedOptions }> = ({ request }) => <div className={style.request}>
+const Request: FunctionComponent<{ request: NormalizedOptions, bodyVisible?: boolean}> = ({ request, bodyVisible }) => <div className={style.request}>
   <RequestLine request={request} />
   {request.headers
     && <Headers headers={request.headers} />
   }
-  {typeof request.body === 'string'
+  {bodyVisible && typeof request.body === 'string'
     && <Body body={request.body} />
   }
 </div>;
@@ -56,4 +58,9 @@ const Headers: FunctionComponent<{ headers: Record<string, string | string[] | u
 </Fragment>;
 
 
-const Body: FunctionComponent<{ body: string, mimeType?: string }> = ({ body }) => <pre><code>{body}</code></pre>;
+export const HttpBody: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body }) => <div className={style.response}>
+  <pre><code>{`${body}`}</code></pre>
+</div>;
+
+
+const Body: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body }) => <pre><code>{`${body}`}</code></pre>;

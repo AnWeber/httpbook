@@ -20,7 +20,7 @@
 .testLine{
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
 }
 .testLine svg{
   margin: .1rem;

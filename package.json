@@ -57,7 +57,10 @@
         "displayName": "httpbook",
         "mimeTypes": [
           "x-application/httpbook-testresults",
-          "x-application/httpbook-rfc7230"
+          "x-application/httpbook-rfc7230",
+          "x-application/httpbook-rfc7230-body",
+          "x-application/httpbook-rfc7230-response",
+          "x-application/httpbook-rfc7230-header"
         ]
       }
     ],
@@ -65,25 +68,77 @@
       "type": "object",
       "title": "httpbook",
       "properties": {
-        "httpbook.responseMimes": {
-          "type": "array",
-          "default": [
-            "x-application/httpbook-rfc7230",
-            "x-application/httpbook-mime",
-            "x-application/httpbook-contenttype",
-            "x-application/httpbook-markdown"
-          ],
+        "httpbook.outputTests":{
+          "type": "string",
+					"enum": [
+						"always",
+						"onlyFailed",
+            "never"
+					],
+          "default": "always",
           "scope": "resource",
-          "description": "list of mimes for response notebookOutputRenderer"
+          "description": "are outputs of tests visible"
         },
-        "httpbook.testMimes": {
-          "type": "array",
-          "default": [
-            "x-application/httpbook-testresults",
-            "x-application/httpbook-testresults-markdown"
-          ],
+        "httpbook.useRFC7230NotebookOutputRendererer":{
+          "type": "boolean",
+          "default": true,
           "scope": "resource",
-          "description": "list of mimes for test notebookOutputRenderer"
+          "description": "show request/ response in RFC7230 Format"
+        },
+        "httpbook.useHeaderNotebookOutputRenderer":{
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "show request/ response headers in RFC7230 Format"
+        },
+        "httpbook.useResponseNotebookOutputRenderer":{
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "show response in RFC7230 Format"
+        },
+        "httpbook.useResponseBodyNotebookOutputRenderer":{
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "show response body"
+        },
+        "httpbook.useMarkdownNotebookOutputRenderer":{
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "show request/ response and test results as markdown"
+        },
+        "httpbook.useContentTypeAsNotebookOutputRendererMime":{
+          "type": "boolean",
+          "default": false,
+          "scope": "resource",
+          "description": "use contentType as mimetype for NotebookOutputRenderer"
+        },
+        "httpbook.preferNotebookOutputRenderer": {
+					"type": "object",
+          "default": {
+            "image/png": "image/png",
+            "image/jpeg": "image/jpeg",
+            "image/svg+xml": "image/svg+xml"
+          },
+					"scope": "resource",
+					"description": "prefer NotebookOutputRenderer for mimeType (regex is possible)"
+        },
+        "httpbook.mapContentTypeToNotebookOutputRendererMime": {
+					"type": "object",
+          "default": {
+            "image/png": "image/png",
+            "image/jpeg": "image/jpeg",
+            "image/svg+xml": "image/svg+xml",
+            "text/html": "text/html",
+            "text/markdown": "text/markdown",
+            "text/plain": "text/plain",
+            "(application|text)/(x-)?javascript": "application/javascript",
+            "(application|json)/(.*\\+|x-amz-)?json.*": "application/json"
+          },
+					"scope": "resource",
+					"description": "map content type to NotebookOutputRenderer (regex is possible)"
         }
       }
     }

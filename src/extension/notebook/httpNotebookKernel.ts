@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import * as Httpyac from 'httpyac';
-import { AppConfig, getConfigSetting, HttpOutputRendererMimes, OutputMimeConstraint } from '../config';
-import * as mimeOutputProvider from '../mimeOutputProvider';
-import { MimeOutputProvider } from '../models';
+import * as httpOutput from '../httpOutputProvider';
+import { AppConfig, TestSlotOutput } from '../config';
+import { TestResult } from 'httpyac';
 
 
 export class HttpNotebookKernel {
@@ -10,28 +10,31 @@ export class HttpNotebookKernel {
   readonly label = 'HttpBook Kernel';
   readonly supportedLanguages = ['http'];
 
-  readonly mimeOutputProvider: Array<MimeOutputProvider> = [
-    new mimeOutputProvider.RawMimeOutputProvider(this.httpyac),
-    new mimeOutputProvider.ContentTypeMimeOutputProvider(),
-    new mimeOutputProvider.MarkdownMimeOutputProvider(this.httpyac),
-    new mimeOutputProvider.MarkdownTestResultsMimeOutputProvider(this.httpyac),
-  ];
-
-  private readonly controller: vscode.NotebookController;
+  readonly httpOutputProvider: Array<httpOutput.HttpOutputProvider>;
 
   constructor(
     private readonly httpyac: typeof Httpyac,
-    private readonly httpFileStore: Httpyac.HttpFileStore
+    private readonly httpFileStore: Httpyac.HttpFileStore,
+    readonly config: AppConfig,
   ) {
-
     this.controller = vscode.notebook.createNotebookController('httpbook-kernel', 'http', 'HttpBook');
 
-    this.controller.supportedLanguages = ['http'];
+    this.controller.supportedLanguages = [...this.supportedLanguages];
     this.controller.hasExecutionOrder = true;
-    this.controller.description = 'A notebook for making REST calls.';
+    this.controller.description = 'a Notebook for sending REST, SOAP, and GraphQL requests';
     this.controller.executeHandler = this.send.bind(this);
 
+    this.httpOutputProvider = [
+      new httpOutput.TestResultsMimeOutpoutProvider(),
+      new httpOutput.Rfc7230HttpOutpoutProvider(config),
+      new httpOutput.ContentTypeHttpOutputProvider(config),
+      new httpOutput.MarkdownHttpOutputProvider(config, this.httpyac),
+    ];
   }
+
+
+  private readonly controller: vscode.NotebookController;
+
 
   dispose(): void {
     this.controller.dispose();
@@ -56,19 +59,20 @@ export class HttpNotebookKernel {
               httpRegion,
             });
             const outputs: Array<vscode.NotebookCellOutput> = [];
-            const config = getConfigSetting();
-            const testOutputItems = this.createTestOutputs(httpRegion, config);
-            if (testOutputItems.length > 0) {
-              outputs.push(new vscode.NotebookCellOutput(testOutputItems));
-            }
-            const outputItems = this.createResponseOutputs(httpRegion, config);
-            if (outputItems.length > 0) {
-              outputs.push(new vscode.NotebookCellOutput(outputItems));
-            }
 
-            if (outputs.length > 0) {
-              execution.replaceOutput(outputs);
+            if (this.canShowTestResults(httpRegion.testResults)) {
+              outputs.push(this.createOutputs(httpRegion, {
+                slot: httpOutput.HttpOutputSlot.testResults,
+                cell,
+                httpFile
+              }));
             }
+            outputs.push(this.createOutputs(httpRegion, {
+              slot: httpOutput.HttpOutputSlot.response,
+              cell,
+              httpFile
+            }));
+            execution.replaceOutput(outputs);
             execution.end({
               success: true,
               endTime: Date.now(),
@@ -76,7 +80,7 @@ export class HttpNotebookKernel {
           } catch (err) {
             execution.replaceOutput([
               new vscode.NotebookCellOutput([
-                new vscode.NotebookCellOutputItem(HttpOutputRendererMimes.error, {
+                new vscode.NotebookCellOutputItem('application/x.notebook.error-traceback', {
                   ename: err instanceof Error && err.name || 'error',
                   evalue: err instanceof Error && err.message || JSON.stringify(err, null, 2),
                   traceback: [err.stack]
@@ -89,57 +93,81 @@ export class HttpNotebookKernel {
     }
   }
 
-  private createResponseOutputs(httpRegion: Httpyac.HttpRegion, config: AppConfig) {
-    const outputItems: Array<vscode.NotebookCellOutputItem> = [];
-    if (httpRegion.response && Array.isArray(config.responseMimes)) {
-      for (const responseMime of config.responseMimes) {
-        let mime: string | undefined;
-        if (typeof (responseMime) === 'string') {
-          mime = responseMime;
-        } else if (this.supportsOutputMimeConstraint(responseMime, httpRegion.response.contentType)) {
-          mime = responseMime.mime;
-        }
-        if (mime) {
-          outputItems.push(this.getNotebookCellOutputItem(mime, httpRegion));
-        }
+  private canShowTestResults(testResults: Array<TestResult> | undefined) {
+    if (testResults && this.config.outputTests !== TestSlotOutput.never) {
+      if (this.config.outputTests === TestSlotOutput.onlyFailed) {
+        return testResults.some(obj => !obj.result);
       }
-    }
-    return outputItems;
-  }
-
-  private createTestOutputs(httpRegion: Httpyac.HttpRegion, config: AppConfig) {
-    const outputItems: Array<vscode.NotebookCellOutputItem> = [];
-    if (httpRegion.testResults && Array.isArray(config.testMimes)) {
-      for (const mime of config.testMimes) {
-        outputItems.push(this.getNotebookCellOutputItem(mime, httpRegion));
-      }
-    }
-    return outputItems;
-  }
-
-  private getNotebookCellOutputItem(mime: string, httpRegion: Httpyac.HttpRegion) {
-    const metaData = {
-      response: httpRegion.response,
-      testResults: httpRegion.testResults,
-    };
-    for (const mimeOutputProvider of this.mimeOutputProvider) {
-      const outputItem = mimeOutputProvider.getNotebookCellOutputItem(mime, httpRegion);
-      if (outputItem) {
-        return outputItem;
-      }
-    }
-    return new vscode.NotebookCellOutputItem(mime, httpRegion, metaData);
-  }
-
-  private supportsOutputMimeConstraint(constraint: OutputMimeConstraint, contentType: Httpyac.ContentType | undefined) {
-    if (constraint.json && this.httpyac.utils.isMimeTypeJSON(contentType)) {
       return true;
     }
-    if (constraint.xml && this.httpyac.utils.isMimeTypeXml(contentType)) {
-      return true;
-    }
-    return contentType && constraint.supportedMimeTypes.indexOf(contentType.mimeType) >= 0;
+    return false;
   }
 
+  private supportOutputSlot(httpOutputProvider: httpOutput.HttpOutputProvider, slot: httpOutput.HttpOutputSlot) {
+    if (slot === httpOutput.HttpOutputSlot.response && !httpOutputProvider.supportedSlots) {
+      return true;
+    }
+    if (httpOutputProvider.supportedSlots) {
+      return httpOutputProvider.supportedSlots.indexOf(slot) >= 0;
+    }
+    return false;
+  }
 
+  private createOutputs(httpRegion: Httpyac.HttpRegion, context: httpOutput.HttpOutputContext): vscode.NotebookCellOutput {
+    const outputItems: Array<httpOutput.HttpOutputResult> = [];
+    for (const httpOutputProvider of this.httpOutputProvider.filter(obj => this.supportOutputSlot(obj, context.slot))) {
+      const result = httpOutputProvider.getOutputResult(httpRegion, context);
+      if (result) {
+        outputItems.push(result);
+      }
+    }
+
+    const preferredMime = this.getPreferredNotebookOutputRendererMime(httpRegion.response?.contentType?.mimeType);
+
+    const items = outputItems
+      .sort((obj1, obj2) => this.compareHttpOutputResults(obj1, obj2, preferredMime))
+      .reduce((prev: Array<vscode.NotebookCellOutputItem>, current) => {
+        if (Array.isArray(current.outputItems)) {
+          prev.push(...current.outputItems);
+        } else {
+          prev.push(current.outputItems);
+        }
+        return prev;
+      }, [])
+      .filter((obj, index, self) => self.indexOf(obj) === index);
+
+    return new vscode.NotebookCellOutput(items);
+  }
+
+  private getPreferredNotebookOutputRendererMime(mimeType?: string) {
+    if (mimeType && this.config.preferNotebookOutputRenderer) {
+      for (const [regex, mime] of Object.entries(this.config.preferNotebookOutputRenderer)) {
+        const regexp = new RegExp(regex, 'ui');
+        if (regexp.test(mimeType)) {
+          return mime;
+        }
+      }
+    }
+    return '';
+  }
+
+  private compareHttpOutputResults(obj1: httpOutput.HttpOutputResult, obj2: httpOutput.HttpOutputResult, mime?: string) {
+
+    if (mime) {
+      if (this.hasHttpOutputResultsMime(obj1, mime)) {
+        return -1;
+      }
+      if (this.hasHttpOutputResultsMime(obj2, mime)) {
+        return 1;
+      }
+    }
+    return obj2.priority - obj1.priority;
+  }
+
+  private hasHttpOutputResultsMime(obj: httpOutput.HttpOutputResult, mime?: string) : boolean {
+    if (Array.isArray(obj.outputItems)) {
+      return obj.outputItems.some(obj => obj.mime === mime);
+    }
+    return obj.outputItems.mime === mime;
+  }
 }

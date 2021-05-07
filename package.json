@@ -32,6 +32,7 @@
   ],
   "icon": "icon.png",
   "preview": true,
+  "enableProposedApi": true,
   "activationEvents": [
     "onNotebook:http",
     "onLanguage:http"
@@ -61,6 +62,242 @@
           "x-application/httpbook-rfc7230-response",
           "x-application/httpbook-rfc7230-header"
         ]
+      }
+    ],
+    "colors": [
+      {
+        "id": "httpbook.hljsQuote",
+        "description": "highlight.js color quote",
+        "defaults": {
+          "dark": "#6A9955",
+          "light": "#0451a5",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsVariable",
+        "description": "highlight.js color variable",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#0000ff",
+          "highContrast": "#9CDCFE"
+        }
+      },
+      {
+        "id": "httpbook.hljsComment",
+        "description": "highlight.js color comment",
+        "defaults": {
+          "dark": "#6A9955",
+          "light": "#008000",
+          "highContrast": "#7ca668"
+        }
+      },
+      {
+        "id": "httpbook.hljsKeyword",
+        "description": "highlight.js color keyword",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#0000ff",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsSelectorTag",
+        "description": "highlight.js color selector-tag",
+        "defaults": {
+          "dark": "#d7ba7d",
+          "light": "#800000",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsBuiltIn",
+        "description": "highlight.js color built_in",
+        "defaults": {
+          "dark": "#d4d4d4",
+          "light": "#0000ff",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsName",
+        "description": "highlight.js color name",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#800000",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsTag",
+        "description": "highlight.js color tag",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#800000",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsString",
+        "description": "highlight.js color string",
+        "defaults": {
+          "dark": "#ce9178",
+          "light": "#a31515",
+          "highContrast": "#ce9178"
+        }
+      },
+      {
+        "id": "httpbook.hljsTitle",
+        "description": "highlight.js color title",
+        "defaults": {
+          "dark": "#ce9178",
+          "light": "#800000",
+          "highContrast": "#ce9178"
+        }
+      },
+      {
+        "id": "httpbook.hljsSection",
+        "description": "highlight.js color section",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#0000ff",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsAttribute",
+        "description": "highlight.js color attribute",
+        "defaults": {
+          "dark": "#9cdcfe",
+          "light": "#ff0000",
+          "highContrast": "#d7ba7d"
+        }
+      },
+      {
+        "id": "httpbook.hljsLiteral",
+        "description": "highlight.js color literal",
+        "defaults": {
+          "dark": "#d7ba7d",
+          "light": "#a31515",
+          "highContrast": "#ce9178"
+        }
+      },
+      {
+        "id": "httpbook.hljsTemplateTag",
+        "description": "highlight.js color template-tag",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#000000",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsTemplateVariable",
+        "description": "highlight.js color template-variable",
+        "defaults": {
+          "dark": "#9cdcfe",
+          "light": "#0000ff",
+          "highContrast": "#9CDCFE"
+        }
+      },
+      {
+        "id": "httpbook.hljsType",
+        "description": "highlight.js color type",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#0000ff",
+          "highContrast": "#4EC9B0"
+        }
+      },
+      {
+        "id": "httpbook.hljsAddition",
+        "description": "highlight.js color addition",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#0000ff",
+          "highContrast": "#C586C0"
+        }
+      },
+      {
+        "id": "httpbook.hljsDeletion",
+        "description": "highlight.js color deletion",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#a31515",
+          "highContrast": "#C586C0"
+        }
+      },
+      {
+        "id": "httpbook.hljsSelectorAttr",
+        "description": "highlight.js color selector-attr",
+        "defaults": {
+          "dark": "#d7ba7d",
+          "light": "#ff0000",
+          "highContrast": "#d7ba7d"
+        }
+      },
+      {
+        "id": "httpbook.hljsSelectorPseudo",
+        "description": "highlight.js color selector-pseudo",
+        "defaults": {
+          "dark": "#d7ba7d",
+          "light": "#800000",
+          "highContrast": "#d7ba7d"
+        }
+      },
+      {
+        "id": "httpbook.hljsMeta",
+        "description": "highlight.js color meta",
+        "defaults": {
+          "dark": "#d4d4d4",
+          "light": "#000080",
+          "highContrast": "#9CDCFE"
+        }
+      },
+      {
+        "id": "httpbook.hljsDoctag",
+        "description": "highlight.js color doctag",
+        "defaults": {
+          "dark": "#d4d4d4",
+          "light": "#000080",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsAttr",
+        "description": "highlight.js color attr",
+        "defaults": {
+          "dark": "#9cdcfe",
+          "light": "#0451a5",
+          "highContrast": "#d4d4d4"
+        }
+      },
+      {
+        "id": "httpbook.hljsSymbol",
+        "description": "highlight.js color symbol",
+        "defaults": {
+          "dark": "#d4d4d4",
+          "light": "#800000",
+          "highContrast": "#569cd6"
+        }
+      },
+      {
+        "id": "httpbook.hljsBullet",
+        "description": "highlight.js color bullet",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#0451a5",
+          "highContrast": "#808080"
+        }
+      },
+      {
+        "id": "httpbook.hljsLink",
+        "description": "highlight.js color link",
+        "defaults": {
+          "dark": "#569cd6",
+          "light": "#800000",
+          "highContrast": "#808080"
+        }
       }
     ],
     "configuration": {
@@ -138,6 +375,22 @@
           },
           "scope": "resource",
           "description": "map content type to NotebookOutputRenderer (regex is possible)"
+        },
+        "httpbook.saveWithEmptyFirstline": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "add empty first line on save"
+        },
+        "httpbook.saveWithDelimiter": {
+          "type": "string",
+          "enum": [
+            "always",
+            "onlyIfNeeded"
+          ],
+          "default": "always",
+          "scope": "resource",
+          "description": "add region delimiter on save"
         }
       }
     }

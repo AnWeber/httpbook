@@ -9,56 +9,85 @@
   background: var(--vscode-editor-background);
   color: var(--vscode-editor-foreground);
 }
-
-:global(.hljs-quote),
-:global(.hljs-variable) {
-  color: var(--vscode-symbolIcon-variableForeground);
+:global(.hljs-quote){
+  color: var(--vscode-httpbook-hljsQuote);
 }
-
-
+:global(.hljs-variable){
+  color: var(--vscode-httpbook-hljsVariable);
+}
 :global(.hljs-comment){
-  color: var(--vscode-symbolIcon-eventForeground);
+  color: var(--vscode-httpbook-hljsComment);
+}
+:global(.hljs-keyword){
+  color: var(--vscode-httpbook-hljsKeyword);
+}
+:global(.hljs-selector-tag){
+  color: var(--vscode-httpbook-hljsSelectorTag);
+}
+:global(.hljs-built_in){
+  color: var(--vscode-httpbook-hljsBuiltIn);
+}
+:global(.hljs-name){
+  color: var(--vscode-httpbook-hljsName);
+}
+:global(.hljs-tag){
+  color: var(--vscode-httpbook-hljsTag);
+}
+:global(.hljs-string){
+  color: var(--vscode-httpbook-hljsString);
+}
+:global(.hljs-title){
+  color: var(--vscode-httpbook-hljsTitle);}
+:global(.hljs-section){
+  color: var(--vscode-httpbook-hljsSection);
+}
+:global(.hljs-attribute){
+  color: var(--vscode-httpbook-hljsAttribute);
+}
+:global(.hljs-literal){
+  color: var(--vscode-httpbook-hljsLiteral);}
+:global(.hljs-template-tag){
+  color: var(--vscode-httpbook-hljsTemplateTag);
+}
+:global(.hljs-template-variable){
+  color: var(--vscode-httpbook-hljsTemplateVariable);
+}
+:global(.hljs-type){
+  color: var(--vscode-httpbook-hljsType);
+}
+:global(.hljs-addition){
+  color: var(--vscode-httpbook-hljsAddition);
+}
+:global(.hljs-deletion){
+  color: var(--vscode-httpbook-hljsDeletion);
+}
+:global(.hljs-selector-attr){
+  color: var(--vscode-httpbook-hljsSelectorAttr);
+}
+:global(.hljs-selector-pseudo){
+  color: var(--vscode-httpbook-hljsSelectorPseudo);
+}
+:global(.hljs-meta){
+  color: var(--vscode-httpbook-hljsMeta);
+}
+:global(.hljs-doctag){
+  color: var(--vscode-httpbook-hljsDoctag);
 }
 
-:global(.hljs-keyword),
-:global(.hljs-selector-tag),
-:global(.hljs-built_in),
-:global(.hljs-name),
-:global(.hljs-tag) {
-  color: var(--vscode-symbolIcon-fieldForeground);
+:global(.hljs-attr > .hljs-attr){
+  color: var(--vscode-httpbook-hljsAttributte);
 }
-
-:global(.hljs-string),
-:global(.hljs-title),
-:global(.hljs-section),
-:global(.hljs-attribute),
-:global(.hljs-literal),
-:global(.hljs-template-tag),
-:global(.hljs-template-variable),
-:global(.hljs-type),
-:global(.hljs-addition) {
-  color: var(--vscode-symbolIcon-stringForeground);
+:global(.hljs-attr){
+  color: var(--vscode-httpbook-hljsAttr);
 }
-
-:global(.hljs-deletion),
-:global(.hljs-selector-attr),
-:global(.hljs-selector-pseudo),
-:global(.hljs-meta) {
-  color: var(--vscode-symbolIcon-functionForeground);
+:global(.hljs-symbol){
+  color: var(--vscode-httpbook-hljsSymbol);
 }
-
-:global(.hljs-doctag) {
-  color: var(--vscode-symbolIcon-classForeground);
+:global(.hljs-bullet){
+  color: var(--vscode-httpbook-hljsBullet);
 }
-
-:global(.hljs-attr) {
-  color: var(--vscode-symbolIcon-fieldForeground);
-}
-
-:global(.hljs-symbol),
-:global(.hljs-bullet),
 :global(.hljs-link){
-  color: var(--vscode-symbolIcon-constantForeground);
+  color: var(--vscode-httpbook-hljsLink);
 }
 
 

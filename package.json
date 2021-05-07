@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, SOAP, and GraphQL requests directly within Visual Studio Code",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -14,7 +14,7 @@
   },
   "qna": "https://github.com/AnWeber/httpbook/discussions",
   "engines": {
-    "vscode": "^1.55.0"
+    "vscode": "^1.56.0"
   },
   "categories": [
     "Notebooks"
@@ -32,7 +32,6 @@
   ],
   "icon": "icon.png",
   "preview": true,
-  "enableProposedApi": true,
   "activationEvents": [
     "onNotebook:http",
     "onLanguage:http"
@@ -401,7 +400,7 @@
   "devDependencies": {
     "@types/node": "^15.0.2",
     "@types/react": "^17.0.5",
-    "@types/vscode": "^1.55.0",
+    "@types/vscode": "^1.56.0",
     "@types/vscode-notebook-renderer": "^1.57.0",
     "@types/webpack-env": "^1.16.0",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
@@ -412,21 +411,21 @@
     "fork-ts-checker-webpack-plugin": "^6.2.6",
     "httpyac": "^2.7.0",
     "husky": "^6.0.0",
-    "lint-staged": "^10.5.4",
+    "lint-staged": "^11.0.0",
     "lockfile-lint": "^4.6.2",
     "style-loader": "^2.0.0",
     "svg-sprite-loader": "^6.0.6",
     "thread-loader": "^3.0.3",
-    "ts-loader": "^9.1.1",
+    "ts-loader": "^9.1.2",
     "typescript": "^4.2.4",
     "vscode-dts": "^0.3.1",
     "webpack": "^5.36.2",
-    "webpack-cli": "^4.6.0"
+    "webpack-cli": "^4.7.0"
   },
   "dependencies": {
     "highlight.js": "^10.7.2",
     "preact": "^10.5.13",
-    "vscode-codicons": "^0.0.16",
+    "vscode-codicons": "^0.0.17",
     "vscode-notebook-error-overlay": "^1.0.1"
   }
 }

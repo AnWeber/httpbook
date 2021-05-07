@@ -9,7 +9,7 @@ declare const scriptUrl: string;
 __webpack_public_path__ = new URL(scriptUrl.replace(/[^/]+$/u, '') + __webpack_relative_entrypoint_to_root__).toString();
 
 
-const notebookApi = acquireNotebookRendererApi('httpbook');
+const notebookApi = acquireNotebookRendererApi();
 
 // Track cells that we render so that, in development, we can re-render then
 // when the scripts change.

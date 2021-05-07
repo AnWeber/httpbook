@@ -1,3 +1,12 @@
+## 0.7.0 (2021-05-07)
+
+#### Features
+* color contribution
+* support markdown cells
+
+#### Fix
+* create empty new files supported
+
 ## 0.5.0 (2021-05-06)
 
 #### Features

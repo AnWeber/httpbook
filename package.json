@@ -381,16 +381,6 @@
           "default": true,
           "scope": "resource",
           "description": "add empty first line on save"
-        },
-        "httpbook.saveWithDelimiter": {
-          "type": "string",
-          "enum": [
-            "always",
-            "onlyIfNeeded"
-          ],
-          "default": "always",
-          "scope": "resource",
-          "description": "add region delimiter on save"
         }
       }
     }

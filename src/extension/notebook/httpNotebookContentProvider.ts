@@ -1,11 +1,15 @@
 import { HttpFileStore, HttpRegion } from 'httpyac';
 import * as vscode from 'vscode';
 import { EOL } from 'os';
+import { AppConfig } from '../config';
 
 export class HttpNotebookContentProvider implements vscode.NotebookContentProvider {
   options?: vscode.NotebookDocumentContentOptions | undefined;
 
-  constructor(private readonly httpFileStore: HttpFileStore) { }
+  constructor(
+    private readonly config: AppConfig,
+    private readonly httpFileStore: HttpFileStore
+  ) { }
 
 
   onDidChangeNotebookContentOptions?: vscode.Event<vscode.NotebookDocumentContentOptions> | undefined;
@@ -19,7 +23,6 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
       this.httpFileStore.rename(uri.fsPath, openContext.backupId);
     }
     const cells = httpFile.httpRegions
-      .filter(obj => obj.actions.length > 0)
       .map(this.createCell);
     return this.createNotebook(cells);
   }
@@ -45,27 +48,50 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
 
   private async saveDocument(uri: vscode.Uri, document: vscode.NotebookDocument) : Promise<void> {
     const contents: Array<string> = [];
+    if (this.config.saveWithEmptyFirstline) {
+      contents.push('');
+    }
+    let hasPrevCell = false;
     for (const cell of document.getCells()) {
       if (cell.kind === vscode.NotebookCellKind.Code) {
+        if (hasPrevCell) {
+          contents.push(`${EOL}###${EOL}`);
+        }
         contents.push(cell.document.getText());
+        hasPrevCell = true;
+      } else if (cell.kind === vscode.NotebookCellKind.Markdown) {
+
+        contents.push(`${EOL}###${EOL}${EOL}/*${EOL}${cell.document.getText()}${EOL}*/${EOL}`);
       }
     }
-    await vscode.workspace.fs.writeFile(uri, Buffer.from(contents.join(`${EOL}${EOL}###${EOL}${EOL}`)));
+    await vscode.workspace.fs.writeFile(uri, Buffer.from(contents.join(`${EOL}`)));
+
   }
 
 
   private createCell(httpRegion: HttpRegion) {
-    return new vscode.NotebookCellData(vscode.NotebookCellKind.Code,
-      httpRegion.source || '',
+    let source = httpRegion.source || '';
+    if (httpRegion.actions.length > 0) {
+      return new vscode.NotebookCellData(vscode.NotebookCellKind.Code,
+        source,
+        'http',
+        [],
+        new vscode.NotebookCellMetadata());
+    }
+    if (source.length > 4) {
+      source = source.slice(2, source.length - 2).trim();
+    }
+    return new vscode.NotebookCellData(vscode.NotebookCellKind.Markdown,
+      source,
       'http',
       [],
       new vscode.NotebookCellMetadata());
-
   }
 
   private createNotebook(cells: Array<vscode.NotebookCellData>) {
-    return new vscode.NotebookData(cells,
-      new vscode.NotebookDocumentMetadata());
-
+    return new vscode.NotebookData(
+      cells,
+      new vscode.NotebookDocumentMetadata()
+    );
   }
 }

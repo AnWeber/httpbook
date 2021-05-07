@@ -23,7 +23,7 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
     context.subscriptions.push(...[
       watchConfigSettings(current => Object.assign(config, current)),
       httpNotebookKernel,
-      vscode.notebook.registerNotebookContentProvider('http', new HttpNotebookContentProvider(httpyacExtension.exports.httpFileStore)),
+      vscode.notebook.registerNotebookContentProvider('http', new HttpNotebookContentProvider(config, httpyacExtension.exports.httpFileStore)),
     ]);
     return {
       registerHttpOutputProvider: (obj: HttpOutputProvider) => {

@@ -17,6 +17,7 @@ export enum TestSlotOutput{
   onlyFailed = 'onlyFailed',
   never = 'never',
 }
+
 export interface AppConfig {
   outputTests?: TestSlotOutput;
   useRFC7230NotebookOutputRendererer?: boolean,
@@ -25,10 +26,9 @@ export interface AppConfig {
   useResponseBodyNotebookOutputRenderer?: boolean,
   useMarkdownNotebookOutputRenderer?: boolean;
   useContentTypeAsNotebookOutputRendererMime?: boolean;
-  mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>
-  preferNotebookOutputRenderer?: Record<string, string>
-
-
+  mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>;
+  preferNotebookOutputRenderer?: Record<string, string>;
+  saveWithEmptyFirstline?: boolean;
   readonly [key: string]: unknown;
 }
 

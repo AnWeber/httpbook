@@ -1,4 +1,4 @@
-import { HttpFileStore, HttpRegion } from 'httpyac';
+import { HttpFileStore, HttpRegion, Logger } from 'httpyac';
 import * as vscode from 'vscode';
 import { EOL } from 'os';
 import { AppConfig } from '../config';
@@ -8,23 +8,29 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
 
   constructor(
     private readonly config: AppConfig,
-    private readonly httpFileStore: HttpFileStore
+    private readonly httpFileStore: HttpFileStore,
+    private readonly log: Logger
   ) { }
 
 
   onDidChangeNotebookContentOptions?: vscode.Event<vscode.NotebookDocumentContentOptions> | undefined;
 
   async openNotebook(uri: vscode.Uri, openContext: vscode.NotebookDocumentOpenContext): Promise<vscode.NotebookData> {
-    const httpFile = await this.httpFileStore.getOrCreate(uri.fsPath, async () => {
-      const content = await vscode.workspace.fs.readFile(uri);
-      return Buffer.from(content).toString();
-    }, 0);
-    if (openContext.backupId) {
-      this.httpFileStore.rename(uri.fsPath, openContext.backupId);
+    try {
+      const httpFile = await this.httpFileStore.getOrCreate(uri.fsPath, async () => {
+        const content = await vscode.workspace.fs.readFile(uri);
+        return Buffer.from(content).toString();
+      }, 0);
+      if (openContext.backupId) {
+        this.httpFileStore.rename(uri.fsPath, openContext.backupId);
+      }
+      const cells = httpFile.httpRegions
+        .map(this.createCell);
+      return this.createNotebook(cells);
+    } catch (err) {
+      this.log.trace(err);
+      return this.createNotebook([]);
     }
-    const cells = httpFile.httpRegions
-      .map(this.createCell);
-    return this.createNotebook(cells);
   }
   async saveNotebook(document: vscode.NotebookDocument): Promise<void> {
     await this.saveDocument(document.uri, document);

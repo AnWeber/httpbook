@@ -2,7 +2,7 @@
 import { h, FunctionComponent, Fragment } from 'preact';
 import style from './rfc7230.css';
 import { HttpResponse, HttpMethod } from 'httpyac';
-import { Hljs } from './hljs';
+import { BodyOutput } from './hljs';
 
 
 interface NormalizedOptions {
@@ -12,9 +12,14 @@ interface NormalizedOptions {
   body?: unknown;
 }
 
-interface RFC7230Data{ response: HttpResponse, requestVisible?: boolean, bodyVisible?: boolean }
+interface RFC7230Data{
+  response: HttpResponse,
+  rawBody: string | undefined,
+  requestVisible?: boolean,
+  bodyVisible?: boolean
+}
 
-export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, requestVisible, bodyVisible }) => <section className={style.response}>
+export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, rawBody, requestVisible, bodyVisible }) => <section className={style.response}>
   {requestVisible && response.request
     && <Request request={response.request} bodyVisible={bodyVisible}/>
   }
@@ -23,7 +28,7 @@ export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, requ
     && <Headers headers={response.headers} />
   }
   {bodyVisible && typeof response.body === 'string'
-    && <Hljs body={response.body} mimeType={response.contentType?.mimeType}/>
+    && <BodyOutput body={response.body} rawBody={rawBody} mimeType={response.contentType?.mimeType}/>
   }
 </section>;
 
@@ -34,7 +39,7 @@ const Request: FunctionComponent<{ request: NormalizedOptions, bodyVisible?: boo
     && <Headers headers={request.headers} />
   }
   {bodyVisible && typeof request.body === 'string'
-    && <Hljs body={request.body} />
+    && <BodyOutput body={request.body} />
   }
 </div>;
 
@@ -59,6 +64,7 @@ const Headers: FunctionComponent<{ headers: Record<string, string | string[] | u
 </Fragment>;
 
 
-export const HttpBody: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body, mimeType }) => <div className={style.response}>
-  <Hljs body={body} mimeType={mimeType}/>
-</div>;
+export const HttpBody: FunctionComponent<{ body: unknown, rawBody: string | undefined, mimeType?: string }>
+  = ({ body, rawBody, mimeType }) => <div className={style.response}>
+    <BodyOutput body={body} rawBody={rawBody} mimeType={mimeType}/>
+  </div>;

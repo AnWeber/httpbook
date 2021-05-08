@@ -12,7 +12,7 @@ interface IRenderInfo {
   notebookApi: NotebookRendererApi<unknown>;
 }
 
-export function renderCell({ container, mimeType, data }: IRenderInfo): void {
+export function renderCell({ container, mimeType, data, metaData }: IRenderInfo): void {
   if (mimeType === 'x-application/httpbook-testresults') {
     if (data.testResults) {
       render(<TestResults testResults={data.testResults} />, container);
@@ -20,16 +20,16 @@ export function renderCell({ container, mimeType, data }: IRenderInfo): void {
   } else if (data.response) {
     switch (mimeType) {
       case 'x-application/httpbook-rfc7230':
-        render(<RFC7230Response response={data.response} requestVisible={true} bodyVisible={true} />, container);
+        render(<RFC7230Response response={data.response} rawBody={metaData?.rawBody} requestVisible={true} bodyVisible={true} />, container);
         break;
       case 'x-application/httpbook-rfc7230-response':
-        render(<RFC7230Response response={data.response} bodyVisible={true} />, container);
+        render(<RFC7230Response response={data.response} rawBody={metaData?.rawBody} bodyVisible={true} />, container);
         break;
       case 'x-application/httpbook-rfc7230-header':
-        render(<RFC7230Response response={data.response} requestVisible={true} />, container);
+        render(<RFC7230Response response={data.response} rawBody={metaData?.rawBody} requestVisible={true} />, container);
         break;
       default:
-        render(<HttpBody body={data.response.body} mimeType={data.response.contentType?.mimeType} />, container);
+        render(<HttpBody body={data.response.body} rawBody={metaData?.rawBody} mimeType={data.response.contentType?.mimeType} />, container);
         break;
     }
 

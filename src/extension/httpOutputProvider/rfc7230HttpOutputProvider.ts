@@ -11,23 +11,30 @@ export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
 
   getOutputResult(httpRegion: Httpyac.HttpRegion): HttpOutputResult | false {
     if (httpRegion.response) {
+      const metaData: Record<string, string> = {};
+      if (httpRegion.response.rawBody) {
+        metaData.rawBody = httpRegion.response.rawBody.toString('base64');
+      }
       const outputItems: vscode.NotebookCellOutputItem[] = [];
       if (this.config.useResponseBodyNotebookOutputRenderer) {
         outputItems.push(new vscode.NotebookCellOutputItem(
           'x-application/httpbook-rfc7230-body',
-          httpRegion
+          httpRegion,
+          metaData
         ));
       }
       if (this.config.useRFC7230NotebookOutputRendererer) {
         outputItems.push(new vscode.NotebookCellOutputItem(
           'x-application/httpbook-rfc7230',
-          httpRegion
+          httpRegion,
+          metaData
         ));
       }
       if (this.config.useResponseNotebookOutputRenderer) {
         outputItems.push(new vscode.NotebookCellOutputItem(
           'x-application/httpbook-rfc7230-response',
-          httpRegion
+          httpRegion,
+          metaData
         ));
       }
       if (this.config.useHeaderNotebookOutputRenderer) {

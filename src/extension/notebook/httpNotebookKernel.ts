@@ -10,6 +10,8 @@ export class HttpNotebookKernel {
   readonly label = 'HttpBook Kernel';
   readonly supportedLanguages = ['http'];
 
+  private executionOrder = 0;
+
   readonly httpOutputProvider: Array<httpOutput.HttpOutputProvider>;
 
   constructor(
@@ -27,6 +29,9 @@ export class HttpNotebookKernel {
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
       new httpOutput.Rfc7230HttpOutpoutProvider(config),
+
+      new httpOutput.BuiltInHttpOutputProvider(),
+      new httpOutput.ImageHttpOutputProvider(),
       new httpOutput.ContentTypeHttpOutputProvider(config),
       new httpOutput.MarkdownHttpOutputProvider(config, this.httpyac),
     ];
@@ -43,15 +48,13 @@ export class HttpNotebookKernel {
   private async send(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument, controller: vscode.NotebookController): Promise<void> {
     const httpFile = this.httpFileStore.get(notebook.uri.fsPath);
     if (httpFile) {
-      if (httpFile.activeEnvironment && httpFile.activeEnvironment.length === 0) {
-        delete httpFile.activeEnvironment;
-      }
 
       for (const cell of cells) {
         const currentFile = await this.httpFileStore.parse(notebook.uri.fsPath, cell.document.getText());
         if (currentFile.httpRegions.length > 0) {
           const httpRegion = currentFile.httpRegions[0];
           const execution = controller.createNotebookCellExecutionTask(cell);
+          execution.executionOrder = ++this.executionOrder;
           try {
             execution.start({ startTime: Date.now() });
             await this.httpyac.httpYacApi.send({

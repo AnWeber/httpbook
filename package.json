@@ -32,6 +32,7 @@
   ],
   "icon": "icon.png",
   "preview": true,
+  "enableProposedApi": true,
   "activationEvents": [
     "onNotebook:http",
     "onLanguage:http"
@@ -362,16 +363,6 @@
         },
         "httpbook.mapContentTypeToNotebookOutputRendererMime": {
           "type": "object",
-          "default": {
-            "image/png": "image/png",
-            "image/jpeg": "image/jpeg",
-            "image/svg+xml": "image/svg+xml",
-            "text/html": "text/html",
-            "text/markdown": "text/markdown",
-            "text/plain": "text/plain",
-            "(application|text)/(x-)?javascript": "application/javascript",
-            "(application|json)/(.*\\+|x-amz-)?json.*": "application/json"
-          },
           "scope": "resource",
           "description": "map content type to NotebookOutputRenderer (regex is possible)"
         },

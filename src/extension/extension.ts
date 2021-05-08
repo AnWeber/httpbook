@@ -29,7 +29,13 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
           config,
           httpyacExtension.exports.httpFileStore,
           httpyacExtension.exports.httpyac.log
-        )
+        ), {
+          transientOutputs: false,
+          transientCellMetadata: {
+            inputCollapsed: true,
+            outputCollapsed: true,
+          }
+        }
       ),
     ]);
     return {

@@ -36,17 +36,9 @@ export class ContentTypeHttpOutputProvider implements HttpOutputProvider {
   }
 
   private createUnknownNotebookCellOutputItem(mime: string, httpRegion: HttpRegion) {
-    let body: unknown = httpRegion.response?.parsedBody || httpRegion.response?.body;
-
-    if (mime.startsWith('image') || mime === 'application/pdf') {
-      if (httpRegion.response?.rawBody) {
-        body = httpRegion.response.rawBody.toString('base64');
-      }
-    }
-
     return new vscode.NotebookCellOutputItem(
       mime,
-      body,
+      httpRegion.response?.body,
       {
         response: httpRegion.response,
         testResults: httpRegion.testResults,

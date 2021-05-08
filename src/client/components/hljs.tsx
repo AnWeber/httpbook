@@ -28,6 +28,15 @@ registerLanguage('properties', properties);
 registerLanguage('xml', xml);
 registerLanguage('yaml', yaml);
 
+export const BodyOutput: FunctionComponent<{ body: unknown, rawBody?: string, mimeType?: string }> = ({ body, rawBody, mimeType }) => {
+  if (mimeType
+    && rawBody
+    && ['image/png', 'image/jpeg'].indexOf(mimeType) >= 0) {
+    return <Image rawBody={rawBody} mimeType={mimeType}/>;
+  }
+  return <Hljs body={body} mimeType={mimeType}/>;
+};
+
 
 export const Hljs: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body, mimeType }) => {
 
@@ -58,3 +67,6 @@ export const Hljs: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ 
   }
   return <pre><code className={style.code} dangerouslySetInnerHTML={{ __html: html }}></code></pre>;
 };
+
+
+export const Image: FunctionComponent<{ rawBody: string, mimeType: string }> = ({ rawBody, mimeType }) => <img src={`data:${mimeType};base64,${rawBody}`}></img>;

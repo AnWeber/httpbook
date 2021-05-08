@@ -1,3 +1,11 @@
+## 0.8.0 (2021-05-08)
+
+#### Features
+* better highlight support by using mimetype
+
+#### Fix
+* error in env support
+
 ## 0.7.0 (2021-05-07)
 
 #### Features

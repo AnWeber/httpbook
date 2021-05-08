@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { h, FunctionComponent } from 'preact';
-import { registerLanguage, highlightAuto } from 'highlight.js/lib/core';
+import { registerLanguage, highlight, highlightAuto } from 'highlight.js/lib/core';
 import style from './hljs.css';
 
 
@@ -29,7 +29,32 @@ registerLanguage('xml', xml);
 registerLanguage('yaml', yaml);
 
 
-export const Hljs: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body }) => {
-  const html = highlightAuto(`${body}`).value;
+export const Hljs: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body, mimeType }) => {
+
+  let language: string | undefined;
+  if (mimeType) {
+    if (/^(application|text)\/(.*\+|x-amz-)?json.*/u.test(mimeType)) {
+      language = 'json';
+    } else if (/^(application|text)\/(.*\+)?xml.*/u.test(mimeType)) {
+      language = 'xml';
+    } else if (/^(application|text)\/(.*\+|.*-)?yaml.*/u.test(mimeType)) {
+      language = 'yaml';
+    } else if (/^(application|text)\/(.*\+|.*-)?javascript.*/u.test(mimeType)) {
+      language = 'javascript';
+    } else if (mimeType === 'text/css') {
+      language = 'css';
+    } else if (mimeType === 'text/markdown') {
+      language = 'markdown';
+    } else if (mimeType === 'application/x-latex') {
+      language = 'latex';
+    }
+  }
+
+  let html: string | undefined;
+  if (language) {
+    html = highlight(`${body}`, { language }).value;
+  } else {
+    html = highlightAuto(`${body}`).value;
+  }
   return <pre><code className={style.code} dangerouslySetInnerHTML={{ __html: html }}></code></pre>;
 };

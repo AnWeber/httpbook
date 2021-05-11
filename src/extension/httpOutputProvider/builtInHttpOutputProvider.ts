@@ -25,7 +25,7 @@ export class BuiltInHttpOutputProvider implements HttpOutputProvider {
         && /^(application|json)\/(.*\+|x-amz-)?json.*$/u.test(httpRegion.response.contentType.mimeType)) {
         return {
           outputItems: new vscode.NotebookCellOutputItem(
-            httpRegion.response?.contentType.mimeType,
+            'application/json',
             httpRegion.response.parsedBody
           ),
           priority: HttpOutputPriority.Low

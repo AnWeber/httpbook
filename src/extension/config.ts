@@ -3,14 +3,6 @@ import * as vscode from 'vscode';
 
 export const APP_NAME = 'httpbook';
 
-export enum HttpOutputRendererMimes{
-  mime = 'x-application/httpbook-mime',
-  contenttype = 'x-application/httpbook-contenttype',
-  rfc7230 = 'x-application/httpbook-rfc7230',
-  testresults = 'x-application/httpbook-testresults',
-  error = 'application/x.notebook.error-traceback'
-}
-
 
 export enum TestSlotOutput{
   always = 'always',
@@ -20,6 +12,8 @@ export enum TestSlotOutput{
 
 export interface AppConfig {
   outputTests?: TestSlotOutput;
+  useHighlightJSInOutput?: boolean,
+  prettyPrintInOutput?: boolean,
   useRFC7230NotebookOutputRendererer?: boolean,
   useHeaderNotebookOutputRenderer?: boolean,
   useResponseNotebookOutputRenderer?: boolean,

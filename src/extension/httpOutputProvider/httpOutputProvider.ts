@@ -29,5 +29,7 @@ export interface HttpOutputProvider{
   /** supported slots, if emtpy only response */
   supportedSlots?: HttpOutputSlot[];
 
+  onDidReceiveMessage?(event: { editor: vscode.NotebookEditor, message: unknown }): void;
+
   getOutputResult(httpRegion: HttpRegion, context: HttpOutputContext): HttpOutputResult | false;
 }

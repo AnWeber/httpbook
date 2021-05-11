@@ -2,7 +2,7 @@
 import { h, FunctionComponent, Fragment } from 'preact';
 import style from './rfc7230.css';
 import { HttpResponse, HttpMethod } from 'httpyac';
-import { BodyOutput } from './hljs';
+import { BodyOutput, HljsMetaData } from './hljs';
 
 
 interface NormalizedOptions {
@@ -14,34 +14,36 @@ interface NormalizedOptions {
 
 interface RFC7230Data{
   response: HttpResponse,
-  rawBody: string | undefined,
+  metaData: HljsMetaData,
   requestVisible?: boolean,
   bodyVisible?: boolean
 }
 
-export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, rawBody, requestVisible, bodyVisible }) => <section className={style.response}>
+
+export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, metaData, requestVisible, bodyVisible }) => <section className={style.response}>
   {requestVisible && response.request
-    && <Request request={response.request} bodyVisible={bodyVisible}/>
+    && <Request request={response.request} metaData={metaData} bodyVisible={bodyVisible}/>
   }
   <StatusLine response={response} />
   {response.headers
     && <Headers headers={response.headers} />
   }
   {bodyVisible && typeof response.body === 'string'
-    && <BodyOutput body={response.body} rawBody={rawBody} mimeType={response.contentType?.mimeType}/>
+    && <BodyOutput hljsOutput={response} metaData={metaData} />
   }
 </section>;
 
 
-const Request: FunctionComponent<{ request: NormalizedOptions, bodyVisible?: boolean}> = ({ request, bodyVisible }) => <div className={style.request}>
-  <RequestLine request={request} />
-  {request.headers
+const Request: FunctionComponent<{ request: NormalizedOptions, metaData: HljsMetaData, bodyVisible?: boolean }>
+  = ({ request, metaData, bodyVisible }) => <div className={style.request}>
+    <RequestLine request={request} />
+    {request.headers
     && <Headers headers={request.headers} />
-  }
-  {bodyVisible && typeof request.body === 'string'
-    && <BodyOutput body={request.body} />
-  }
-</div>;
+    }
+    {bodyVisible && typeof request.body === 'string'
+    && <BodyOutput hljsOutput={{ body: request.body }} metaData={metaData} />
+    }
+  </div>;
 
 
 const RequestLine: FunctionComponent<{ request: NormalizedOptions }> = ({ request }) => <h4 className={style.requestLine}>
@@ -64,7 +66,7 @@ const Headers: FunctionComponent<{ headers: Record<string, string | string[] | u
 </Fragment>;
 
 
-export const HttpBody: FunctionComponent<{ body: unknown, rawBody: string | undefined, mimeType?: string }>
-  = ({ body, rawBody, mimeType }) => <div className={style.response}>
-    <BodyOutput body={body} rawBody={rawBody} mimeType={mimeType}/>
+export const HttpBody: FunctionComponent<{ response: HttpResponse, metaData: HljsMetaData }>
+  = ({ response, metaData }) => <div className={style.response}>
+    <BodyOutput hljsOutput={response} metaData={metaData}/>
   </div>;

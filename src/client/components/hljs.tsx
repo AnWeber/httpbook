@@ -11,6 +11,7 @@ import markdown from 'highlight.js/lib/languages/markdown';
 import plaintext from 'highlight.js/lib/languages/plaintext';
 import xml from 'highlight.js/lib/languages/xml';
 import yaml from 'highlight.js/lib/languages/yaml';
+import type { ContentType } from 'httpyac';
 
 registerLanguage('css', css);
 registerLanguage('javascript', javascript);
@@ -20,45 +21,70 @@ registerLanguage('plaintext', plaintext);
 registerLanguage('xml', xml);
 registerLanguage('yaml', yaml);
 
-export const BodyOutput: FunctionComponent<{ body: unknown, rawBody?: string, mimeType?: string }> = ({ body, rawBody, mimeType }) => {
-  if (mimeType
-    && rawBody
-    && ['image/png', 'image/jpeg'].indexOf(mimeType) >= 0) {
-    return <Image rawBody={rawBody} mimeType={mimeType}/>;
+export interface HljsBody{
+  body: unknown,
+  parsedBody?: unknown,
+  contentType?: ContentType,
+}
+
+export interface HljsMetaData{
+  rawBody?: string,
+  useHighlightJSInOutput?: boolean,
+  prettyPrintInOutput?: boolean,
+}
+export const BodyOutput: FunctionComponent<{ hljsOutput: HljsBody, metaData: HljsMetaData}> = ({ hljsOutput, metaData }) => {
+  if (hljsOutput.contentType?.mimeType
+    && metaData.rawBody
+    && ['image/png', 'image/jpeg'].indexOf(hljsOutput.contentType.mimeType) >= 0) {
+    return <Image rawBody={metaData.rawBody} mimeType={hljsOutput.contentType.mimeType}/>;
   }
-  return <Hljs body={body} mimeType={mimeType}/>;
+  return <Hljs hljsOutput={hljsOutput} metaData={metaData}/>;
 };
 
 
-export const Hljs: FunctionComponent<{ body: unknown, mimeType?: string }> = ({ body, mimeType }) => {
+export const Hljs: FunctionComponent<{ hljsOutput: HljsBody, metaData: HljsMetaData }> = ({ hljsOutput, metaData }) => {
+  let html = `${hljsOutput.body}`;
 
-  let language: string | undefined;
-  if (mimeType) {
-    if (/^(application|text)\/(.*\+|x-amz-)?json.*/u.test(mimeType)) {
-      language = 'json';
-    } else if (/^(application|text)\/(.*\+)?xml.*/u.test(mimeType)) {
-      language = 'xml';
-    } else if (/^(application|text)\/(.*\+|.*-)?yaml.*/u.test(mimeType)) {
-      language = 'yaml';
-    } else if (/^(application|text)\/(.*\+|.*-)?javascript.*/u.test(mimeType)) {
-      language = 'javascript';
-    } else if (mimeType === 'text/css') {
-      language = 'css';
-    } else if (mimeType === 'text/markdown') {
-      language = 'markdown';
-    } else if (mimeType === 'application/x-latex') {
-      language = 'latex';
-    }
+  if (hljsOutput.contentType?.mimeType
+    && /^(application|text)\/(.*\+|x-amz-)?json.*/u.test(hljsOutput.contentType.mimeType)
+    && hljsOutput.parsedBody
+    && metaData.prettyPrintInOutput) {
+    html = JSON.stringify(hljsOutput.parsedBody, null, 2);
   }
 
-  let html: string | undefined;
-  if (language) {
-    html = highlight(`${body}`, { language }).value;
-  } else {
-    html = highlightAuto(`${body}`).value;
+  if (metaData.useHighlightJSInOutput) {
+    const language: string | undefined = getHighlightJsLanguage(hljsOutput);
+    if (language) {
+      html = highlight(`${html}`, { language }).value;
+    } else {
+      html = highlightAuto(`${html}`).value;
+    }
   }
   return <pre><code className={style.code} dangerouslySetInnerHTML={{ __html: html }}></code></pre>;
 };
 
 
 export const Image: FunctionComponent<{ rawBody: string, mimeType: string }> = ({ rawBody, mimeType }) => <img src={`data:${mimeType};base64,${rawBody}`}></img>;
+
+
+function getHighlightJsLanguage(hljsOutput: HljsBody) {
+  let language: string | undefined;
+  if (hljsOutput.contentType?.mimeType) {
+    if (/^(application|text)\/(.*\+|x-amz-)?json.*/u.test(hljsOutput.contentType.mimeType)) {
+      language = 'json';
+    } else if (/^(application|text)\/(.*\+)?xml.*/u.test(hljsOutput.contentType.mimeType)) {
+      language = 'xml';
+    } else if (/^(application|text)\/(.*\+|.*-)?yaml.*/u.test(hljsOutput.contentType.mimeType)) {
+      language = 'yaml';
+    } else if (/^(application|text)\/(.*\+|.*-)?javascript.*/u.test(hljsOutput.contentType.mimeType)) {
+      language = 'javascript';
+    } else if (hljsOutput.contentType.mimeType === 'text/css') {
+      language = 'css';
+    } else if (hljsOutput.contentType.mimeType === 'text/markdown') {
+      language = 'markdown';
+    } else if (hljsOutput.contentType.mimeType === 'application/x-latex') {
+      language = 'latex';
+    }
+  }
+  return language;
+}

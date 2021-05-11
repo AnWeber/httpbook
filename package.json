@@ -26,12 +26,11 @@
     "Intellij Http Client",
     "Postman",
     "Soap",
-    "ci",
-    "api",
     "rest-client"
   ],
   "icon": "icon.png",
   "preview": true,
+  "enableProposedApi": true,
   "activationEvents": [
     "onNotebook:http",
     "onLanguage:http"
@@ -314,6 +313,18 @@
           "scope": "resource",
           "description": "are outputs of tests visible"
         },
+        "httpbook.useHighlightJSInOutput": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "use highlight.js in NotebookOutputRenderer"
+        },
+        "httpbook.prettyPrintInOutput": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "pretty print JSON in NotebookOutputRenderer"
+        },
         "httpbook.useRFC7230NotebookOutputRendererer": {
           "type": "boolean",
           "default": true,
@@ -385,6 +396,7 @@
     "eslint": "eslint src --ext ts",
     "lint": "npm run eslint && npm run lockfile-lint",
     "precommit": "npm run lint",
+    "deploy": "npx vsce publish --web --noVerify",
     "update-api": "npx vscode-dts dev"
   },
   "devDependencies": {
@@ -393,8 +405,8 @@
     "@types/vscode": "^1.56.0",
     "@types/vscode-notebook-renderer": "^1.57.0",
     "@types/webpack-env": "^1.16.0",
-    "@typescript-eslint/eslint-plugin": "^4.22.1",
-    "@typescript-eslint/parser": "^4.22.1",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
     "css-loader": "^5.2.4",
     "eslint": "^7.26.0",
     "eslint-plugin-node": "^11.1.0",
@@ -405,11 +417,11 @@
     "lockfile-lint": "^4.6.2",
     "style-loader": "^2.0.0",
     "svg-sprite-loader": "^6.0.6",
-    "thread-loader": "^3.0.3",
+    "thread-loader": "^3.0.4",
     "ts-loader": "^9.1.2",
     "typescript": "^4.2.4",
     "vscode-dts": "^0.3.1",
-    "webpack": "^5.36.2",
+    "webpack": "^5.37.0",
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {

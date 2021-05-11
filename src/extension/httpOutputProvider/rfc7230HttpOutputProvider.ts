@@ -7,16 +7,21 @@ export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
   id = 'httpbook-rfc7230';
 
 
-  constructor(readonly config: AppConfig) {}
+  constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}
 
   getOutputResult(httpRegion: Httpyac.HttpRegion): HttpOutputResult | false {
     if (httpRegion.response) {
-      const metaData: Record<string, string> = {};
-      if (httpRegion.response.rawBody) {
+      const metaData: Record<string, unknown> = {
+        useHighlightJSInOutput: this.config.useHighlightJSInOutput,
+        prettyPrintInOutput: this.config.prettyPrintInOutput,
+      };
+      if (httpRegion.response.rawBody
+        && this.httpyac.utils.isMimeTypeImage(httpRegion.response.contentType)) {
         metaData.rawBody = httpRegion.response.rawBody.toString('base64');
       }
       const outputItems: vscode.NotebookCellOutputItem[] = [];
-      if (this.config.useResponseBodyNotebookOutputRenderer) {
+      if (this.config.useResponseBodyNotebookOutputRenderer
+        && httpRegion.response.body) {
         outputItems.push(new vscode.NotebookCellOutputItem(
           'x-application/httpbook-rfc7230-body',
           httpRegion,

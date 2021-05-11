@@ -44,10 +44,8 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
   backupNotebook(document: vscode.NotebookDocument): Promise<vscode.NotebookDocumentBackup> {
     return Promise.resolve({
       id: document.uri.fsPath,
-      delete: () => {
-        // eslint-disable-next-line no-console
-        console.info('no delete needed');
-      }
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      delete: () => {}
     });
   }
 

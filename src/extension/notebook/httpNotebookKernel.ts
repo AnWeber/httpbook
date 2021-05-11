@@ -6,9 +6,6 @@ import { TestResult } from 'httpyac';
 
 
 export class HttpNotebookKernel {
-  readonly id = 'httpbook-kernel';
-  readonly label = 'HttpBook Kernel';
-  readonly supportedLanguages = ['http'];
 
   private executionOrder = 0;
 
@@ -20,16 +17,15 @@ export class HttpNotebookKernel {
     readonly config: AppConfig,
   ) {
     this.controller = vscode.notebook.createNotebookController('httpbook-kernel', 'http', 'HttpBook');
-
-    this.controller.supportedLanguages = [...this.supportedLanguages];
+    this.controller.supportedLanguages = ['http'];
     this.controller.hasExecutionOrder = true;
     this.controller.description = 'a Notebook for sending REST, SOAP, and GraphQL requests';
     this.controller.executeHandler = this.send.bind(this);
+    this.controller.onDidReceiveMessage(this.onDidReceiveMessage, this);
 
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
-      new httpOutput.Rfc7230HttpOutpoutProvider(config),
-
+      new httpOutput.Rfc7230HttpOutpoutProvider(config, this.httpyac),
       new httpOutput.BuiltInHttpOutputProvider(),
       new httpOutput.ImageHttpOutputProvider(),
       new httpOutput.ContentTypeHttpOutputProvider(config),
@@ -43,6 +39,14 @@ export class HttpNotebookKernel {
 
   dispose(): void {
     this.controller.dispose();
+  }
+
+  private onDidReceiveMessage(event: { editor: vscode.NotebookEditor, message: unknown }) {
+    for (const httpOutputProvider of this.httpOutputProvider) {
+      if (httpOutputProvider.onDidReceiveMessage) {
+        httpOutputProvider.onDidReceiveMessage(event);
+      }
+    }
   }
 
   private async send(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument, controller: vscode.NotebookController): Promise<void> {

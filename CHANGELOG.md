@@ -1,3 +1,13 @@
+## 0.9.0 (2021-05-09)
+
+#### Features
+* extension api supports onDidReceiveMessage function
+* RFC7230 NotebookOutputRenderer supports disabling highlight.js (better Performance on large files)
+* RF7230 NotebookOutputRenderer supports pretty print of JSON
+
+#### Fix
+* builtin application/json NotebookOutputRenderer not working on content-type application/hal+json
+* enableProposedApi true in marketplace release
 ## 0.8.0 (2021-05-08)
 
 #### Features

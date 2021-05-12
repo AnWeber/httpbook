@@ -1,6 +1,6 @@
 import * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
-import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from './httpOutputProvider';
+import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../httpOutputProvider';
 
 export class ImageHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-image';

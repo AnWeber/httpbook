@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as Httpyac from 'httpyac';
+import * as extensionApi from '../extensionApi';
 import * as httpOutput from '../httpOutputProvider';
 import { AppConfig, TestSlotOutput } from '../config';
 import { TestResult } from 'httpyac';
@@ -9,7 +10,7 @@ export class HttpNotebookKernel {
 
   private executionOrder = 0;
 
-  readonly httpOutputProvider: Array<httpOutput.HttpOutputProvider>;
+  readonly httpOutputProvider: Array<extensionApi.HttpOutputProvider>;
 
   constructor(
     private readonly httpyac: typeof Httpyac,
@@ -69,13 +70,13 @@ export class HttpNotebookKernel {
 
             if (this.canShowTestResults(httpRegion.testResults)) {
               outputs.push(this.createOutputs(httpRegion, {
-                slot: httpOutput.HttpOutputSlot.testResults,
+                slot: extensionApi.HttpOutputSlot.testResults,
                 cell,
                 httpFile
               }));
             }
             outputs.push(this.createOutputs(httpRegion, {
-              slot: httpOutput.HttpOutputSlot.response,
+              slot: extensionApi.HttpOutputSlot.response,
               cell,
               httpFile
             }));
@@ -110,8 +111,8 @@ export class HttpNotebookKernel {
     return false;
   }
 
-  private supportOutputSlot(httpOutputProvider: httpOutput.HttpOutputProvider, slot: httpOutput.HttpOutputSlot) {
-    if (slot === httpOutput.HttpOutputSlot.response && !httpOutputProvider.supportedSlots) {
+  private supportOutputSlot(httpOutputProvider: extensionApi.HttpOutputProvider, slot: extensionApi.HttpOutputSlot) {
+    if (slot === extensionApi.HttpOutputSlot.response && !httpOutputProvider.supportedSlots) {
       return true;
     }
     if (httpOutputProvider.supportedSlots) {
@@ -120,8 +121,8 @@ export class HttpNotebookKernel {
     return false;
   }
 
-  private createOutputs(httpRegion: Httpyac.HttpRegion, context: httpOutput.HttpOutputContext): vscode.NotebookCellOutput {
-    const outputItems: Array<httpOutput.HttpOutputResult> = [];
+  private createOutputs(httpRegion: Httpyac.HttpRegion, context: extensionApi.HttpOutputContext): vscode.NotebookCellOutput {
+    const outputItems: Array<extensionApi.HttpOutputResult> = [];
     for (const httpOutputProvider of this.httpOutputProvider.filter(obj => this.supportOutputSlot(obj, context.slot))) {
       const result = httpOutputProvider.getOutputResult(httpRegion, context);
       if (result) {
@@ -158,7 +159,7 @@ export class HttpNotebookKernel {
     return '';
   }
 
-  private compareHttpOutputResults(obj1: httpOutput.HttpOutputResult, obj2: httpOutput.HttpOutputResult, mime?: string) {
+  private compareHttpOutputResults(obj1: extensionApi.HttpOutputResult, obj2: extensionApi.HttpOutputResult, mime?: string) {
 
     if (mime) {
       if (this.hasHttpOutputResultsMime(obj1, mime)) {
@@ -171,7 +172,7 @@ export class HttpNotebookKernel {
     return obj2.priority - obj1.priority;
   }
 
-  private hasHttpOutputResultsMime(obj: httpOutput.HttpOutputResult, mime?: string) : boolean {
+  private hasHttpOutputResultsMime(obj: extensionApi.HttpOutputResult, mime?: string) : boolean {
     if (Array.isArray(obj.outputItems)) {
       return obj.outputItems.some(obj => obj.mime === mime);
     }

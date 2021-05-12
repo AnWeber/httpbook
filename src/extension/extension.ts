@@ -1,12 +1,8 @@
 import * as vscode from 'vscode';
 import { HttpNotebookKernel, HttpNotebookContentProvider } from './notebook';
 import { HttpyacExtensionApi } from './models';
-import { HttpOutputProvider } from './httpOutputProvider';
+import { HttpBookApi, HttpOutputProvider } from './extensionApi';
 import { AppConfig, watchConfigSettings } from './config';
-
-export interface HttpBookApi{
-  registerHttpOutputProvider(obj: HttpOutputProvider): void;
-}
 
 
 export function activate(context: vscode.ExtensionContext): HttpBookApi | false {

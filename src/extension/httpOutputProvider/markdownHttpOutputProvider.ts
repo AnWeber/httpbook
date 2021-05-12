@@ -1,7 +1,7 @@
 import * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
 import { AppConfig } from '../config';
-import { HttpOutputProvider, HttpOutputContext, HttpOutputSlot, HttpOutputResult, HttpOutputPriority } from './httpOutputProvider';
+import { HttpOutputProvider, HttpOutputContext, HttpOutputSlot, HttpOutputResult, HttpOutputPriority } from '../httpOutputProvider';
 
 export class MarkdownHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-markdown';

@@ -1,7 +1,7 @@
 import * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
 import { AppConfig } from '../config';
-import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from './httpOutputProvider';
+import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../httpOutputProvider';
 
 export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
   id = 'httpbook-rfc7230';

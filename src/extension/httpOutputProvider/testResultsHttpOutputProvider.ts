@@ -1,6 +1,6 @@
 import * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
-import { HttpOutputProvider, HttpOutputSlot, HttpOutputResult, HttpOutputPriority } from './httpOutputProvider';
+import { HttpOutputProvider, HttpOutputSlot, HttpOutputResult, HttpOutputPriority } from '../httpOutputProvider';
 
 export class TestResultsMimeOutpoutProvider implements HttpOutputProvider {
   id = 'httpbook-testresults';

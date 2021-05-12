@@ -396,7 +396,7 @@
     "eslint": "eslint src --ext ts",
     "lint": "npm run eslint && npm run lockfile-lint",
     "precommit": "npm run lint",
-    "deploy": "npx vsce publish --web --noVerify",
+    "deploy": "npx vsce publish --noVerify",
     "update-api": "npx vscode-dts dev"
   },
   "devDependencies": {

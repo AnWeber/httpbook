@@ -1,36 +1,15 @@
-import { HttpRegion, HttpFile } from 'httpyac';
-import * as vscode from 'vscode';
-
-
-export enum HttpOutputSlot{
-
-  /**
-   * Output Slot for testResults NotebookCellOutputItems
-   */
-  testResults = 'testResults',
-
-  /**
-   * Output Slot for response NotebookCellOutputItems
-   */
-  response = 'response',
-}
-
+import { NotebookCell, NotebookCellOutputItem, NotebookEditor } from 'vscode';
+import type { HttpResponse, TestResult } from 'httpyac';
 export interface HttpOutputContext{
 
   /**
    * current Notebookcell
    */
-  cell: vscode.NotebookCell;
+  cell: NotebookCell;
 
-  /**
-   * parsed Notebook Document with all httpRegions
-   */
-  httpFile: HttpFile;
+  mimeType?: string;
 
-  /**
-   * aktueller OutputSlot
-   */
-  slot: HttpOutputSlot;
+  [key: string]: unknown;
 }
 
 
@@ -39,7 +18,7 @@ export interface HttpOutputResult {
   /**
    * NotebookCellOutputItem or Array of NotebookCellOutputItem
    */
-  outputItems: vscode.NotebookCellOutputItem | Array<vscode.NotebookCellOutputItem>;
+  outputItems: NotebookCellOutputItem | Array<NotebookCellOutputItem>;
 
   /**
    * priority of outputViewItems
@@ -73,23 +52,26 @@ export interface HttpOutputProvider{
   readonly id: string;
 
   /**
-   * supported slots, if emtpy only HttpOutputSlot.response
-  */
-  supportedSlots?: HttpOutputSlot[];
-
-  /**
    * onDidReceiveMessage of any NotebookCellOutputItem
    * @param event onDidReceiveMessage Event
    */
-  onDidReceiveMessage?(event: { editor: vscode.NotebookEditor, message: unknown }): void;
+  onDidReceiveMessage?(event: { editor: NotebookEditor, message: unknown }): void;
 
   /**
-   * create NotebookCellOutputItems with view priority
+   * create NotebookCellOutputItems with view priority for response
    * @param httpRegion processed httpregion with Response, Request und TestResults
    * @param context HttpOutputContext
    * @returns false if output not valid else NotebookCellOutputItems and priortiy
    */
-  getOutputResult(httpRegion: HttpRegion, context: HttpOutputContext): HttpOutputResult | false;
+  getResponseOutputResult?(response: HttpResponse, context: HttpOutputContext): HttpOutputResult | false;
+
+  /**
+   * create NotebookCellOutputItems with view priority for testResults
+   * @param httpRegion processed httpregion with Response, Request und TestResults
+   * @param context HttpOutputContext
+   * @returns false if output not valid else NotebookCellOutputItems and priortiy
+   */
+   getTestResultOutputResult?(testResult: TestResult[], context: HttpOutputContext): HttpOutputResult | false;
 }
 
 

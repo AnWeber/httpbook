@@ -68,18 +68,31 @@ export class HttpNotebookKernel {
             });
             const outputs: Array<vscode.NotebookCellOutput> = [];
 
-            if (this.canShowTestResults(httpRegion.testResults)) {
-              outputs.push(this.createOutputs(httpRegion, {
-                slot: extensionApi.HttpOutputSlot.testResults,
-                cell,
-                httpFile
-              }));
-            }
-            outputs.push(this.createOutputs(httpRegion, {
-              slot: extensionApi.HttpOutputSlot.response,
+            const httpOutputContext: extensionApi.HttpOutputContext = {
               cell,
+              httpRegion,
+              mimeType: httpRegion.response?.contentType?.mimeType,
               httpFile
-            }));
+            };
+
+            if (httpRegion.testResults && this.canShowTestResults(httpRegion.testResults)) {
+              const testResults = httpRegion.testResults;
+              const outputItems = this.mapHttpOutputProvider(
+                obj => !!obj.getTestResultOutputResult && obj.getTestResultOutputResult(testResults, httpOutputContext)
+              );
+              if (outputItems.length > 0) {
+                outputs.push(this.createNotebookCellOutput(outputItems, httpRegion.response?.contentType?.mimeType));
+              }
+            }
+            if (httpRegion.response) {
+              const response = httpRegion.response;
+              const outputItems = this.mapHttpOutputProvider(
+                obj => !!obj.getResponseOutputResult && obj.getResponseOutputResult(response, httpOutputContext)
+              );
+              if (outputItems.length > 0) {
+                outputs.push(this.createNotebookCellOutput(outputItems, response.contentType?.mimeType));
+              }
+            }
             execution.replaceOutput(outputs);
             execution.end({
               success: true,
@@ -111,26 +124,20 @@ export class HttpNotebookKernel {
     return false;
   }
 
-  private supportOutputSlot(httpOutputProvider: extensionApi.HttpOutputProvider, slot: extensionApi.HttpOutputSlot) {
-    if (slot === extensionApi.HttpOutputSlot.response && !httpOutputProvider.supportedSlots) {
-      return true;
-    }
-    if (httpOutputProvider.supportedSlots) {
-      return httpOutputProvider.supportedSlots.indexOf(slot) >= 0;
-    }
-    return false;
-  }
+  private mapHttpOutputProvider(mapFunc: (obj: extensionApi.HttpOutputProvider) => (extensionApi.HttpOutputResult | false)) {
+    const result: Array<extensionApi.HttpOutputResult> = [];
 
-  private createOutputs(httpRegion: Httpyac.HttpRegion, context: extensionApi.HttpOutputContext): vscode.NotebookCellOutput {
-    const outputItems: Array<extensionApi.HttpOutputResult> = [];
-    for (const httpOutputProvider of this.httpOutputProvider.filter(obj => this.supportOutputSlot(obj, context.slot))) {
-      const result = httpOutputProvider.getOutputResult(httpRegion, context);
-      if (result) {
-        outputItems.push(result);
+    for (const httpOutputProvider of this.httpOutputProvider) {
+      const obj = mapFunc(httpOutputProvider);
+      if (obj) {
+        result.push(obj);
       }
     }
+    return result;
+  }
 
-    const preferredMime = this.getPreferredNotebookOutputRendererMime(httpRegion.response?.contentType?.mimeType);
+  private createNotebookCellOutput(outputItems: Array<extensionApi.HttpOutputResult>, mimeType?: string) {
+    const preferredMime = this.getPreferredNotebookOutputRendererMime(mimeType);
 
     const items = outputItems
       .sort((obj1, obj2) => this.compareHttpOutputResults(obj1, obj2, preferredMime))

@@ -1,41 +1,40 @@
-import * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
-import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../httpOutputProvider';
-
+import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../extensionApi';
+import type { HttpResponse } from 'httpyac';
 export class BuiltInHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-builtin';
 
-  getOutputResult(httpRegion: Httpyac.HttpRegion): HttpOutputResult | false {
+  getResponseOutputResult(response: HttpResponse): HttpOutputResult | false {
 
-    if (httpRegion.response?.contentType) {
+    if (response?.contentType) {
       if (['image/svg+xml',
         'text/html',
         'text/markdown',
         'text/plain',
-        'application/javascript'].indexOf(httpRegion.response?.contentType.mimeType) >= 0) {
+        'application/javascript'].indexOf(response?.contentType.mimeType) >= 0) {
         return {
           outputItems: new vscode.NotebookCellOutputItem(
-            httpRegion.response?.contentType.mimeType,
-            httpRegion.response?.body
+            response?.contentType.mimeType,
+            response?.body
           ),
           priority: HttpOutputPriority.Low
         };
       }
-      if (httpRegion.response.parsedBody
-        && /^(application|json)\/(.*\+|x-amz-)?json.*$/u.test(httpRegion.response.contentType.mimeType)) {
+      if (response.parsedBody
+        && /^(application|json)\/(.*\+|x-amz-)?json.*$/u.test(response.contentType.mimeType)) {
         return {
           outputItems: new vscode.NotebookCellOutputItem(
             'application/json',
-            httpRegion.response.parsedBody
+            response.parsedBody
           ),
           priority: HttpOutputPriority.Low
         };
       }
-      if (typeof httpRegion.response.body === 'string') {
+      if (typeof response.body === 'string') {
         return {
           outputItems: new vscode.NotebookCellOutputItem(
             'text/plain',
-            httpRegion.response.body
+            response.body
           ),
           priority: HttpOutputPriority.Low
         };

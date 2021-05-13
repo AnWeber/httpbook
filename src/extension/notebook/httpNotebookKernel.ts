@@ -70,6 +70,7 @@ export class HttpNotebookKernel {
 
             const httpOutputContext: extensionApi.HttpOutputContext = {
               cell,
+              metaData: httpRegion.metaData,
               httpRegion,
               mimeType: httpRegion.response?.contentType?.mimeType,
               httpFile

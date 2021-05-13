@@ -9,6 +9,8 @@ export interface HttpOutputContext{
 
   mimeType?: string;
 
+  metaData: Record<string, string>;
+
   [key: string]: unknown;
 }
 

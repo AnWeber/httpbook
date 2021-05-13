@@ -1,3 +1,9 @@
+## 0.10.0 (2021-05-09)
+
+#### Features
+* updated to current notebook api
+* support virtual workspaces
+
 ## 0.9.0 (2021-05-09)
 
 #### Features

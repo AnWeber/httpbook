@@ -51,11 +51,11 @@ export class HttpNotebookKernel {
   }
 
   private async send(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument, controller: vscode.NotebookController): Promise<void> {
-    const httpFile = this.httpFileStore.get(notebook.uri.fsPath);
+    const httpFile = this.httpFileStore.get(notebook.uri);
     if (httpFile) {
 
       for (const cell of cells) {
-        const currentFile = await this.httpFileStore.parse(notebook.uri.fsPath, cell.document.getText());
+        const currentFile = await this.httpFileStore.parse(notebook.uri, cell.document.getText());
         if (currentFile.httpRegions.length > 0) {
           const httpRegion = currentFile.httpRegions[0];
           const execution = controller.createNotebookCellExecutionTask(cell);

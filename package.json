@@ -36,6 +36,9 @@
     "onLanguage:http"
   ],
   "main": "./dist/extension.js",
+	"capabilities": {
+		"virtualWorkspaces": true
+	},
   "contributes": {
     "notebooks": [
       {
@@ -400,7 +403,7 @@
     "update-api": "npx vscode-dts dev"
   },
   "devDependencies": {
-    "@types/node": "^15.0.2",
+    "@types/node": "^15.0.3",
     "@types/react": "^17.0.5",
     "@types/vscode": "^1.56.0",
     "@types/vscode-notebook-renderer": "^1.57.0",
@@ -410,8 +413,8 @@
     "css-loader": "^5.2.4",
     "eslint": "^7.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "fork-ts-checker-webpack-plugin": "^6.2.6",
-    "httpyac": "^2.7.0",
+    "fork-ts-checker-webpack-plugin": "^6.2.7",
+    "httpyac": "^2.8.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "lockfile-lint": "^4.6.2",

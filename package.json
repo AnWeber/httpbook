@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, SOAP, and GraphQL requests directly within Visual Studio Code",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -36,9 +36,9 @@
     "onLanguage:http"
   ],
   "main": "./dist/extension.js",
-	"capabilities": {
-		"virtualWorkspaces": true
-	},
+  "capabilities": {
+    "virtualWorkspaces": true
+  },
   "contributes": {
     "notebooks": [
       {

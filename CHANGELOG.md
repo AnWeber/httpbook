@@ -1,6 +1,7 @@
-## 0.10.0 (2021-05-09)
+## 0.10.0 (2021-05-13)
 
 #### Features
+* redesign of extension api
 * updated to current notebook api
 * support virtual workspaces
 

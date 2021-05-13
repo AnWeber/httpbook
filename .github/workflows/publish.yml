@@ -26,3 +26,4 @@ jobs:
         registryUrl: https://marketplace.visualstudio.com
         extensionFile: ${{ steps.publishToOpenVSX.outputs.vsixPath }}
         packagePath: ''
+        noVerify: true

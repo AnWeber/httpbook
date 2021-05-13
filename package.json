@@ -37,7 +37,7 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
-    "notebookProvider": [
+    "notebooks": [
       {
         "viewType": "http",
         "displayName": "HttpBook",

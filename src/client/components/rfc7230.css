@@ -15,14 +15,14 @@
 }
 .statusLineVersion{
   padding-right: .5rem;
-  color: var(--vscode-httpbook-hljsString);
+  color: var(--vscode-httpbook-hljsLiteral);
 }
 .statusLineCode{
   padding-right: .5rem;
   color: var(--vscode-httpbook-hljsAttr);
 }
 .statusLineMessage{
-  color: var(--vscode-httpbook-hljsString);
+  color: var(--vscode-httpbook-hljsLiteral);
 }
 
 .request + .statusLine{
@@ -38,21 +38,20 @@
 }
 .requestLineMethod{
   padding-right: .5rem;
-  color: var(--vscode-httpbook-hljsString);
+  color: var(--vscode-httpbook-hljsAttr);
 }
 .requestLineUrl{
-  color: var(--vscode-httpbook-hljsAttr);
+  color: var(--vscode-httpbook-hljsLiteral);
 }
 
 
 .header{
-  display: flex;
-  align-items: center;
-  flex-direction: row;
+  display: grid;
+  column-gap: .5rem;
+  grid-template-columns: auto minmax(0, 1fr);
 }
 .headerName{
   color: var(--vscode-httpbook-hljsAttr);
-  padding-right: .5rem;
 }
 .headerValue{
   color: var(--vscode-httpbook-hljsString);

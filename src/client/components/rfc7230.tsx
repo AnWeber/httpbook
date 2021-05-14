@@ -57,15 +57,13 @@ const StatusLine: FunctionComponent<{ response: HttpResponse }> = ({ response })
   }
 </h4>;
 
-const Headers: FunctionComponent<{ headers: Record<string, string | string[] | undefined | null> }> = ({ headers }) => <Fragment>
-  {Object.entries(headers).map(([key, value]) => <div className={style.header}>
-    <span className={style.headerName}>{key}:</span>{value
-      && <div className={style.headerValue}>{Array.isArray(value) ? value.join(' ,') : value}</div>
-    }
-  </div>)}
-</Fragment>;
-
-
+const Headers: FunctionComponent<{ headers: Record<string, string | string[] | undefined | null> }> = ({ headers }) =>
+  <div className={style.header}>
+    {Object.entries(headers).map(([key, value]) => <Fragment>
+      <span className={style.headerName}>{key}:</span>
+      <span className={style.headerValue} title={key}>{Array.isArray(value) ? value.join(' ,') : value}</span>
+    </Fragment>)}
+  </div>;
 export const HttpBody: FunctionComponent<{ response: HttpResponse, metaData: HljsMetaData }>
   = ({ response, metaData }) => <div className={style.response}>
     <BodyOutput hljsOutput={response} metaData={metaData}/>

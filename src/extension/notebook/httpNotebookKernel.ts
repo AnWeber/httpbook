@@ -129,9 +129,13 @@ export class HttpNotebookKernel {
     const result: Array<extensionApi.HttpOutputResult> = [];
 
     for (const httpOutputProvider of this.httpOutputProvider) {
-      const obj = mapFunc(httpOutputProvider);
-      if (obj) {
-        result.push(obj);
+      try {
+        const obj = mapFunc(httpOutputProvider);
+        if (obj) {
+          result.push(obj);
+        }
+      } catch (err) {
+        this.httpyac.log.error(httpOutputProvider.id, err);
       }
     }
     return result;

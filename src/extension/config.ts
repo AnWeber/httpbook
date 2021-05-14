@@ -14,6 +14,7 @@ export interface AppConfig {
   outputTests?: TestSlotOutput;
   useHighlightJSInOutput?: boolean,
   prettyPrintInOutput?: boolean,
+  useBuiltInNotebookOutputRendererer?: boolean,
   useRFC7230NotebookOutputRendererer?: boolean,
   useHeaderNotebookOutputRenderer?: boolean,
   useResponseNotebookOutputRenderer?: boolean,

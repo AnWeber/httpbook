@@ -1,12 +1,15 @@
 import * as vscode from 'vscode';
 import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../extensionApi';
 import type { HttpResponse } from 'httpyac';
+import { AppConfig } from '../config';
 export class BuiltInHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-builtin';
 
+  constructor(readonly config: AppConfig) { }
+
   getResponseOutputResult(response: HttpResponse): HttpOutputResult | false {
 
-    if (response?.contentType) {
+    if (this.config.useBuiltInNotebookOutputRendererer && response?.contentType) {
       if (['image/svg+xml',
         'text/html',
         'text/markdown',

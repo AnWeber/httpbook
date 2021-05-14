@@ -27,8 +27,8 @@ export class HttpNotebookKernel {
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
       new httpOutput.Rfc7230HttpOutpoutProvider(config, this.httpyac),
-      new httpOutput.BuiltInHttpOutputProvider(),
-      new httpOutput.ImageHttpOutputProvider(),
+      new httpOutput.BuiltInHttpOutputProvider(config),
+      new httpOutput.ImageHttpOutputProvider(config),
       new httpOutput.ContentTypeHttpOutputProvider(config),
       new httpOutput.MarkdownHttpOutputProvider(config, this.httpyac),
     ];

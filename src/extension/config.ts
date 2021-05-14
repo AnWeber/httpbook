@@ -24,6 +24,7 @@ export interface AppConfig {
   mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>;
   preferNotebookOutputRenderer?: Record<string, string>;
   saveWithEmptyFirstline?: boolean;
+  saveWithRegionDelimiter?: boolean;
   readonly [key: string]: unknown;
 }
 

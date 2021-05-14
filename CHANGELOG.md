@@ -1,3 +1,11 @@
+## 0.11.0 (2021-05-14)
+
+#### Features
+* output header in grid
+* setting to disable builtin NotebookOutputRenderer
+* catch error in httpOutputProvider
+* allow save without explicit region delimiter
+
 ## 0.10.0 (2021-05-13)
 
 #### Features

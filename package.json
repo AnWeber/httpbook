@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, SOAP, and GraphQL requests directly within Visual Studio Code",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -384,6 +384,12 @@
           "default": true,
           "scope": "resource",
           "description": "add empty first line on save"
+        },
+        "httpbook.saveWithRegionDelimiter": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "save with Region Delimiter (###). set to true, if compatibilty with Intellij is needed"
         }
       }
     }
@@ -403,7 +409,7 @@
     "update-api": "npx vscode-dts dev"
   },
   "devDependencies": {
-    "@types/node": "^15.0.3",
+    "@types/node": "^15.3.0",
     "@types/react": "^17.0.5",
     "@types/vscode": "^1.56.0",
     "@types/vscode-notebook-renderer": "^1.57.0",
@@ -413,7 +419,7 @@
     "css-loader": "^5.2.4",
     "eslint": "^7.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "fork-ts-checker-webpack-plugin": "^6.2.7",
+    "fork-ts-checker-webpack-plugin": "^6.2.9",
     "httpyac": "^2.8.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",

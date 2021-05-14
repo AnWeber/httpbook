@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
         new HttpNotebookContentProvider(
           config,
           httpyacExtension.exports.httpFileStore,
-          httpyacExtension.exports.httpyac.log
+          httpyacExtension.exports.httpyac,
         ), {
           transientOutputs: false,
           transientCellMetadata: {

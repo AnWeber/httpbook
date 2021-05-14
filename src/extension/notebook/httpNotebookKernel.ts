@@ -44,8 +44,12 @@ export class HttpNotebookKernel {
 
   private onDidReceiveMessage(event: { editor: vscode.NotebookEditor, message: unknown }) {
     for (const httpOutputProvider of this.httpOutputProvider) {
-      if (httpOutputProvider.onDidReceiveMessage) {
-        httpOutputProvider.onDidReceiveMessage(event);
+      try {
+        if (httpOutputProvider.onDidReceiveMessage) {
+          httpOutputProvider.onDidReceiveMessage(event);
+        }
+      } catch (err) {
+        this.httpyac.log.error(httpOutputProvider.id, err);
       }
     }
   }

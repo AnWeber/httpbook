@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { HttpNotebookKernel, HttpNotebookContentProvider, environementChangedFactory } from './notebook';
+import * as notebook from './notebook';
 import { HttpyacExtensionApi } from './models';
 import { HttpBookApi, HttpOutputProvider } from './extensionApi';
 import { AppConfig, watchConfigSettings } from './config';
@@ -11,29 +11,34 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
 
   const httpyacExtension = vscode.extensions.getExtension<HttpyacExtensionApi>('anweber.vscode-httpyac');
   if (httpyacExtension?.isActive) {
-    const environementChanged = environementChangedFactory(httpyacExtension.exports.httpFileStore, httpyacExtension.exports.refreshCodeLens);
+    const environementChanged = notebook.environementChangedFactory(httpyacExtension.exports.httpFileStore, httpyacExtension.exports.refreshCodeLens);
     httpyacExtension.exports.environementChanged.event(environementChanged);
 
-    const httpNotebookKernel = new HttpNotebookKernel(
+    const httpNotebookKernel = new notebook.HttpNotebookKernel(
       httpyacExtension.exports.httpyac,
       httpyacExtension.exports.httpFileStore,
       httpyacExtension.exports.refreshCodeLens,
       config
     );
+
+    const httpNotebookContentProvider = new notebook.HttpNotebookContentProvider(
+      config,
+      httpyacExtension.exports.httpFileStore,
+      httpyacExtension.exports.httpyac,
+    );
     context.subscriptions.push(...[
       watchConfigSettings(current => Object.assign(config, current)),
       httpNotebookKernel,
+      vscode.workspace.onDidChangeTextDocument(httpNotebookContentProvider.onDidChangeTextDocument.bind(httpNotebookContentProvider)),
       vscode.notebook.registerNotebookContentProvider(
         'http',
-        new HttpNotebookContentProvider(
-          config,
-          httpyacExtension.exports.httpFileStore,
-          httpyacExtension.exports.httpyac,
-        ), {
-          transientOutputs: false,
+        httpNotebookContentProvider,
+        {
+          transientOutputs: true,
           transientCellMetadata: {
             inputCollapsed: true,
             outputCollapsed: true,
+            with: true,
           }
         }
       ),

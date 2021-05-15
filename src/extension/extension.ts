@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { HttpNotebookKernel, HttpNotebookContentProvider } from './notebook';
+import { HttpNotebookKernel, HttpNotebookContentProvider, environementChangedFactory } from './notebook';
 import { HttpyacExtensionApi } from './models';
 import { HttpBookApi, HttpOutputProvider } from './extensionApi';
 import { AppConfig, watchConfigSettings } from './config';
@@ -11,9 +11,13 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
 
   const httpyacExtension = vscode.extensions.getExtension<HttpyacExtensionApi>('anweber.vscode-httpyac');
   if (httpyacExtension?.isActive) {
+    const environementChanged = environementChangedFactory(httpyacExtension.exports.httpFileStore, httpyacExtension.exports.refreshCodeLens);
+    httpyacExtension.exports.environementChanged.event(environementChanged);
+
     const httpNotebookKernel = new HttpNotebookKernel(
       httpyacExtension.exports.httpyac,
       httpyacExtension.exports.httpFileStore,
+      httpyacExtension.exports.refreshCodeLens,
       config
     );
     context.subscriptions.push(...[

@@ -15,6 +15,7 @@ export class HttpNotebookKernel {
   constructor(
     private readonly httpyac: typeof Httpyac,
     private readonly httpFileStore: Httpyac.HttpFileStore,
+    private readonly refreshCodeLens: vscode.EventEmitter<void>,
     readonly config: AppConfig,
   ) {
     this.controller = vscode.notebook.createNotebookController('httpbook-kernel', 'http', 'HttpBook');
@@ -34,9 +35,7 @@ export class HttpNotebookKernel {
     ];
   }
 
-
   private readonly controller: vscode.NotebookController;
-
 
   dispose(): void {
     this.controller.dispose();
@@ -55,68 +54,86 @@ export class HttpNotebookKernel {
   }
 
   private async send(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument, controller: vscode.NotebookController): Promise<void> {
+    const r = this.httpyac.fileProvider.toString(notebook.uri);
+    this.httpyac.log.info(r);
     const httpFile = this.httpFileStore.get(notebook.uri);
     if (httpFile) {
-
       for (const cell of cells) {
-        const currentFile = await this.httpFileStore.parse(notebook.uri, cell.document.getText());
-        if (currentFile.httpRegions.length > 0) {
-          const httpRegion = currentFile.httpRegions[0];
-          const execution = controller.createNotebookCellExecutionTask(cell);
-          execution.executionOrder = ++this.executionOrder;
-          try {
-            execution.start({ startTime: Date.now() });
-            await this.httpyac.httpYacApi.send({
-              httpFile,
-              httpRegion,
-            });
-            const outputs: Array<vscode.NotebookCellOutput> = [];
-
-            const httpOutputContext: extensionApi.HttpOutputContext = {
-              cell,
-              metaData: httpRegion.metaData,
-              httpRegion,
-              mimeType: httpRegion.response?.contentType?.mimeType,
-              httpFile
-            };
-
-            if (httpRegion.testResults && this.canShowTestResults(httpRegion.testResults)) {
-              const testResults = httpRegion.testResults;
-              const outputItems = this.mapHttpOutputProvider(
-                obj => !!obj.getTestResultOutputResult && obj.getTestResultOutputResult(testResults, httpOutputContext)
-              );
-              if (outputItems.length > 0) {
-                outputs.push(this.createNotebookCellOutput(outputItems, httpRegion.response?.contentType?.mimeType));
-              }
-            }
-            if (httpRegion.response) {
-              const response = httpRegion.response;
-              const outputItems = this.mapHttpOutputProvider(
-                obj => !!obj.getResponseOutputResult && obj.getResponseOutputResult(response, httpOutputContext)
-              );
-              if (outputItems.length > 0) {
-                outputs.push(this.createNotebookCellOutput(outputItems, response.contentType?.mimeType));
-              }
-            }
-            execution.replaceOutput(outputs);
-            execution.end({
-              success: true,
-              endTime: Date.now(),
-            });
-          } catch (err) {
-            execution.replaceOutput([
-              new vscode.NotebookCellOutput([
-                new vscode.NotebookCellOutputItem('application/x.notebook.error-traceback', {
-                  ename: err instanceof Error && err.name || 'error',
-                  evalue: err instanceof Error && err.message || JSON.stringify(err, null, 2),
-                  traceback: [err.stack]
-                })
-              ])]);
-            execution.end({ success: false, endTime: Date.now() });
+        const cellHttpFile = await this.httpFileStore.getOrCreate(cell.document.uri,
+          () => Promise.resolve(cell.document.getText()), cell.document.version);
+        if (cellHttpFile.httpRegions.length > 0) {
+          httpFile.activeEnvironment = cellHttpFile.activeEnvironment;
+          if (await this.executeCell(controller, cell, httpFile, cellHttpFile.httpRegions)) {
+            this.refreshCodeLens.fire();
           }
         }
       }
     }
+  }
+
+  private async executeCell(controller: vscode.NotebookController, cell: vscode.NotebookCell, httpFile: Httpyac.HttpFile, httpRegions: Httpyac.HttpRegion[]) {
+    const execution = controller.createNotebookCellExecutionTask(cell);
+    execution.executionOrder = ++this.executionOrder;
+    execution.start({ startTime: Date.now() });
+    try {
+      await this.httpyac.httpYacApi.send({
+        httpFile,
+        httpRegions,
+      });
+      const outputs: Array<vscode.NotebookCellOutput> = [];
+
+      for (const httpRegion of httpRegions) {
+        outputs.push(...this.createHttpRegionOutputs(httpRegion, {
+          cell,
+          metaData: httpRegion.metaData,
+          httpRegion,
+          mimeType: httpRegion.response?.contentType?.mimeType,
+          httpFile
+        }));
+      }
+      execution.replaceOutput(outputs);
+      execution.end({
+        success: true,
+        endTime: Date.now(),
+      });
+      return true;
+    } catch (err) {
+      this.httpyac.log.error(err);
+      execution.replaceOutput([
+        new vscode.NotebookCellOutput([
+          new vscode.NotebookCellOutputItem('application/x.notebook.error-traceback', {
+            ename: err instanceof Error && err.name || 'error',
+            evalue: err instanceof Error && err.message || JSON.stringify(err, null, 2),
+            traceback: [err.stack]
+          })
+        ])
+      ]);
+      execution.end({ success: false, endTime: Date.now() });
+      return false;
+    }
+  }
+
+  private createHttpRegionOutputs(httpRegion: Httpyac.HttpRegion, httpOutputContext: extensionApi.HttpOutputContext): vscode.NotebookCellOutput[] {
+    const outputs: vscode.NotebookCellOutput[] = [];
+    if (httpRegion.testResults && this.canShowTestResults(httpRegion.testResults)) {
+      const testResults = httpRegion.testResults;
+      const outputItems = this.mapHttpOutputProvider(
+        obj => !!obj.getTestResultOutputResult && obj.getTestResultOutputResult(testResults, httpOutputContext)
+      );
+      if (outputItems.length > 0) {
+        outputs.push(this.createNotebookCellOutput(outputItems, httpRegion.response?.contentType?.mimeType));
+      }
+    }
+    if (httpRegion.response) {
+      const response = httpRegion.response;
+      const outputItems = this.mapHttpOutputProvider(
+        obj => !!obj.getResponseOutputResult && obj.getResponseOutputResult(response, httpOutputContext)
+      );
+      if (outputItems.length > 0) {
+        outputs.push(this.createNotebookCellOutput(outputItems, response.contentType?.mimeType));
+      }
+    }
+    return outputs;
   }
 
   private canShowTestResults(testResults: Array<TestResult> | undefined) {

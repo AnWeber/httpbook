@@ -12,18 +12,19 @@ export class HttpNotebookKernel {
 
   readonly httpOutputProvider: Array<extensionApi.HttpOutputProvider>;
 
+  private subscriptions: Array<vscode.Disposable>;
   constructor(
     private readonly httpyac: typeof Httpyac,
     private readonly httpFileStore: Httpyac.HttpFileStore,
     private readonly refreshCodeLens: vscode.EventEmitter<void>,
     readonly config: AppConfig,
   ) {
-    this.controller = vscode.notebook.createNotebookController('httpbook-kernel', 'http', 'HttpBook');
-    this.controller.supportedLanguages = ['http'];
-    this.controller.hasExecutionOrder = true;
-    this.controller.description = 'a Notebook for sending REST, SOAP, and GraphQL requests';
-    this.controller.executeHandler = this.send.bind(this);
-    this.controller.onDidReceiveMessage(this.onDidReceiveMessage, this);
+    const controller = vscode.notebook.createNotebookController('httpbook-kernel', 'http', 'HttpBook');
+    controller.supportedLanguages = ['http'];
+    controller.hasExecutionOrder = true;
+    controller.description = 'a Notebook for sending REST, SOAP, and GraphQL requests';
+    controller.executeHandler = this.send.bind(this);
+    controller.onDidReceiveMessage(this.onDidReceiveMessage, this);
 
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
@@ -33,13 +34,18 @@ export class HttpNotebookKernel {
       new httpOutput.ContentTypeHttpOutputProvider(config),
       new httpOutput.MarkdownHttpOutputProvider(config, this.httpyac),
     ];
+
+    this.subscriptions = [
+      controller,
+    ];
+  }
+  public dispose(): void {
+    if (this.subscriptions) {
+      this.subscriptions.forEach(obj => obj.dispose());
+      this.subscriptions = [];
+    }
   }
 
-  private readonly controller: vscode.NotebookController;
-
-  dispose(): void {
-    this.controller.dispose();
-  }
 
   private onDidReceiveMessage(event: { editor: vscode.NotebookEditor, message: unknown }) {
     for (const httpOutputProvider of this.httpOutputProvider) {

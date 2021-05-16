@@ -22,12 +22,12 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
     );
 
     context.subscriptions.push(...[
+      watchConfigSettings(current => Object.assign(config, current)),
       new notebook.HttpNotebookContentProvider(
         config,
         httpyacExtension.exports.httpFileStore,
         httpyacExtension.exports.httpyac,
       ),
-      watchConfigSettings(current => Object.assign(config, current)),
       httpNotebookKernel,
     ]);
     return {

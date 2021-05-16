@@ -10,11 +10,35 @@ export const httpDocumentSelector = [
 export class HttpNotebookContentProvider implements vscode.NotebookContentProvider {
   options?: vscode.NotebookDocumentContentOptions | undefined;
 
+  private subscriptions: Array<vscode.Disposable>;
   constructor(
     private readonly config: AppConfig,
     private readonly httpFileStore: Httpyac.HttpFileStore,
     private readonly httpyac: typeof Httpyac,
-  ) { }
+  ) {
+
+    this.subscriptions = [
+      vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument.bind(this)),
+      vscode.notebook.registerNotebookContentProvider(
+        'http',
+        this,
+        {
+          transientOutputs: true,
+          transientCellMetadata: {
+            inputCollapsed: true,
+            outputCollapsed: true,
+            with: true,
+          }
+        }
+      )
+    ];
+  }
+  public dispose(): void {
+    if (this.subscriptions) {
+      this.subscriptions.forEach(obj => obj.dispose());
+      this.subscriptions = [];
+    }
+  }
 
 
   onDidChangeNotebookContentOptions?: vscode.Event<vscode.NotebookDocumentContentOptions> | undefined;
@@ -72,7 +96,7 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
     return Promise.resolve({
       id: document.uri.toString(),
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      delete: () => {}
+      delete: () => { }
     });
   }
 
@@ -110,7 +134,7 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
     return contents.join(`${EOL}`);
   }
 
-  private async saveDocument(uri: vscode.Uri, document: vscode.NotebookDocument) : Promise<void> {
+  private async saveDocument(uri: vscode.Uri, document: vscode.NotebookDocument): Promise<void> {
     await vscode.workspace.fs.writeFile(uri, Buffer.from(this.getDocumentSource(document)));
   }
 

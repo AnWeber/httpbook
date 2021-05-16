@@ -21,27 +21,14 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
       config
     );
 
-    const httpNotebookContentProvider = new notebook.HttpNotebookContentProvider(
-      config,
-      httpyacExtension.exports.httpFileStore,
-      httpyacExtension.exports.httpyac,
-    );
     context.subscriptions.push(...[
+      new notebook.HttpNotebookContentProvider(
+        config,
+        httpyacExtension.exports.httpFileStore,
+        httpyacExtension.exports.httpyac,
+      ),
       watchConfigSettings(current => Object.assign(config, current)),
       httpNotebookKernel,
-      vscode.workspace.onDidChangeTextDocument(httpNotebookContentProvider.onDidChangeTextDocument.bind(httpNotebookContentProvider)),
-      vscode.notebook.registerNotebookContentProvider(
-        'http',
-        httpNotebookContentProvider,
-        {
-          transientOutputs: true,
-          transientCellMetadata: {
-            inputCollapsed: true,
-            outputCollapsed: true,
-            with: true,
-          }
-        }
-      ),
     ]);
     return {
       registerHttpOutputProvider: (obj: HttpOutputProvider) => {

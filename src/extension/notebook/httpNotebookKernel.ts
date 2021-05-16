@@ -65,7 +65,20 @@ export class HttpNotebookKernel {
           httpFile.activeEnvironment = cellHttpFile.activeEnvironment;
           if (await this.executeCell(controller, cell, httpFile, cellHttpFile.httpRegions)) {
             this.refreshCodeLens.fire();
+            this.refreshFileHttpRegions(cellHttpFile, httpFile);
           }
+        }
+      }
+    }
+  }
+
+  private refreshFileHttpRegions(cellHttpFile: Httpyac.HttpFile, httpFile: Httpyac.HttpFile) {
+    for (const httpRegion of cellHttpFile.httpRegions) {
+      if (httpRegion.metaData.name && httpRegion.response) {
+        const fileHttpRegion = httpFile.httpRegions.find(obj => obj.metaData.name === httpRegion.metaData.name);
+        if (fileHttpRegion) {
+          fileHttpRegion.response = httpRegion.response;
+          fileHttpRegion.testResults = httpRegion.testResults;
         }
       }
     }

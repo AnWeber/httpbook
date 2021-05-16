@@ -119,11 +119,7 @@ Provide custom notebook renderer, but api is not stable at the moment
 
 ## Next Steps
 
-* evaluate notebook api
-* custom renderer implementation
-* renderer api support
-* better env visualization
-* fix out of sync global scripts and more little accidents
+* fix out more little accidents and just test it
 
 ## License
 [MIT License](LICENSE)

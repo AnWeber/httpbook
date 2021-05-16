@@ -1,3 +1,16 @@
+
+## 0.12.0 (2021-05-16)
+
+#### Features
+* add cell status items (save, show, toggle env, active sessions, remove cookies)
+
+#### Fix
+
+* fixed codelens integration of vscode-httpyac
+* fixed environment per file and not per cell
+* changing global scripts/ variables are used without file reload
+* ref to other response are not called on every request
+
 ## 0.11.0 (2021-05-14)
 
 #### Features

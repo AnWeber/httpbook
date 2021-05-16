@@ -126,7 +126,7 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
     if (event.document.notebook?.viewType === 'http'
       && vscode.languages.match(httpDocumentSelector, event.document)) {
       const source = this.getDocumentSource(event.document.notebook);
-      this.httpFileStore.getOrCreate(event.document.uri, () => Promise.resolve(source), event.document.version);
+      this.httpFileStore.getOrCreate(event.document.notebook.uri, () => Promise.resolve(source), event.document.version);
     }
   }
 

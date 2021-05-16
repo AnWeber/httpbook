@@ -2,10 +2,8 @@ import * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
 import { EOL } from 'os';
 import { AppConfig } from '../config';
+import { httpDocumentSelector, HttpNotebookViewType } from './notebookSelector';
 
-export const httpDocumentSelector = [
-  { language: 'http', scheme: '*' }
-];
 
 export class HttpNotebookContentProvider implements vscode.NotebookContentProvider {
   options?: vscode.NotebookDocumentContentOptions | undefined;
@@ -20,7 +18,7 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
     this.subscriptions = [
       vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument.bind(this)),
       vscode.notebook.registerNotebookContentProvider(
-        'http',
+        HttpNotebookViewType,
         this,
         {
           transientOutputs: true,
@@ -147,7 +145,8 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
   }
 
   public onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
-    if (event.document.notebook?.viewType === 'http'
+    if (event.document.notebook
+      && event.document.notebook?.viewType === HttpNotebookViewType
       && vscode.languages.match(httpDocumentSelector, event.document)) {
       const source = this.getDocumentSource(event.document.notebook);
       this.httpFileStore.getOrCreate(event.document.notebook.uri, () => Promise.resolve(source), event.document.version);

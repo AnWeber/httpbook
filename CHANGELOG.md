@@ -1,4 +1,14 @@
 
+## 0.13.0 (2021-05-16)
+
+#### Features
+* use new NotebookRenderer Api
+* Monaco Editor as default Editor
+* use ContentType of Response as Output
+
+#### Fix
+* testResults output is working again
+
 ## 0.12.0 (2021-05-16)
 
 #### Features

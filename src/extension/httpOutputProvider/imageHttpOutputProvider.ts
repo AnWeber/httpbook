@@ -1,17 +1,13 @@
 import * as vscode from 'vscode';
 import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../extensionApi';
 import type { HttpResponse } from 'httpyac';
-import { AppConfig } from '../config';
 
 export class ImageHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-image';
 
-  constructor(readonly config: AppConfig) { }
-
   getResponseOutputResult(response: HttpResponse): HttpOutputResult | false {
 
-    if (this.config.useBuiltInNotebookOutputRendererer
-      && response?.contentType
+    if (response?.contentType
       && response.rawBody
       && ['image/png', 'image/jpeg'].indexOf(response?.contentType.mimeType) >= 0) {
       return {

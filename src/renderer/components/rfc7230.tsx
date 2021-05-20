@@ -1,0 +1,59 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { h, FunctionComponent, Fragment } from 'preact';
+import './rfc7230.css';
+import { HttpResponse, HttpMethod } from 'httpyac';
+
+
+interface NormalizedOptions {
+  url?: URL;
+  method?: HttpMethod;
+  headers?: Record<string, string | string[] | undefined>;
+  body?: unknown;
+}
+
+interface RFC7230Data{
+  response: HttpResponse
+  image?: string;
+}
+
+
+export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, image }) => <section class="response">
+  {response.request
+    && <Request request={response.request}/>
+  }
+  <StatusLine response={response} />
+  {response.headers
+    && <Headers headers={response.headers} />
+  }
+  {image ? <img src={`data:${response.contentType?.mimeType || 'image/png'};base64,${image}`}></img> : typeof response.body === 'string' && <pre><code>{ response.body }</code></pre>}
+</section>;
+
+
+const Request: FunctionComponent<{ request: NormalizedOptions }>
+  = ({ request }) => <div class='request'>
+    <RequestLine request={request} />
+    {request.headers
+    && <Headers headers={request.headers} />
+    }
+    {typeof request.body === 'string' && <pre><code>{ request.body }</code></pre>}
+  </div>;
+
+
+const RequestLine: FunctionComponent<{ request: NormalizedOptions }> = ({ request }) => <h4 class="requestline">
+  <span class="requestline__method">{request.method || 'GET'}</span> <span class="requestline__url">{request.url}</span>
+</h4>;
+
+
+const StatusLine: FunctionComponent<{ response: HttpResponse }> = ({ response }) => <h4 class="statusline">
+  <span class="statusline__version">HTTP/{response.httpVersion || '1.1'}</span> <span class="statusline__code">{response.statusCode}</span> {response.statusMessage
+    && <span class="statusline__message">{response.statusMessage}</span>
+  }
+</h4>;
+
+const Headers: FunctionComponent<{ headers: Record<string, string | string[] | undefined | null> }> = ({ headers }) =>
+  <div class="header">
+    {Object.entries(headers).map(([key, value]) => <Fragment>
+      <span class="header__key">{key}:</span>
+      <span class="header__value" title={key}>{Array.isArray(value) ? value.join(' ,') : value}</span>
+    </Fragment>)}
+  </div>;

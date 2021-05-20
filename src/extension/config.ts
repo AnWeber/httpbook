@@ -12,13 +12,6 @@ export enum TestSlotOutput{
 
 export interface AppConfig {
   outputTests?: TestSlotOutput;
-  useHighlightJSInOutput?: boolean,
-  prettyPrintInOutput?: boolean,
-  useBuiltInNotebookOutputRendererer?: boolean,
-  useRFC7230NotebookOutputRendererer?: boolean,
-  useHeaderNotebookOutputRenderer?: boolean,
-  useResponseNotebookOutputRenderer?: boolean,
-  useResponseBodyNotebookOutputRenderer?: boolean,
   useMarkdownNotebookOutputRenderer?: boolean;
   useContentTypeAsNotebookOutputRendererMime?: boolean;
   mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>;

@@ -7,41 +7,41 @@
   overflow: auto;
 }
 
-.statusLine{
+.statusline{
   margin: .5rem 0;
   display: flex;
   align-items: center;
   flex-direction: row;
 }
-.statusLineVersion{
+.statusline__version{
   padding-right: .5rem;
-  color: var(--vscode-httpbook-hljsLiteral);
+  color: var(--vscode-symbolIcon-operatorForeground);
 }
-.statusLineCode{
+.statusline__code{
   padding-right: .5rem;
-  color: var(--vscode-httpbook-hljsAttr);
+  color: var(--vscode-symbolIcon-variableForeground);
 }
-.statusLineMessage{
-  color: var(--vscode-httpbook-hljsLiteral);
+.statusline__message{
+  color: var(--vscode-symbolIcon-textForeground);
 }
 
-.request + .statusLine{
+.request + .statusline{
   margin-top: 2rem;
 }
 
 
-.requestLine{
+.requestline{
   margin: .5rem 0;
   display: flex;
   align-items: center;
   flex-direction: row;
 }
-.requestLineMethod{
+.requestline__method{
   padding-right: .5rem;
-  color: var(--vscode-httpbook-hljsAttr);
+  color: var(--vscode-symbolIcon-operatorForeground);
 }
-.requestLineUrl{
-  color: var(--vscode-httpbook-hljsLiteral);
+.requestline__url{
+  color: var(--vscode-symbolIcon-textForeground);
 }
 
 
@@ -50,13 +50,9 @@
   column-gap: .5rem;
   grid-template-columns: auto minmax(0, 1fr);
 }
-.headerName{
-  color: var(--vscode-httpbook-hljsAttr);
+.header__key{
+  color: var(--vscode-symbolIcon-keyForeground);
 }
-.headerValue{
-  color: var(--vscode-httpbook-hljsString);
-}
-
-.body{
-  margin: .5rem 0;
+.header__value{
+  color: var(--vscode-symbolIcon-variableForeground);
 }

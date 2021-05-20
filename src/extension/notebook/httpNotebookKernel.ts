@@ -31,9 +31,9 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
+      new httpOutput.MonacoEditorHttpOutputProvider(config, this.httpyac),
       new httpOutput.Rfc7230HttpOutpoutProvider(config, this.httpyac),
-      new httpOutput.BuiltInHttpOutputProvider(config),
-      new httpOutput.ImageHttpOutputProvider(config),
+      new httpOutput.ImageHttpOutputProvider(),
       new httpOutput.ContentTypeHttpOutputProvider(config),
       new httpOutput.MarkdownHttpOutputProvider(config, this.httpyac),
     ];
@@ -50,7 +50,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     const cellHttpFile = await this.getCellHttpFile(cell);
     if (cellHttpFile) {
       result.push(new vscode.NotebookCellStatusBarItem(
-        `${cellHttpFile.activeEnvironment || '-'}`,
+        `${cellHttpFile.activeEnvironment || 'none'}`,
         vscode.NotebookCellStatusBarAlignment.Right,
         'httpyac.toggle-env',
         `current environment: ${cellHttpFile.activeEnvironment || '-'}`,

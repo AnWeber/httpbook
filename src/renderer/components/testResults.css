@@ -1,34 +1,36 @@
-.testResults{
+.testresults{
   font-family: var(--vscode-editor-font-family);
   color: var(--vscode-editor-foreground);
 }
-.testTitle{
+.testtitle{
   display: flex;
   flex-direction: row;
   margin-bottom: 1rem;
   align-items: center;
 }
-.testTitleCell svg{
+.testtitle__cell svg{
   margin: .1rem;
 }
-.testTitleCell{
+.testtitle__cell{
   margin: 0;
 }
-.testTitleCell + .testTitleCell{
+.testtitle__cell + .testtitle__cell{
   margin-left: 1rem;
 }
-.testLine{
+.testline{
   display: flex;
   flex-direction: row;
   align-items: flex-start;
 }
-.testLine svg{
+.testline svg{
   margin: .1rem;
 }
-.testLineError{
+.testline__error{
   padding: 0 1rem;
 }
-.testError{
-  color: var(--vscode-testing-iconFailed);
+.is_error{
+  color: var(--vscode-notebookStatusErrorIcon-foreground);
 }
-
+.is_success{
+  color: var(--vscode-notebookStatusSuccessIcon-foreground);
+}

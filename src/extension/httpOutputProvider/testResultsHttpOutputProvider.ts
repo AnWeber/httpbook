@@ -1,19 +1,18 @@
 import * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
-import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority, HttpOutputContext } from '../extensionApi';
-import { HttpOutputContext as InternalHttpOutputContext } from './httpOutputContext';
+import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../extensionApi';
+
 
 export class TestResultsMimeOutpoutProvider implements HttpOutputProvider {
   id = 'httpbook-testresults';
 
-  getOutputResult(_testResult: Httpyac.TestResult[], { httpRegion }: HttpOutputContext & InternalHttpOutputContext): HttpOutputResult | false {
+  getTestResultOutputResult(testResults: Httpyac.TestResult[]): HttpOutputResult | false {
     return {
       outputItems: new vscode.NotebookCellOutputItem(
         'x-application/httpbook-testresults',
-        httpRegion
+        JSON.stringify(testResults),
       ),
       priority: HttpOutputPriority.Default
     };
-
   }
 }

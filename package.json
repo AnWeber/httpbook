@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, SOAP, and GraphQL requests directly within Visual Studio Code",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -53,252 +53,34 @@
     ],
     "notebookOutputRenderer": [
       {
-        "id": "httpbook",
-        "entrypoint": "./dist/client.js",
+        "id": "httpbook-testresults",
+        "entrypoint": "./dist/testResultsRenderer.js",
+        "displayName": "Httpbook TestResults",
+        "mimeTypes": [
+          "x-application/httpbook-testresults"
+        ]
+      },
+      {
+        "id": "httpbook-rfc7230",
+        "entrypoint": "./dist/rfc7230Renderer.js",
+        "displayName": "Httpbook RFC7230",
+        "mimeTypes": [
+          "message/http"
+        ]
+      },
+      {
+        "id": "httpbook-monacoeditor",
+        "entrypoint": "./dist/monacoRenderer.js",
         "displayName": "httpbook",
         "mimeTypes": [
-          "x-application/httpbook-testresults",
-          "x-application/httpbook-rfc7230",
-          "x-application/httpbook-rfc7230-body",
-          "x-application/httpbook-rfc7230-response",
-          "x-application/httpbook-rfc7230-header"
+          "x-application/httpbook-monaco-editor",
+          "application/json",
+          "image/svg+xml",
+          "text/html",
+          "text/markdown",
+          "text/plain",
+          "application/javascript"
         ]
-      }
-    ],
-    "colors": [
-      {
-        "id": "httpbook.hljsQuote",
-        "description": "highlight.js color quote",
-        "defaults": {
-          "dark": "#6A9955",
-          "light": "#0451a5",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsVariable",
-        "description": "highlight.js color variable",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#0000ff",
-          "highContrast": "#9CDCFE"
-        }
-      },
-      {
-        "id": "httpbook.hljsComment",
-        "description": "highlight.js color comment",
-        "defaults": {
-          "dark": "#6A9955",
-          "light": "#008000",
-          "highContrast": "#7ca668"
-        }
-      },
-      {
-        "id": "httpbook.hljsKeyword",
-        "description": "highlight.js color keyword",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#0000ff",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsSelectorTag",
-        "description": "highlight.js color selector-tag",
-        "defaults": {
-          "dark": "#d7ba7d",
-          "light": "#800000",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsBuiltIn",
-        "description": "highlight.js color built_in",
-        "defaults": {
-          "dark": "#d4d4d4",
-          "light": "#0000ff",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsName",
-        "description": "highlight.js color name",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#800000",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsTag",
-        "description": "highlight.js color tag",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#800000",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsString",
-        "description": "highlight.js color string",
-        "defaults": {
-          "dark": "#ce9178",
-          "light": "#a31515",
-          "highContrast": "#ce9178"
-        }
-      },
-      {
-        "id": "httpbook.hljsTitle",
-        "description": "highlight.js color title",
-        "defaults": {
-          "dark": "#ce9178",
-          "light": "#800000",
-          "highContrast": "#ce9178"
-        }
-      },
-      {
-        "id": "httpbook.hljsSection",
-        "description": "highlight.js color section",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#0000ff",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsAttribute",
-        "description": "highlight.js color attribute",
-        "defaults": {
-          "dark": "#9cdcfe",
-          "light": "#ff0000",
-          "highContrast": "#d7ba7d"
-        }
-      },
-      {
-        "id": "httpbook.hljsLiteral",
-        "description": "highlight.js color literal",
-        "defaults": {
-          "dark": "#d7ba7d",
-          "light": "#a31515",
-          "highContrast": "#ce9178"
-        }
-      },
-      {
-        "id": "httpbook.hljsTemplateTag",
-        "description": "highlight.js color template-tag",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#000000",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsTemplateVariable",
-        "description": "highlight.js color template-variable",
-        "defaults": {
-          "dark": "#9cdcfe",
-          "light": "#0000ff",
-          "highContrast": "#9CDCFE"
-        }
-      },
-      {
-        "id": "httpbook.hljsType",
-        "description": "highlight.js color type",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#0000ff",
-          "highContrast": "#4EC9B0"
-        }
-      },
-      {
-        "id": "httpbook.hljsAddition",
-        "description": "highlight.js color addition",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#0000ff",
-          "highContrast": "#C586C0"
-        }
-      },
-      {
-        "id": "httpbook.hljsDeletion",
-        "description": "highlight.js color deletion",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#a31515",
-          "highContrast": "#C586C0"
-        }
-      },
-      {
-        "id": "httpbook.hljsSelectorAttr",
-        "description": "highlight.js color selector-attr",
-        "defaults": {
-          "dark": "#d7ba7d",
-          "light": "#ff0000",
-          "highContrast": "#d7ba7d"
-        }
-      },
-      {
-        "id": "httpbook.hljsSelectorPseudo",
-        "description": "highlight.js color selector-pseudo",
-        "defaults": {
-          "dark": "#d7ba7d",
-          "light": "#800000",
-          "highContrast": "#d7ba7d"
-        }
-      },
-      {
-        "id": "httpbook.hljsMeta",
-        "description": "highlight.js color meta",
-        "defaults": {
-          "dark": "#d4d4d4",
-          "light": "#000080",
-          "highContrast": "#9CDCFE"
-        }
-      },
-      {
-        "id": "httpbook.hljsDoctag",
-        "description": "highlight.js color doctag",
-        "defaults": {
-          "dark": "#d4d4d4",
-          "light": "#000080",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsAttr",
-        "description": "highlight.js color attr",
-        "defaults": {
-          "dark": "#9cdcfe",
-          "light": "#0451a5",
-          "highContrast": "#d4d4d4"
-        }
-      },
-      {
-        "id": "httpbook.hljsSymbol",
-        "description": "highlight.js color symbol",
-        "defaults": {
-          "dark": "#d4d4d4",
-          "light": "#800000",
-          "highContrast": "#569cd6"
-        }
-      },
-      {
-        "id": "httpbook.hljsBullet",
-        "description": "highlight.js color bullet",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#0451a5",
-          "highContrast": "#808080"
-        }
-      },
-      {
-        "id": "httpbook.hljsLink",
-        "description": "highlight.js color link",
-        "defaults": {
-          "dark": "#569cd6",
-          "light": "#800000",
-          "highContrast": "#808080"
-        }
       }
     ],
     "configuration": {
@@ -316,53 +98,17 @@
           "scope": "resource",
           "description": "are outputs of tests visible"
         },
-        "httpbook.useHighlightJSInOutput": {
-          "type": "boolean",
-          "default": true,
-          "scope": "resource",
-          "description": "use highlight.js in NotebookOutputRenderer"
-        },
-        "httpbook.prettyPrintInOutput": {
-          "type": "boolean",
-          "default": true,
-          "scope": "resource",
-          "description": "pretty print JSON in NotebookOutputRenderer"
-        },
         "httpbook.useRFC7230NotebookOutputRendererer": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "show request/ response in RFC7230 Format"
         },
-        "httpbook.useHeaderNotebookOutputRenderer": {
-          "type": "boolean",
-          "default": false,
-          "scope": "resource",
-          "description": "show request/ response headers in RFC7230 Format"
-        },
-        "httpbook.useResponseNotebookOutputRenderer": {
-          "type": "boolean",
-          "default": false,
-          "scope": "resource",
-          "description": "show response in RFC7230 Format"
-        },
-        "httpbook.useResponseBodyNotebookOutputRenderer": {
-          "type": "boolean",
-          "default": true,
-          "scope": "resource",
-          "description": "show response body"
-        },
         "httpbook.useMarkdownNotebookOutputRenderer": {
           "type": "boolean",
           "default": false,
           "scope": "resource",
           "description": "show request/ response and test results as markdown"
-        },
-        "httpbook.useContentTypeAsNotebookOutputRendererMime": {
-          "type": "boolean",
-          "default": false,
-          "scope": "resource",
-          "description": "use contentType as mimetype for NotebookOutputRenderer"
         },
         "httpbook.preferNotebookOutputRenderer": {
           "type": "object",
@@ -409,32 +155,34 @@
     "update-api": "npx vscode-dts dev"
   },
   "devDependencies": {
-    "@types/node": "^15.3.0",
-    "@types/react": "^17.0.5",
+    "@types/node": "^15.3.1",
+    "@types/react": "^17.0.6",
     "@types/vscode": "^1.56.0",
-    "@types/vscode-notebook-renderer": "^1.57.0",
+    "@types/vscode-notebook-renderer": "^1.57.1",
     "@types/webpack-env": "^1.16.0",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.23.0",
-    "css-loader": "^5.2.4",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
+    "@typescript-eslint/parser": "^4.24.0",
+    "css-loader": "^5.2.5",
     "eslint": "^7.26.0",
     "eslint-plugin-node": "^11.1.0",
-    "fork-ts-checker-webpack-plugin": "^6.2.9",
-    "httpyac": "^2.8.0",
+    "fork-ts-checker-webpack-plugin": "^6.2.10",
+    "httpyac": "^2.9.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "lockfile-lint": "^4.6.2",
+    "monaco-editor-webpack-plugin": "^3.1.0",
     "style-loader": "^2.0.0",
     "svg-sprite-loader": "^6.0.6",
     "thread-loader": "^3.0.4",
-    "ts-loader": "^9.1.2",
+    "ts-loader": "^9.2.1",
     "typescript": "^4.2.4",
     "vscode-dts": "^0.3.1",
-    "webpack": "^5.37.0",
+    "webpack": "^5.37.1",
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
-    "highlight.js": "^10.7.2",
+    "file-loader": "^6.2.0",
+    "monaco-editor": "^0.24.0",
     "preact": "^10.5.13",
     "vscode-codicons": "^0.0.17",
     "vscode-notebook-error-overlay": "^1.0.1"

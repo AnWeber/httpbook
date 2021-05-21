@@ -1,4 +1,4 @@
-import * as Httpyac from 'httpyac';
+import type * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
 import { AppConfig } from '../config';
 import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority, HttpOutputContext } from '../extensionApi';

@@ -1,4 +1,7 @@
+## 0.13.1 (2021-05-17)
 
+#### Fix
+* use only type import for httpyac
 ## 0.13.0 (2021-05-16)
 
 #### Features

@@ -1,4 +1,4 @@
-import { HttpFileStore } from 'httpyac';
+import type { HttpFileStore } from 'httpyac';
 import * as vscode from 'vscode';
 
 export function environementChangedFactory(httpFileStore: HttpFileStore, refreshCodeLens: vscode.EventEmitter<void>) {

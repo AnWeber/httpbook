@@ -1,4 +1,4 @@
-import * as httpyac from 'httpyac';
+import type * as httpyac from 'httpyac';
 import * as vscode from 'vscode';
 
 export interface HttpyacExtensionApi{

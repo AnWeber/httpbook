@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { h, FunctionComponent, Fragment } from 'preact';
 import './rfc7230.css';
-import { HttpResponse, HttpMethod } from 'httpyac';
+import type { HttpResponse, HttpMethod } from 'httpyac';
 
 
 interface NormalizedOptions {

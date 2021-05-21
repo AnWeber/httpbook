@@ -1,9 +1,8 @@
 import * as vscode from 'vscode';
-import * as Httpyac from 'httpyac';
+import type * as Httpyac from 'httpyac';
 import * as extensionApi from '../extensionApi';
 import * as httpOutput from '../httpOutputProvider';
 import { AppConfig, TestSlotOutput } from '../config';
-import { TestResult } from 'httpyac';
 import { HttpNotebookViewType } from './notebookSelector';
 
 
@@ -211,7 +210,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     return outputs;
   }
 
-  private canShowTestResults(testResults: Array<TestResult> | undefined) {
+  private canShowTestResults(testResults: Array<Httpyac.TestResult> | undefined) {
     if (testResults && this.config.outputTests !== TestSlotOutput.never) {
       if (this.config.outputTests === TestSlotOutput.onlyFailed) {
         return testResults.some(obj => !obj.result);

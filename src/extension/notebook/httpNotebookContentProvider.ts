@@ -51,7 +51,7 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
         this.httpFileStore.rename(uri, vscode.Uri.parse(openContext.backupId));
       }
       const cells = httpFile.httpRegions
-        .map(this.createCell);
+        .map(obj => this.createCell(obj));
       return this.createNotebook(cells);
     } catch (err) {
       this.httpyac.log.trace(err);
@@ -62,7 +62,7 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
   private createCell(httpRegion: Httpyac.HttpRegion) {
     let source = httpRegion.source || '';
     if (httpRegion.symbol.children
-      && httpRegion.symbol.children.every(obj => obj.kind === Httpyac.HttpSymbolKind.commnet)) {
+      && httpRegion.symbol.children.every(obj => obj.kind === this.httpyac.HttpSymbolKind.commnet)) {
       if (source.length > 4) {
         source = source.slice(2, source.length - 2).trim();
       }

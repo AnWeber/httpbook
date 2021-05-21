@@ -1,3 +1,8 @@
+## 0.13.2 (2021-05-17)
+
+#### Fix
+* removed direct access of httpyac
+
 ## 0.13.1 (2021-05-17)
 
 #### Fix

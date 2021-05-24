@@ -1,3 +1,9 @@
+## 0.14.0 (2021-05-24)
+
+#### Features
+* update to new vscode renderer api
+* remove use of --vscode- CSS Variables
+
 ## 0.13.2 (2021-05-17)
 
 #### Fix

@@ -1,6 +1,6 @@
 .testresults{
-  font-family: var(--vscode-editor-font-family);
-  color: var(--vscode-editor-foreground);
+  font-family: var(--theme-code-font-family);
+  color: var(--theme-foreground);
 }
 .testtitle{
   display: flex;
@@ -21,16 +21,15 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  padding: .1rem;
+}
+.testline--error{
+  color: var(--theme-error-foreground);
+  background-color: var(--theme-error-background);
 }
 .testline svg{
   margin: .1rem;
 }
 .testline__error{
   padding: 0 1rem;
-}
-.is_error{
-  color: var(--vscode-notebookStatusErrorIcon-foreground);
-}
-.is_success{
-  color: var(--vscode-notebookStatusSuccessIcon-foreground);
 }

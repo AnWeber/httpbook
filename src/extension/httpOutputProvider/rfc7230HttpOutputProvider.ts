@@ -15,14 +15,10 @@ export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
         && this.httpyac.utils.isMimeTypeImage(response.contentType)) {
       metaData.image = response.rawBody.toString('base64');
     }
+    const ouputItem = vscode.NotebookCellOutputItem.json(response, 'message/http');
+    ouputItem.metadata = metaData;
     return {
-      outputItems: [
-        new vscode.NotebookCellOutputItem(
-          'message/http',
-          JSON.stringify(response),
-          metaData
-        )
-      ],
+      outputItems: ouputItem,
       priority: HttpOutputPriority.Default,
     };
   }

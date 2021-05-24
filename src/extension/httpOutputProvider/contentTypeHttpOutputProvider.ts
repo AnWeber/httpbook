@@ -1,8 +1,6 @@
-import { HttpRegion } from 'httpyac';
 import * as vscode from 'vscode';
 import { AppConfig } from '../config';
-import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority, HttpOutputContext } from '../extensionApi';
-import { HttpOutputContext as InternalHttpOutputContext } from './httpOutputContext';
+import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../extensionApi';
 import type { HttpResponse } from 'httpyac';
 
 export class ContentTypeHttpOutputProvider implements HttpOutputProvider {
@@ -10,40 +8,30 @@ export class ContentTypeHttpOutputProvider implements HttpOutputProvider {
 
   constructor(readonly config: AppConfig) {}
 
-  getResponseOutputResult(response: HttpResponse, { httpRegion }: HttpOutputContext & InternalHttpOutputContext): HttpOutputResult | false {
-    if (response?.contentType) {
+  getResponseOutputResult(response: HttpResponse): HttpOutputResult | false {
+    if (response?.contentType && response.rawBody) {
+      const rawBody = response.rawBody;
       const outputItems: Array<vscode.NotebookCellOutputItem> = [];
       if (this.config.useContentTypeAsNotebookOutputRendererMime) {
-        outputItems.push(this.createUnknownNotebookCellOutputItem(response.contentType.mimeType, httpRegion));
+        outputItems.push(vscode.NotebookCellOutputItem.bytes(rawBody, response.contentType.mimeType));
       }
       if (this.config.mapContentTypeToNotebookOutputRendererMime) {
         for (const [regex, mimes] of Object.entries(this.config.mapContentTypeToNotebookOutputRendererMime)) {
           const regexp = new RegExp(regex, 'ui');
           if (regexp.test(response.contentType.mimeType)) {
             if (Array.isArray(mimes)) {
-              outputItems.push(...mimes.map(mime => this.createUnknownNotebookCellOutputItem(mime, httpRegion)));
+              outputItems.push(...mimes.map(mime => vscode.NotebookCellOutputItem.bytes(rawBody, mime)));
             } else if (typeof mimes === 'string') {
-              outputItems.push(this.createUnknownNotebookCellOutputItem(mimes, httpRegion));
+              outputItems.push(vscode.NotebookCellOutputItem.bytes(rawBody, mimes));
             }
           }
         }
       }
       return {
         outputItems,
-        priority: HttpOutputPriority.Low
+        priority: HttpOutputPriority.Default
       };
     }
     return false;
-  }
-
-  private createUnknownNotebookCellOutputItem(mime: string, httpRegion: HttpRegion) {
-    return new vscode.NotebookCellOutputItem(
-      mime,
-      httpRegion.response?.body,
-      {
-        response: httpRegion.response,
-        testResults: httpRegion.testResults,
-      }
-    );
   }
 }

@@ -11,11 +11,11 @@ export class ImageHttpOutputProvider implements HttpOutputProvider {
       && response.rawBody
       && ['image/png', 'image/jpeg'].indexOf(response?.contentType.mimeType) >= 0) {
       return {
-        outputItems: new vscode.NotebookCellOutputItem(
+        outputItems: vscode.NotebookCellOutputItem.bytes(
+          response.rawBody,
           response?.contentType.mimeType,
-          response.rawBody.toString('base64')
         ),
-        priority: HttpOutputPriority.Low
+        priority: HttpOutputPriority.Default
       };
     }
     return false;

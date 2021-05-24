@@ -12,7 +12,7 @@ export enum TestSlotOutput{
 
 export interface AppConfig {
   outputTests?: TestSlotOutput;
-  useMarkdownNotebookOutputRenderer?: boolean;
+  monacoEditorOptions?: unknown,
   useContentTypeAsNotebookOutputRendererMime?: boolean;
   mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>;
   preferNotebookOutputRenderer?: Record<string, string>;

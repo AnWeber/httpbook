@@ -8,10 +8,7 @@ export class TestResultsMimeOutpoutProvider implements HttpOutputProvider {
 
   getTestResultOutputResult(testResults: Httpyac.TestResult[]): HttpOutputResult | false {
     return {
-      outputItems: new vscode.NotebookCellOutputItem(
-        'x-application/httpbook-testresults',
-        JSON.stringify(testResults),
-      ),
+      outputItems: vscode.NotebookCellOutputItem.json(testResults, 'x-application/httpbook-testresults'),
       priority: HttpOutputPriority.Default
     };
   }

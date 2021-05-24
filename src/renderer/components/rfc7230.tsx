@@ -44,11 +44,12 @@ const RequestLine: FunctionComponent<{ request: NormalizedOptions }> = ({ reques
 </h4>;
 
 
-const StatusLine: FunctionComponent<{ response: HttpResponse }> = ({ response }) => <h4 class="statusline">
-  <span class="statusline__version">HTTP/{response.httpVersion || '1.1'}</span> <span class="statusline__code">{response.statusCode}</span> {response.statusMessage
+const StatusLine: FunctionComponent<{ response: HttpResponse }> = ({ response }) =>
+  <h4 className={response.statusCode >= 400 ? 'statusline statusline--error' : 'statusline statusline--success'}>
+    <span class="statusline__version">HTTP/{response.httpVersion || '1.1'}</span> <span class="statusline__code">{response.statusCode}</span>{response.statusMessage
     && <span class="statusline__message">{response.statusMessage}</span>
-  }
-</h4>;
+    }
+  </h4>;
 
 const Headers: FunctionComponent<{ headers: Record<string, string | string[] | undefined | null> }> = ({ headers }) =>
   <div class="header">

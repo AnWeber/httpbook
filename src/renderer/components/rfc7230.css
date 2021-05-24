@@ -1,7 +1,7 @@
 .response{
-  font-family: var(--vscode-editor-font-family);
-  color: var(--vscode-editor-foreground);
-  background-color: var(--vscode-editor-background);
+  font-family: var(--theme-code-font-family);
+  color: var(--theme-foreground);
+  background-color: var(--theme-background);
   padding: 1rem;
   max-height: 30rem;
   overflow: auto;
@@ -14,15 +14,19 @@
   flex-direction: row;
 }
 .statusline__version{
-  padding-right: .5rem;
-  color: var(--vscode-symbolIcon-operatorForeground);
+  color: var(--theme-info-foreground);
 }
 .statusline__code{
-  padding-right: .5rem;
-  color: var(--vscode-symbolIcon-variableForeground);
+  padding: 0 .2rem;
+  margin: 0 .3rem;
+  color: var(--theme-link);
+}
+.statusline--error .statusline__code{
+  color: var(--theme-error-foreground);
+  background-color: var(--theme-error-background);
 }
 .statusline__message{
-  color: var(--vscode-symbolIcon-textForeground);
+  color: var(--theme-info-foreground);
 }
 
 .request + .statusline{
@@ -38,10 +42,10 @@
 }
 .requestline__method{
   padding-right: .5rem;
-  color: var(--vscode-symbolIcon-operatorForeground);
+  color: var(--theme-link);
 }
 .requestline__url{
-  color: var(--vscode-symbolIcon-textForeground);
+  color: var(--theme-info-foreground);
 }
 
 
@@ -51,8 +55,8 @@
   grid-template-columns: auto minmax(0, 1fr);
 }
 .header__key{
-  color: var(--vscode-symbolIcon-keyForeground);
+  color: var(--theme-info-foreground);
 }
 .header__value{
-  color: var(--vscode-symbolIcon-variableForeground);
+  color: var(--theme-link);
 }

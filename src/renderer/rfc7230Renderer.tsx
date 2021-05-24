@@ -6,13 +6,11 @@ import { RFC7230Response } from './components/rfc7230';
 
 export const activate: ActivationFunction = () => ({
   renderCell(_id, cell: CellInfo) {
-    if (typeof cell.value === 'string') {
-      let image: string | undefined;
-      if (hasImage(cell.metadata)) {
-        image = cell.metadata.image;
-      }
-      render(<RFC7230Response response={JSON.parse(cell.value)} image={image}/>, cell.element);
+    let image: string | undefined;
+    if (hasImage(cell.metadata)) {
+      image = cell.metadata.image;
     }
+    render(<RFC7230Response response={cell.json()} image={image}/>, cell.element);
   },
 });
 

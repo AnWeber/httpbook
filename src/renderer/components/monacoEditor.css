@@ -1,11 +1,6 @@
 
 .editor{
+  font-family: var(--theme-code-font-family);
   width: 100%;
-	height: 600px;
-	border: 1px solid #ccc;
-}
-
-
-#container .output_container .output div{
-	overflow-x: unset;
+  height: 30rem;
 }

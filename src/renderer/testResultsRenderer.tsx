@@ -6,8 +6,6 @@ import { TestResults } from './components/testResults';
 
 export const activate: ActivationFunction = () => ({
   renderCell(_id, cell: CellInfo) {
-    if (typeof cell.value === 'string') {
-      render(<TestResults testResults={JSON.parse(cell.value)} />, cell.element);
-    }
+    render(<TestResults testResults={cell.json()} />, cell.element);
   },
 });

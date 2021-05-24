@@ -29,10 +29,10 @@ export const TestResults: FunctionComponent<{
 
 const TestResultLine: FunctionComponent<{ testResult: TestResult }> = ({ testResult }) => (
 
-  <article class="testline">
+  <article className={testResult.result ? 'testline testline--success' : 'testline testline--error'}>
     {testResult.result
-      ? <Icon svg={PassSvg} class="is_success"></Icon>
-      : <Icon svg={BugSvg} class="is_error"></Icon>
+      ? <Icon svg={PassSvg}></Icon>
+      : <Icon svg={BugSvg}></Icon>
     }
     <div>
       <span>{testResult.message}</span>

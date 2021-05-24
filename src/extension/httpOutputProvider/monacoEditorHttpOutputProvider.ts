@@ -8,52 +8,43 @@ export class MonacoEditorHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-monaco';
 
 
-  constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}
+  constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) { }
 
   getResponseOutputResult(response: Httpyac.HttpResponse): HttpOutputResult | false {
     const metaData: Record<string, unknown> = {
       colorThemeKind: vscode.window.activeColorTheme.kind,
-      response,
+      editorOptions: this.config.monacoEditorOptions,
     };
 
+    let mimeType: string | undefined;
 
     if (response.contentType) {
-      if (['image/png', 'image/jpeg', 'application/pdf'].indexOf(response.contentType.mimeType) >= 0) {
-        return false;
+      if (this.httpyac.utils.isMimeTypeJSON(response.contentType)) {
+        mimeType = 'application/json';
+      } else if (this.httpyac.utils.isMimeTypeXml(response.contentType)) {
+        mimeType = 'application/xml';
+      } else if (this.httpyac.utils.isMimeTypeCSS(response.contentType)) {
+        mimeType = 'text/css';
+      } else if (this.httpyac.utils.isMimeTypeHtml(response.contentType)) {
+        mimeType = 'text/html';
+      } else if (this.httpyac.utils.isMimeTypeJavascript(response.contentType)) {
+        mimeType = 'application/javascript';
+      } else if (this.httpyac.utils.isMimeTypeMarkdown(response.contentType)) {
+        mimeType = 'text/markdown';
+      } else if (response.contentType.mimeType.startsWith('text')) {
+        mimeType = 'text/plain';
       }
-      if (['image/svg+xml',
-        'text/html',
-        'text/markdown',
-        'text/plain',
-        'application/javascript'].indexOf(response?.contentType.mimeType) >= 0) {
-        return {
-          outputItems: new vscode.NotebookCellOutputItem(
-            response?.contentType.mimeType,
-            response?.body,
-            metaData
-          ),
-          priority: HttpOutputPriority.Default
-        };
-      }
-      if (/^(application|json)\/(.*\+|x-amz-)?json.*$/u.test(response.contentType.mimeType)) {
-        return {
-          outputItems: new vscode.NotebookCellOutputItem(
-            'application/json',
-            response.body,
-            metaData
-          ),
-          priority: HttpOutputPriority.Default
-        };
-      }
-
     }
-    return {
-      outputItems: [new vscode.NotebookCellOutputItem(
-        'text/plain',
-        response.body,
-        metaData
-      )],
-      priority: HttpOutputPriority.Default,
-    };
+
+    if (mimeType && typeof response.body === 'string') {
+      const outputItem = vscode.NotebookCellOutputItem.text(response.body, mimeType);
+      outputItem.metadata = metaData;
+      return {
+        outputItems: outputItem,
+        priority: HttpOutputPriority.Default,
+      };
+    }
+
+    return false;
   }
 }

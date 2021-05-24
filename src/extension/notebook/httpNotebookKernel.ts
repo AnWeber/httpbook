@@ -34,7 +34,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
       new httpOutput.Rfc7230HttpOutpoutProvider(config, this.httpyac),
       new httpOutput.ImageHttpOutputProvider(),
       new httpOutput.ContentTypeHttpOutputProvider(config),
-      new httpOutput.MarkdownHttpOutputProvider(config, this.httpyac),
     ];
 
     this.subscriptions = [
@@ -49,8 +48,8 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     const cellHttpFile = await this.getCellHttpFile(cell);
     if (cellHttpFile) {
       result.push(new vscode.NotebookCellStatusBarItem(
-        `${cellHttpFile.activeEnvironment || 'none'}`,
-        vscode.NotebookCellStatusBarAlignment.Right,
+        `${cellHttpFile.activeEnvironment || 'no env'}`,
+        vscode.NotebookCellStatusBarAlignment.Left,
         'httpyac.toggle-env',
         `current environment: ${cellHttpFile.activeEnvironment || '-'}`,
       ));
@@ -175,11 +174,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
       this.httpyac.log.error(err);
       execution.replaceOutput([
         new vscode.NotebookCellOutput([
-          new vscode.NotebookCellOutputItem('application/x.notebook.error-traceback', {
-            ename: err instanceof Error && err.name || 'error',
-            evalue: err instanceof Error && err.message || JSON.stringify(err, null, 2),
-            traceback: [err.stack]
-          })
+          vscode.NotebookCellOutputItem.error(err),
         ])
       ]);
       execution.end({ success: false, endTime: Date.now() });

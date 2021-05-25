@@ -51,7 +51,7 @@
         ]
       }
     ],
-    "notebookOutputRenderer": [
+    "notebookRenderer": [
       {
         "id": "httpbook-testresults",
         "entrypoint": "./dist/testResultsRenderer.js",

@@ -1,3 +1,9 @@
+## 0.15.0 (2021-05-26)
+
+#### Features
+* change to new notebookRender contribution
+* remove onDidReceiveMessage, because of changing api
+
 ## 0.14.0 (2021-05-24)
 
 #### Features

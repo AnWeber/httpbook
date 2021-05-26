@@ -26,7 +26,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     controller.hasExecutionOrder = true;
     controller.description = 'a Notebook for sending REST, SOAP, and GraphQL requests';
     controller.executeHandler = this.send.bind(this);
-    controller.onDidReceiveMessage(this.onDidReceiveMessage, this);
 
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
@@ -93,19 +92,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     if (this.subscriptions) {
       this.subscriptions.forEach(obj => obj.dispose());
       this.subscriptions = [];
-    }
-  }
-
-
-  private onDidReceiveMessage(event: { editor: vscode.NotebookEditor, message: unknown }) {
-    for (const httpOutputProvider of this.httpOutputProvider) {
-      try {
-        if (httpOutputProvider.onDidReceiveMessage) {
-          httpOutputProvider.onDidReceiveMessage(event);
-        }
-      } catch (err) {
-        this.httpyac.log.error(httpOutputProvider.id, err);
-      }
     }
   }
 

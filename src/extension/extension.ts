@@ -23,12 +23,7 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
     const environementChanged = notebook.environementChangedFactory(httpyacExtension.exports.httpFileStore, httpyacExtension.exports.refreshCodeLens);
     httpyacExtension.exports.environementChanged.event(environementChanged);
 
-    const httpNotebookKernel = new notebook.HttpNotebookKernel(
-      httpyacExtension.exports.httpyac,
-      httpyacExtension.exports.httpFileStore,
-      httpyacExtension.exports.refreshCodeLens,
-      config
-    );
+    const httpNotebookOutputFactory = new notebook.HttpNotebookOutputFactory(config, httpyacExtension.exports.httpyac);
 
     context.subscriptions.push(...[
       watchConfigSettings(current => Object.assign(config, current)),
@@ -39,15 +34,21 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
         httpyacExtension.exports.httpFileStore.remove(notebook.uri);
       }),
       new notebook.HttpNotebookContentProvider(
-        config,
-        httpyacExtension.exports.httpFileStore,
+        httpNotebookOutputFactory,
         httpyacExtension.exports.httpyac,
+        httpyacExtension.exports.httpFileStore,
+        config,
       ),
-      httpNotebookKernel,
+      new notebook.HttpNotebookKernel(
+        httpNotebookOutputFactory,
+        httpyacExtension.exports.httpyac,
+        httpyacExtension.exports.httpFileStore,
+        httpyacExtension.exports.refreshCodeLens
+      )
     ]);
     return {
       registerHttpOutputProvider: (obj: HttpOutputProvider) => {
-        httpNotebookKernel.httpOutputProvider.push(obj);
+        httpNotebookOutputFactory.httpOutputProvider.push(obj);
       }
     };
   }

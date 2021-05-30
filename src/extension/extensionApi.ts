@@ -1,11 +1,6 @@
-import { NotebookCell, NotebookCellOutputItem } from 'vscode';
+import { NotebookCellOutputItem } from 'vscode';
 import type { HttpResponse, TestResult } from 'httpyac';
 export interface HttpOutputContext{
-
-  /**
-   * current Notebookcell
-   */
-  cell: NotebookCell;
 
   mimeType?: string;
 

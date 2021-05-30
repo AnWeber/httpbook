@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import { EOL } from 'os';
 import { AppConfig } from '../config';
 import { httpDocumentSelector, HttpNotebookViewType } from './notebookSelector';
+import { HttpNotebookOutputFactory } from './httpNotebookOutputFactory';
 
 
 export class HttpNotebookContentProvider implements vscode.NotebookContentProvider {
@@ -10,9 +11,10 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
 
   private subscriptions: Array<vscode.Disposable>;
   constructor(
-    private readonly config: AppConfig,
-    private readonly httpFileStore: Httpyac.HttpFileStore,
+    private readonly httpNotebookOutputFactory: HttpNotebookOutputFactory,
     private readonly httpyac: typeof Httpyac,
+    private readonly httpFileStore: Httpyac.HttpFileStore,
+    private readonly config: AppConfig,
   ) {
 
     this.subscriptions = [
@@ -50,8 +52,10 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
       if (openContext.backupId) {
         this.httpFileStore.rename(uri, vscode.Uri.parse(openContext.backupId));
       }
-      const cells = httpFile.httpRegions
-        .map(obj => this.createCell(obj));
+      const cells: Array<vscode.NotebookCellData> = [];
+      for (const httpRegion of httpFile.httpRegions) {
+        cells.push(...this.createCells(httpRegion, httpFile));
+      }
       return this.createNotebook(cells);
     } catch (err) {
       this.httpyac.log.trace(err);
@@ -59,26 +63,57 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
     }
   }
 
-  private createCell(httpRegion: Httpyac.HttpRegion) {
-    let source = httpRegion.source || '';
-    if (httpRegion.symbol.children
-      && httpRegion.symbol.children.every(obj => obj.kind === this.httpyac.HttpSymbolKind.commnet)) {
-      if (source.length > 4) {
-        source = source.slice(2, source.length - 2).trim();
+  private createCells(httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
+    const cells: Array<vscode.NotebookCellData> = [];
+    if (httpRegion.symbol.children) {
+      const sourceLines: Array<string> = [];
+      for (const symbol of httpRegion.symbol.children) {
+        if (symbol.source) {
+          if (symbol.kind === this.httpyac.HttpSymbolKind.comment) {
+            cells.push(this.createMarkDownCell(symbol.source));
+          } else if (symbol.kind !== this.httpyac.HttpSymbolKind.response) {
+            sourceLines.push(symbol.source);
+          }
+        }
       }
-      return new vscode.NotebookCellData(
-        1,
-        source,
-        'test/markdown',
-        [],
-        new vscode.NotebookCellMetadata()
-      );
+      if (sourceLines.length > 0) {
+        cells.push(this.createHttpCodeCell(this.httpyac.utils.toMultiLineString(sourceLines), httpRegion, httpFile));
+      }
+    } else {
+      cells.push(this.createHttpCodeCell(httpRegion.symbol.source || '', httpRegion, httpFile));
     }
-    return new vscode.NotebookCellData(vscode.NotebookCellKind.Code,
+    return cells;
+  }
+
+  private createMarkDownCell(source: string) {
+    let src = source;
+    if (source.length > 4) {
+      src = source.slice(2, source.length - 2).trim();
+    }
+    return new vscode.NotebookCellData(
+      vscode.NotebookCellKind.Markup,
+      src,
+      'text/markdown',
+      [],
+      new vscode.NotebookCellMetadata()
+    );
+  }
+
+  private createHttpCodeCell(source: string, httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
+    const cell = new vscode.NotebookCellData(vscode.NotebookCellKind.Code,
       source,
       'http',
       [],
       new vscode.NotebookCellMetadata());
+
+    if (httpRegion.response) {
+      cell.outputs = this.httpNotebookOutputFactory.createHttpRegionOutputs(httpRegion, {
+        metaData: httpRegion.metaData,
+        mimeType: httpRegion.response.contentType?.mimeType,
+        httpFile
+      });
+    }
+    return cell;
   }
 
   async saveNotebook(document: vscode.NotebookDocument): Promise<void> {
@@ -123,10 +158,16 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
         }
         isPrevCellGlobalScript = !startsWithRequestLine;
         contents.push(cell.document.getText());
-        hasPrevCell = true;
-      } else if (cell.kind === vscode.NotebookCellKind.Markdown) {
+        for (const output of cell.outputs) {
+          if (output.metadata?.source) {
+            contents.push('');
+            contents.push(output.metadata.source);
+          }
+        }
 
-        contents.push(`${EOL}###${EOL}${EOL}/*${EOL}${cell.document.getText()}${EOL}*/${EOL}`);
+        hasPrevCell = true;
+      } else if (cell.kind === vscode.NotebookCellKind.Markup) {
+        contents.push(`${EOL}/*${EOL}${cell.document.getText()}${EOL}*/${EOL}`);
       }
     }
     return contents.join(`${EOL}`);

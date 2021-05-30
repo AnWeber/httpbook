@@ -2,6 +2,7 @@
 
 #### Features
 * change to new createNotebookCellExecution
+* response output is saved (is still in development)
 #### Fix
 * fix support of  file references as request body
 

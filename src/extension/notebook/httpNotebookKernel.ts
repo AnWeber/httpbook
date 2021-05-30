@@ -131,7 +131,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
   }
 
   private async executeCell(controller: vscode.NotebookController, cell: vscode.NotebookCell, httpFile: Httpyac.HttpFile, httpRegions: Httpyac.HttpRegion[]) {
-    const execution = controller.createNotebookCellExecutionTask(cell);
+    const execution = controller.createNotebookCellExecution(cell);
     execution.executionOrder = ++this.executionOrder;
     execution.start({ startTime: Date.now() });
     try {

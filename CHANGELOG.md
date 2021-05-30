@@ -1,3 +1,10 @@
+## 0.16.0 (2021-05-30)
+
+#### Features
+* change to new createNotebookCellExecution
+#### Fix
+* fix support of  file references as request body
+
 ## 0.15.0 (2021-05-26)
 
 #### Features

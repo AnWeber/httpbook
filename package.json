@@ -159,7 +159,7 @@
     "@types/vscode-notebook-renderer": "^1.57.4",
     "@types/webpack-env": "^1.16.0",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
+    "@typescript-eslint/parser": "^4.26.0",
     "css-loader": "^5.2.6",
     "eslint": "^7.27.0",
     "eslint-plugin-node": "^11.1.0",

@@ -32,10 +32,11 @@ export class MonacoEditor extends Component<MonacoEditorProps,
           {
             fontFamily: computedStyle.getPropertyValue('--theme-code-font-family'),
             fontSize: +computedStyle.getPropertyValue('--theme-code-font-size').replace('px', ''),
-            fontWeight: computedStyle.getPropertyValue('--theme-code-font-weight')
-          },
-          {
+            fontWeight: computedStyle.getPropertyValue('--theme-code-font-weight'),
             language: this.getLanguageId(this.props.mimeType),
+            minimap: {
+              enabled: false
+            },
           }
         )
       );

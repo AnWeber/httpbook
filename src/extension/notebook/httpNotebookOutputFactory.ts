@@ -18,6 +18,7 @@ export class HttpNotebookOutputFactory {
       new httpOutput.TestResultsMimeOutpoutProvider(),
       new httpOutput.MonacoEditorHttpOutputProvider(config, this.httpyac),
       new httpOutput.Rfc7230HttpOutpoutProvider(config, this.httpyac),
+      new httpOutput.ExtensionHttpOutputProvider(),
       new httpOutput.ImageHttpOutputProvider(),
       new httpOutput.ContentTypeHttpOutputProvider(config),
     ];

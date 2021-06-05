@@ -42,7 +42,8 @@
   "contributes": {
     "notebooks": [
       {
-        "viewType": "http",
+        "id": "httpbook",
+        "type": "http",
         "displayName": "HttpBook",
         "selector": [
           {
@@ -153,18 +154,18 @@
     "update-api": "cd ./src/extension && npx vscode-dts dev"
   },
   "devDependencies": {
-    "@types/node": "^15.6.1",
-    "@types/react": "^17.0.8",
+    "@types/node": "^15.12.1",
+    "@types/react": "^17.0.9",
     "@types/vscode": "^1.56.0",
-    "@types/vscode-notebook-renderer": "^1.57.4",
+    "@types/vscode-notebook-renderer": "^1.57.9",
     "@types/webpack-env": "^1.16.0",
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
-    "@typescript-eslint/parser": "^4.25.0",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
     "css-loader": "^5.2.6",
-    "eslint": "^7.27.0",
+    "eslint": "^7.28.0",
     "eslint-plugin-node": "^11.1.0",
     "fork-ts-checker-webpack-plugin": "^6.2.10",
-    "httpyac": "^2.12.1",
+    "httpyac": "^2.13.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "lockfile-lint": "^4.6.2",

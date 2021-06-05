@@ -43,8 +43,6 @@ export class HttpNotebookOutputFactory {
       if (outputItems.length > 0) {
         const output = this.createNotebookCellOutput(outputItems, response.contentType?.mimeType);
 
-        // TODO add fix to httpyac lib
-        delete response.headers[':status'];
         output.metadata = {
           source: this.httpyac.utils.toMultiLineString(this.httpyac.utils.toHttpStringResponse(response)),
         };

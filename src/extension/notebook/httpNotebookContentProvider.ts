@@ -2,11 +2,12 @@ import type * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
 import { EOL } from 'os';
 import { AppConfig } from '../config';
-import { httpDocumentSelector, HttpNotebookViewType } from './notebookSelector';
+import { HttpNotebookViewType } from './notebookSelector';
 import { HttpNotebookOutputFactory } from './httpNotebookOutputFactory';
 
 
 export class HttpNotebookContentProvider implements vscode.NotebookContentProvider {
+
   options?: vscode.NotebookDocumentContentOptions | undefined;
 
   private subscriptions: Array<vscode.Disposable>;
@@ -15,11 +16,12 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
     private readonly httpyac: typeof Httpyac,
     private readonly httpFileStore: Httpyac.HttpFileStore,
     private readonly config: AppConfig,
+    private readonly httpDocumentSelector: vscode.DocumentSelector,
   ) {
 
     this.subscriptions = [
       vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument.bind(this)),
-      vscode.notebook.registerNotebookContentProvider(
+      vscode.workspace.registerNotebookContentProvider(
         HttpNotebookViewType,
         this,
         {
@@ -56,10 +58,10 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
       for (const httpRegion of httpFile.httpRegions) {
         cells.push(...this.createCells(httpRegion, httpFile));
       }
-      return this.createNotebook(cells);
+      return new vscode.NotebookData(cells);
     } catch (err) {
       this.httpyac.log.trace(err);
-      return this.createNotebook([]);
+      return new vscode.NotebookData([]);
     }
   }
 
@@ -93,18 +95,14 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
     return new vscode.NotebookCellData(
       vscode.NotebookCellKind.Markup,
       src,
-      'text/markdown',
-      [],
-      new vscode.NotebookCellMetadata()
+      'text/markdown'
     );
   }
 
   private createHttpCodeCell(source: string, httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
     const cell = new vscode.NotebookCellData(vscode.NotebookCellKind.Code,
       source,
-      'http',
-      [],
-      new vscode.NotebookCellMetadata());
+      'http');
 
     if (httpRegion.response) {
       cell.outputs = this.httpNotebookOutputFactory.createHttpRegionOutputs(httpRegion, {
@@ -178,17 +176,10 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
   }
 
 
-  private createNotebook(cells: Array<vscode.NotebookCellData>) {
-    return new vscode.NotebookData(
-      cells,
-      new vscode.NotebookDocumentMetadata()
-    );
-  }
-
   public onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
     if (event.document.notebook
-      && event.document.notebook?.viewType === HttpNotebookViewType
-      && vscode.languages.match(httpDocumentSelector, event.document)) {
+      && event.document.notebook?.notebookType === HttpNotebookViewType
+      && vscode.languages.match(this.httpDocumentSelector, event.document)) {
       const source = this.getDocumentSource(event.document.notebook);
       this.httpFileStore.getOrCreate(event.document.notebook.uri, () => Promise.resolve(source), event.document.version);
     }

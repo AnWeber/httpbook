@@ -1,23 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { h, FunctionComponent, Fragment } from 'preact';
 import './rfc7230.css';
-import type { HttpResponse, HttpMethod } from 'httpyac';
+import type { HttpResponse, HttpResponseRequest } from 'httpyac';
 
-
-interface NormalizedOptions {
-  url?: URL;
-  method?: HttpMethod;
-  headers?: Record<string, string | string[] | undefined>;
-  body?: unknown;
-}
 
 interface RFC7230Data{
   response: HttpResponse
-  image?: string;
 }
 
 
-export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, image }) => <section class="response">
+export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response }) => <section class="response">
   {response.request
     && <Request request={response.request}/>
   }
@@ -25,11 +17,11 @@ export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response, imag
   {response.headers
     && <Headers headers={response.headers} />
   }
-  {image ? <img src={`data:${response.contentType?.mimeType || 'image/png'};base64,${image}`}></img> : typeof response.body === 'string' && <pre><code>{ response.body }</code></pre>}
+  {typeof response.body === 'string' && (response.body.startsWith('data:') ? <img src={response.body}></img> : <pre><code>{ response.body }</code></pre>)}
 </section>;
 
 
-const Request: FunctionComponent<{ request: NormalizedOptions }>
+const Request: FunctionComponent<{ request: HttpResponseRequest }>
   = ({ request }) => <div class='request'>
     <RequestLine request={request} />
     {request.headers
@@ -39,8 +31,8 @@ const Request: FunctionComponent<{ request: NormalizedOptions }>
   </div>;
 
 
-const RequestLine: FunctionComponent<{ request: NormalizedOptions }> = ({ request }) => <h4 class="requestline">
-  <span class="requestline__method">{request.method || 'GET'}</span> <span class="requestline__url">{request.url}</span>
+const RequestLine: FunctionComponent<{ request: HttpResponseRequest }> = ({ request }) => <h4 class="requestline">
+  <span class="requestline__method">{request.method || 'GET'}</span> <span class="requestline__url">{`${request.url}`}</span>
 </h4>;
 
 

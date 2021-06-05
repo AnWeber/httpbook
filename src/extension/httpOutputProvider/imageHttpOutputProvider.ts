@@ -11,7 +11,7 @@ export class ImageHttpOutputProvider implements HttpOutputProvider {
       && response.rawBody
       && ['image/png', 'image/jpeg'].indexOf(response?.contentType.mimeType) >= 0) {
       return {
-        outputItems: vscode.NotebookCellOutputItem.bytes(
+        outputItems: new vscode.NotebookCellOutputItem(
           response.rawBody,
           response?.contentType.mimeType,
         ),

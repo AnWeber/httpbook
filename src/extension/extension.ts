@@ -27,7 +27,7 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
 
     context.subscriptions.push(...[
       watchConfigSettings(current => Object.assign(config, current)),
-      vscode.notebook.onDidCloseNotebookDocument(notebook => {
+      vscode.workspace.onDidCloseNotebookDocument(notebook => {
         for (const cell of notebook.getCells()) {
           httpyacExtension.exports.httpFileStore.remove(cell.document.uri);
         }
@@ -38,6 +38,7 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
         httpyacExtension.exports.httpyac,
         httpyacExtension.exports.httpFileStore,
         config,
+        httpyacExtension.exports.httpDocumentSelector
       ),
       new notebook.HttpNotebookKernel(
         httpNotebookOutputFactory,

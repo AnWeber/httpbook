@@ -8,6 +8,7 @@ export interface HttpyacExtensionApi{
   httpyac: typeof httpyac,
   httpFileStore: httpyac.HttpFileStore,
   documentStore: DocumentStore,
+  httpDocumentSelector: vscode.DocumentSelector,
   refreshCodeLens: vscode.EventEmitter<void>,
   environementChanged: vscode.EventEmitter<string[] | undefined>
 }

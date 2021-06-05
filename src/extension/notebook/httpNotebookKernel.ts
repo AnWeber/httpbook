@@ -18,16 +18,15 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     private readonly refreshCodeLens: vscode.EventEmitter<void>
   ) {
     this.onDidChangeCellStatusBarItems = refreshCodeLens.event;
-    const controller = vscode.notebook.createNotebookController('httpbook-kernel', HttpNotebookViewType, 'HttpBook');
+    const controller = vscode.notebooks.createNotebookController('httpbook-kernel', HttpNotebookViewType, 'HttpBook');
     controller.supportedLanguages = ['http'];
-    controller.hasExecutionOrder = true;
     controller.description = 'a Notebook for sending REST, SOAP, and GraphQL requests';
     controller.executeHandler = this.send.bind(this);
 
 
     this.subscriptions = [
       controller,
-      vscode.notebook.registerNotebookCellStatusBarItemProvider(HttpNotebookViewType, this),
+      vscode.notebooks.registerNotebookCellStatusBarItemProvider(HttpNotebookViewType, this),
     ];
   }
   async provideCellStatusBarItems(cell: vscode.NotebookCell): Promise<vscode.NotebookCellStatusBarItem[]> {
@@ -36,14 +35,14 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
     const cellHttpFile = await this.getCellHttpFile(cell);
     if (cellHttpFile) {
-      result.push(new vscode.NotebookCellStatusBarItem(
+      result.push(this.createNotebookCellStatusBarItem(
         `${cellHttpFile.activeEnvironment || 'no env'}`,
         vscode.NotebookCellStatusBarAlignment.Left,
         'httpyac.toggle-env',
         `current environment: ${cellHttpFile.activeEnvironment || '-'}`,
       ));
       if (this.httpyac.environments.userSessionStore.userSessions.length > 0) {
-        result.push(new vscode.NotebookCellStatusBarItem(
+        result.push(this.createNotebookCellStatusBarItem(
           `active session (${this.httpyac.environments.userSessionStore.userSessions.length})`,
           vscode.NotebookCellStatusBarAlignment.Right,
           'httpyac.logout',
@@ -51,7 +50,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
         ));
       }
       if (this.httpyac.environments.cookieStore.cookies.length > 0) {
-        result.push(new vscode.NotebookCellStatusBarItem(
+        result.push(this.createNotebookCellStatusBarItem(
           `cookies (${this.httpyac.environments.cookieStore.cookies.length})`,
           vscode.NotebookCellStatusBarAlignment.Right,
           'httpyac.removeCookies',
@@ -61,13 +60,13 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
         // TODO correct command if cell statusbar items are working with command
         if (httpRegion.response) {
-          result.push(new vscode.NotebookCellStatusBarItem(
+          result.push(this.createNotebookCellStatusBarItem(
             '$(save)',
             vscode.NotebookCellStatusBarAlignment.Left,
             'httpyac.save',
             'save'
           ));
-          result.push(new vscode.NotebookCellStatusBarItem(
+          result.push(this.createNotebookCellStatusBarItem(
             '$(file-code)',
             vscode.NotebookCellStatusBarAlignment.Left,
             'httpyac.show',
@@ -84,6 +83,14 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
       this.subscriptions = [];
     }
   }
+
+  private createNotebookCellStatusBarItem(text: string, alignment: vscode.NotebookCellStatusBarAlignment, command: string | vscode.Command, tooltip?: string) {
+    const statusBarItem = new vscode.NotebookCellStatusBarItem(text, alignment);
+    statusBarItem.command = command;
+    statusBarItem.tooltip = tooltip;
+    return statusBarItem;
+  }
+
 
   private async send(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument, controller: vscode.NotebookController): Promise<void> {
     const r = this.httpyac.fileProvider.toString(notebook.uri);
@@ -123,7 +130,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
   private async executeCell(controller: vscode.NotebookController, cell: vscode.NotebookCell, httpFile: Httpyac.HttpFile, httpRegions: Httpyac.HttpRegion[]) {
     const execution = controller.createNotebookCellExecution(cell);
     execution.executionOrder = ++this.executionOrder;
-    execution.start({ startTime: Date.now() });
+    execution.start(Date.now());
     try {
       await this.httpyac.httpYacApi.send({
         httpFile,
@@ -139,10 +146,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
         }));
       }
       execution.replaceOutput(outputs);
-      execution.end({
-        success: true,
-        endTime: Date.now(),
-      });
+      execution.end(true, Date.now());
       return true;
     } catch (err) {
       this.httpyac.log.error(err);
@@ -151,7 +155,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
           vscode.NotebookCellOutputItem.error(err),
         ])
       ]);
-      execution.end({ success: false, endTime: Date.now() });
+      execution.end(false, Date.now());
       return false;
     }
   }

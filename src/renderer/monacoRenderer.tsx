@@ -1,24 +1,11 @@
-import { ActivationFunction, CellInfo } from 'vscode-notebook-renderer';
+import { ActivationFunction, OutputItem } from 'vscode-notebook-renderer';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { h, render } from 'preact';
-import { MonacoEditor, MonacoEditorMetaData } from './components/monacoEditor';
+import { MonacoEditor } from './components/monacoEditor';
 
 
 export const activate: ActivationFunction = () => ({
-  renderCell(_id, cell: CellInfo) {
-    let metaData: MonacoEditorMetaData = {
-      colorThemeKind: 1,
-      editorOptions: {}
-    };
-    if (isColorThemeKind(cell.metadata)) {
-      metaData = cell.metadata;
-    }
-    render(<MonacoEditor value={cell.text()} mimeType={cell.mime} metaData={metaData} />, cell.element);
+  renderOutputItem(outputItem: OutputItem, element: HTMLElement) {
+    render(<MonacoEditor value={outputItem.text()} mimeType={outputItem.mime} />, element);
   },
 });
-
-
-function isColorThemeKind(metadata: unknown): metadata is MonacoEditorMetaData {
-  const obj = metadata as Record<string, number>;
-  return !!obj && !!obj.colorThemeKind;
-}

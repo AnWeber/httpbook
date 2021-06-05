@@ -11,13 +11,7 @@ export class MonacoEditorHttpOutputProvider implements HttpOutputProvider {
   constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) { }
 
   getResponseOutputResult(response: Httpyac.HttpResponse): HttpOutputResult | false {
-    const metaData: Record<string, unknown> = {
-      colorThemeKind: vscode.window.activeColorTheme.kind,
-      editorOptions: this.config.monacoEditorOptions,
-    };
-
     let mimeType: string | undefined;
-
     if (response.contentType) {
       if (this.httpyac.utils.isMimeTypeJSON(response.contentType)) {
         mimeType = 'application/json';
@@ -37,10 +31,8 @@ export class MonacoEditorHttpOutputProvider implements HttpOutputProvider {
     }
 
     if (mimeType && typeof response.body === 'string') {
-      const outputItem = vscode.NotebookCellOutputItem.text(response.body, mimeType);
-      outputItem.metadata = metaData;
       return {
-        outputItems: outputItem,
+        outputItems: vscode.NotebookCellOutputItem.text(response.body, mimeType),
         priority: HttpOutputPriority.Default,
       };
     }

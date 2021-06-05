@@ -10,15 +10,14 @@ export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
   constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}
 
   getResponseOutputResult(response: Httpyac.HttpResponse): HttpOutputResult | false {
-    const metaData: Record<string, unknown> = {};
+    const httpResponse: Httpyac.HttpResponse = { ...response };
     if (response.rawBody
         && this.httpyac.utils.isMimeTypeImage(response.contentType)) {
-      metaData.image = response.rawBody.toString('base64');
+      httpResponse.body = `data:${response.contentType?.mimeType || 'image/png'};base64,${response.rawBody.toString('base64')}`;
     }
-    const ouputItem = vscode.NotebookCellOutputItem.json(response, 'message/http');
-    ouputItem.metadata = metaData;
+
     return {
-      outputItems: ouputItem,
+      outputItems: vscode.NotebookCellOutputItem.json(httpResponse, 'message/http'),
       priority: HttpOutputPriority.Default,
     };
   }

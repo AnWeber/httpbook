@@ -6,12 +6,6 @@ import './monacoEditor.css';
 export interface MonacoEditorProps{
   value: string,
   mimeType: string,
-  metaData: MonacoEditorMetaData,
-}
-
-export interface MonacoEditorMetaData{
-  colorThemeKind: number,
-  editorOptions: editor.IStandaloneEditorConstructionOptions
 }
 
 export class MonacoEditor extends Component<MonacoEditorProps,
@@ -22,9 +16,10 @@ export class MonacoEditor extends Component<MonacoEditorProps,
 
       const { editor } = await import(/* webpackChunkName: "monacoeditor" */ 'monaco-editor/esm/vs/editor/editor.api.js');
 
-      if (this.props.metaData.colorThemeKind === 2) {
+
+      if (document.body.className.indexOf('vscode-dark') >= 0) {
         editor.setTheme('vs-dark');
-      } else if (this.props.metaData.colorThemeKind === 3) {
+      } else if (document.body.className.indexOf('vscode-high-contrast') >= 0) {
         editor.setTheme('hc-black');
       } else {
         editor.setTheme('vs');
@@ -39,7 +34,6 @@ export class MonacoEditor extends Component<MonacoEditorProps,
             fontSize: +computedStyle.getPropertyValue('--theme-code-font-size').replace('px', ''),
             fontWeight: computedStyle.getPropertyValue('--theme-code-font-weight')
           },
-          this.props.metaData.editorOptions,
           {
             language: this.getLanguageId(this.props.mimeType),
           }

@@ -1,3 +1,8 @@
+## 0.17.0 (2021-06-05)
+
+#### Features
+* update to new notebook api
+
 ## 0.16.0 (2021-05-30)
 
 #### Features

@@ -144,7 +144,7 @@
     "update-api": "cd ./src/extension && npx vscode-dts dev"
   },
   "devDependencies": {
-    "@types/node": "^15.12.1",
+    "@types/node": "^15.12.2",
     "@types/react": "^17.0.9",
     "@types/vscode": "^1.56.0",
     "@types/vscode-notebook-renderer": "^1.57.9",

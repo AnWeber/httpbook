@@ -1,7 +1,13 @@
+## 0.19.0 (2021-06-11)
+
+#### Features
+* update monaco-editor
+
 ## 0.18.0 (2021-06-05)
 
 #### Features
 * search notebookRenderer supporting mimeType
+
 ## 0.17.0 (2021-06-05)
 
 #### Features

@@ -93,8 +93,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
 
   private async send(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument, controller: vscode.NotebookController): Promise<void> {
-    const r = this.httpyac.fileProvider.toString(notebook.uri);
-    this.httpyac.log.info(r);
     const httpFile = this.httpFileStore.get(notebook.uri);
     if (httpFile) {
       for (const cell of cells) {

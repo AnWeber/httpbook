@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as notebook from './notebook';
-import { HttpyacExtensionApi } from './models';
+import { HttpyacExtensionApi } from './httpyacExtensionApi';
 import { HttpBookApi, HttpOutputProvider } from './extensionApi';
 import { AppConfig, watchConfigSettings } from './config';
 
@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
   const httpyacExtension = vscode.extensions.getExtension<HttpyacExtensionApi>('anweber.vscode-httpyac');
   if (httpyacExtension?.isActive) {
     httpyacExtension.exports.documentStore.getDocumentPathLike = document => {
-      if (document.notebook) {
+      if (notebook.isNotebookDocument(document)) {
         return {
           uri: document.uri,
           fileUri: document.notebook.uri,
@@ -20,11 +20,16 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
       }
       return document.uri;
     };
-    const environementChanged = notebook.environementChangedFactory(httpyacExtension.exports.httpFileStore, httpyacExtension.exports.refreshCodeLens);
+    const environementChanged = notebook.environementChangedFactory(httpyacExtension.exports);
     httpyacExtension.exports.environementChanged.event(environementChanged);
 
     const httpNotebookOutputFactory = new notebook.HttpNotebookOutputFactory(config, httpyacExtension.exports.httpyac);
 
+    const httpNotebookSerialier = new notebook.HttpNotebookSerializer(
+      httpNotebookOutputFactory,
+      httpyacExtension.exports,
+      config
+    );
     context.subscriptions.push(...[
       watchConfigSettings(current => Object.assign(config, current)),
       vscode.workspace.onDidCloseNotebookDocument(notebook => {
@@ -33,18 +38,11 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
         }
         httpyacExtension.exports.httpFileStore.remove(notebook.uri);
       }),
-      new notebook.HttpNotebookContentProvider(
-        httpNotebookOutputFactory,
-        httpyacExtension.exports.httpyac,
-        httpyacExtension.exports.httpFileStore,
-        config,
-        httpyacExtension.exports.httpDocumentSelector
-      ),
+      httpNotebookSerialier,
       new notebook.HttpNotebookKernel(
         httpNotebookOutputFactory,
-        httpyacExtension.exports.httpyac,
-        httpyacExtension.exports.httpFileStore,
-        httpyacExtension.exports.refreshCodeLens
+        httpNotebookSerialier,
+        httpyacExtension.exports
       )
     ]);
     return {

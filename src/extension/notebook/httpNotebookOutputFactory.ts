@@ -45,7 +45,7 @@ export class HttpNotebookOutputFactory {
         const output = this.createNotebookCellOutput(outputItems, response.contentType?.mimeType);
 
         output.metadata = {
-          source: this.httpyac.utils.toMultiLineString(this.httpyac.utils.toHttpStringResponse(response)),
+          source: this.httpyac.utils.toMultiLineString(this.httpyac.utils.toHttpStringResponse(response)).trim(),
         };
         outputs.push(output);
       }

@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, SOAP, and GraphQL requests directly within Visual Studio Code",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -30,7 +30,6 @@
   ],
   "icon": "icon.png",
   "preview": true,
-  "enableProposedApi": true,
   "activationEvents": [
     "onNotebook:http",
     "onLanguage:http"
@@ -114,17 +113,17 @@
           "scope": "resource",
           "description": "map content type to NotebookOutputRenderer (regex is possible)"
         },
-        "httpbook.saveWithEmptyFirstline": {
-          "type": "boolean",
-          "default": true,
-          "scope": "resource",
-          "description": "add empty first line on save"
-        },
         "httpbook.saveWithRegionDelimiter": {
           "type": "boolean",
           "default": true,
           "scope": "resource",
           "description": "save with Region Delimiter (###). set to true, if compatibilty with Intellij is needed"
+        },
+        "httpbook.saveWithOutputs": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "add outputs to http file"
         }
       }
     }
@@ -139,23 +138,21 @@
     "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
     "eslint": "eslint src --ext ts",
     "lint": "npm run eslint && npm run lockfile-lint",
-    "precommit": "npm run lint",
-    "deploy": "npx vsce publish --noVerify",
-    "update-api": "cd ./src/extension && npx vscode-dts dev"
+    "precommit": "npm run lint"
   },
   "devDependencies": {
-    "@types/node": "^15.12.2",
+    "@types/node": "^15.12.4",
     "@types/react": "^17.0.11",
     "@types/vscode": "^1.57.0",
-    "@types/vscode-notebook-renderer": "^1.57.9",
+    "@types/vscode-notebook-renderer": "^1.57.10",
     "@types/webpack-env": "^1.16.0",
-    "@typescript-eslint/eslint-plugin": "^4.26.1",
-    "@typescript-eslint/parser": "^4.26.1",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
     "css-loader": "^5.2.6",
-    "eslint": "^7.28.0",
+    "eslint": "^7.29.0",
     "eslint-plugin-node": "^11.1.0",
-    "fork-ts-checker-webpack-plugin": "^6.2.10",
-		"httpyac": "^2.14.1",
+    "fork-ts-checker-webpack-plugin": "^6.2.12",
+		"httpyac": "^2.16.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
     "lockfile-lint": "^4.6.2",
@@ -164,14 +161,14 @@
     "svg-sprite-loader": "^6.0.7",
     "thread-loader": "^3.0.4",
     "ts-loader": "^9.2.3",
-    "typescript": "^4.3.2",
+    "typescript": "^4.3.4",
     "vscode-dts": "^0.3.1",
-    "webpack": "^5.38.1",
+    "webpack": "^5.39.1",
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
     "file-loader": "^6.2.0",
-    "monaco-editor": "^0.25.1",
+    "monaco-editor": "^0.25.2",
     "preact": "^10.5.13",
     "vscode-codicons": "^0.0.17"
   }

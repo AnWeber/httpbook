@@ -1,16 +1,22 @@
-import type { HttpFileStore } from 'httpyac';
 import * as vscode from 'vscode';
+import { HttpyacExtensionApi } from '../httpyacExtensionApi';
+import { isNotebookDocument } from './notebookUtils';
 
-export function environementChangedFactory(httpFileStore: HttpFileStore, refreshCodeLens: vscode.EventEmitter<void>) {
+export function environementChangedFactory(httpyacExtensionApi: HttpyacExtensionApi) {
   return async function environementChanged(env: string[] | undefined): Promise<void> {
-    const notebookDocument = vscode.window.activeNotebookEditor?.document;
-
-    if (notebookDocument) {
-      for (const cell of notebookDocument.getCells()) {
-        const httpFile = await httpFileStore.getOrCreate(cell.document.uri, () => Promise.resolve(cell.document.getText()), cell.document.version);
-        httpFile.activeEnvironment = env;
+    try {
+      const notebookDocument = vscode.window.activeTextEditor?.document;
+      if (notebookDocument && isNotebookDocument(notebookDocument)) {
+        if (notebookDocument) {
+          for (const cell of notebookDocument.notebook.getCells()) {
+            const httpFile = await httpyacExtensionApi.documentStore.getHttpFile(cell.document);
+            httpFile.activeEnvironment = env;
+          }
+          httpyacExtensionApi.refreshCodeLens.fire();
+        }
       }
-      refreshCodeLens.fire();
+    } catch (err) {
+      httpyacExtensionApi.httpyac.log.error(err);
     }
   };
 }

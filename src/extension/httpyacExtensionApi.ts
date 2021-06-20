@@ -1,8 +1,10 @@
 import type * as httpyac from 'httpyac';
 import * as vscode from 'vscode';
 
-interface DocumentStore extends httpyac.HttpFileStore{
+export interface DocumentStore {
+  httpFileStore: httpyac.HttpFileStore;
   getDocumentPathLike: (document: vscode.TextDocument) => httpyac.PathLike;
+  getHttpFile(document: vscode.TextDocument): Promise<httpyac.HttpFile>;
 }
 export interface HttpyacExtensionApi{
   httpyac: typeof httpyac,

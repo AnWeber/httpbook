@@ -1,4 +1,5 @@
 export * from './environmentController';
-export * from './httpNotebookContentProvider';
+export * from './httpNotebookSerializer';
 export * from './httpNotebookKernel';
 export * from './httpNotebookOutputFactory';
+export * from './notebookUtils';

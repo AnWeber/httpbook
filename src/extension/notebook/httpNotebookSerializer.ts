@@ -2,26 +2,32 @@ import type * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
 import { EOL } from 'os';
 import { AppConfig } from '../config';
-import { HttpNotebookViewType } from './notebookSelector';
 import { HttpNotebookOutputFactory } from './httpNotebookOutputFactory';
+import { isNotebookDocument } from './notebookUtils';
+import { HttpyacExtensionApi } from '../httpyacExtensionApi';
 
+export const HttpNotebookViewType = 'http';
 
-export class HttpNotebookContentProvider implements vscode.NotebookContentProvider {
+interface HttpCell{
+  value: string;
+  kind: vscode.NotebookCellKind,
+  outputs?: Array<unknown>
+}
+
+export class HttpNotebookSerializer implements vscode.NotebookSerializer {
 
   options?: vscode.NotebookDocumentContentOptions | undefined;
 
   private subscriptions: Array<vscode.Disposable>;
   constructor(
     private readonly httpNotebookOutputFactory: HttpNotebookOutputFactory,
-    private readonly httpyac: typeof Httpyac,
-    private readonly httpFileStore: Httpyac.HttpFileStore,
-    private readonly config: AppConfig,
-    private readonly httpDocumentSelector: vscode.DocumentSelector,
+    private readonly httpyacExtensionApi: HttpyacExtensionApi,
+    private readonly config: AppConfig
   ) {
 
     this.subscriptions = [
       vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument.bind(this)),
-      vscode.workspace.registerNotebookContentProvider(
+      vscode.workspace.registerNotebookSerializer(
         HttpNotebookViewType,
         this,
         {
@@ -35,6 +41,27 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
       )
     ];
   }
+  async deserializeNotebook(content: Uint8Array): Promise<vscode.NotebookData> {
+    try {
+      const httpFile = await this.httpyacExtensionApi.httpFileStore.parse(
+        vscode.window.activeTextEditor?.document.uri || 'unknown',
+        Buffer.from(content).toString('utf-8')
+      );
+
+      const cells: Array<vscode.NotebookCellData> = [];
+      for (const httpRegion of httpFile.httpRegions) {
+        cells.push(...this.createCells(httpRegion, httpFile));
+      }
+      return new vscode.NotebookData(cells);
+    } catch (err) {
+      this.httpyacExtensionApi.httpyac.log.trace(err);
+      return new vscode.NotebookData([]);
+    }
+  }
+  serializeNotebook(data: vscode.NotebookData): Uint8Array | Thenable<Uint8Array> {
+    const source = this.getDocumentSource(data);
+    return Buffer.from(source);
+  }
   public dispose(): void {
     if (this.subscriptions) {
       this.subscriptions.forEach(obj => obj.dispose());
@@ -45,41 +72,21 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
 
   onDidChangeNotebookContentOptions?: vscode.Event<vscode.NotebookDocumentContentOptions> | undefined;
 
-  async openNotebook(uri: vscode.Uri, openContext: vscode.NotebookDocumentOpenContext): Promise<vscode.NotebookData> {
-    try {
-      const httpFile = await this.httpFileStore.getOrCreate(uri, async () => {
-        const content = await vscode.workspace.fs.readFile(uri);
-        return Buffer.from(content).toString();
-      }, 0);
-      if (openContext.backupId) {
-        this.httpFileStore.rename(uri, vscode.Uri.parse(openContext.backupId));
-      }
-      const cells: Array<vscode.NotebookCellData> = [];
-      for (const httpRegion of httpFile.httpRegions) {
-        cells.push(...this.createCells(httpRegion, httpFile));
-      }
-      return new vscode.NotebookData(cells);
-    } catch (err) {
-      this.httpyac.log.trace(err);
-      return new vscode.NotebookData([]);
-    }
-  }
-
   private createCells(httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
     const cells: Array<vscode.NotebookCellData> = [];
     if (httpRegion.symbol.children) {
       const sourceLines: Array<string> = [];
       for (const symbol of httpRegion.symbol.children) {
         if (symbol.source) {
-          if (symbol.kind === this.httpyac.HttpSymbolKind.comment) {
+          if (symbol.kind === this.httpyacExtensionApi.httpyac.HttpSymbolKind.comment) {
             cells.push(this.createMarkDownCell(symbol.source));
-          } else if (symbol.kind !== this.httpyac.HttpSymbolKind.response) {
+          } else if (symbol.kind !== this.httpyacExtensionApi.httpyac.HttpSymbolKind.response) {
             sourceLines.push(symbol.source);
           }
         }
       }
       if (sourceLines.length > 0) {
-        cells.push(this.createHttpCodeCell(this.httpyac.utils.toMultiLineString(sourceLines), httpRegion, httpFile));
+        cells.push(this.createHttpCodeCell(this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceLines), httpRegion, httpFile));
       }
     } else {
       cells.push(this.createHttpCodeCell(httpRegion.symbol.source || '', httpRegion, httpFile));
@@ -114,36 +121,15 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
     return cell;
   }
 
-  async saveNotebook(document: vscode.NotebookDocument): Promise<void> {
-    await this.saveDocument(document.uri, document);
-  }
-
-  async saveNotebookAs(targetResource: vscode.Uri, document: vscode.NotebookDocument): Promise<void> {
-    await this.saveDocument(targetResource, document);
-  }
-
-
-  backupNotebook(document: vscode.NotebookDocument): Promise<vscode.NotebookDocumentBackup> {
-    return Promise.resolve({
-      id: document.uri.toString(),
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      delete: () => { }
-    });
-  }
-
-
-  private getDocumentSource(document: vscode.NotebookDocument): string {
+  public getDocumentSource(document: vscode.NotebookData | vscode.NotebookDocument): string {
     const contents: Array<string> = [];
-    if (this.config.saveWithEmptyFirstline) {
-      contents.push('');
-    }
     let hasPrevCell = false;
     let isPrevCellGlobalScript = false;
-    for (const cell of document.getCells()) {
+    for (const cell of this.getNotebookCells(document)) {
       if (cell.kind === vscode.NotebookCellKind.Code) {
-        const sourceFirstLine = this.httpyac.utils.toMultiLineArray(cell.document.getText().trim()).shift();
+        const sourceFirstLine = this.httpyacExtensionApi.httpyac.utils.toMultiLineArray(cell.value.trim()).shift();
         const startsWithRequestLine = sourceFirstLine
-          && this.httpyac.parser.ParserRegex.request.requestLine.test(sourceFirstLine);
+          && this.httpyacExtensionApi.httpyac.parser.ParserRegex.request.requestLine.test(sourceFirstLine);
 
         if (hasPrevCell) {
           if (!startsWithRequestLine || isPrevCellGlobalScript) {
@@ -155,34 +141,54 @@ export class HttpNotebookContentProvider implements vscode.NotebookContentProvid
           }
         }
         isPrevCellGlobalScript = !startsWithRequestLine;
-        contents.push(cell.document.getText());
-        for (const output of cell.outputs) {
-          if (output.metadata?.source) {
-            contents.push('');
-            contents.push(output.metadata.source);
+        contents.push(cell.value);
+        if (cell.outputs && this.config.saveWithOutputs) {
+          for (const output of cell.outputs) {
+            if (output && typeof output === 'string') {
+              contents.push('');
+              contents.push(output);
+            }
           }
         }
-
         hasPrevCell = true;
       } else if (cell.kind === vscode.NotebookCellKind.Markup) {
-        contents.push(`${EOL}/*${EOL}${cell.document.getText()}${EOL}*/${EOL}`);
+        contents.push(`${EOL}/*${EOL}${cell.value}${EOL}*/${EOL}`);
       }
     }
     return contents.join(`${EOL}`);
   }
 
-  private async saveDocument(uri: vscode.Uri, document: vscode.NotebookDocument): Promise<void> {
-    await vscode.workspace.fs.writeFile(uri, Buffer.from(this.getDocumentSource(document)));
+  private getNotebookCells(document: vscode.NotebookData | vscode.NotebookDocument) : Array<HttpCell> {
+    if (document instanceof vscode.NotebookData) {
+      return document.cells.map(obj => {
+        const result: HttpCell = {
+          value: obj.value,
+          kind: obj.kind,
+        };
+        if (obj.outputs) {
+          result.outputs = obj.outputs.map(output => output.metadata?.source);
+        }
+        return result;
+      });
+    }
+    return document.getCells().map(obj => {
+      const result: HttpCell = {
+        value: obj.document.getText(),
+        kind: obj.kind,
+      };
+      if (obj.outputs) {
+        result.outputs = obj.outputs.map(output => output.metadata?.source);
+      }
+      return result;
+    });
   }
-
 
   public onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
-    if (event.document.notebook
+    if (isNotebookDocument(event.document)
       && event.document.notebook?.notebookType === HttpNotebookViewType
-      && vscode.languages.match(this.httpDocumentSelector, event.document)) {
+      && vscode.languages.match(this.httpyacExtensionApi.httpDocumentSelector, event.document)) {
       const source = this.getDocumentSource(event.document.notebook);
-      this.httpFileStore.getOrCreate(event.document.notebook.uri, () => Promise.resolve(source), event.document.version);
+      this.httpyacExtensionApi.httpFileStore.getOrCreate(event.document.notebook.uri, () => Promise.resolve(source), event.document.version);
     }
   }
-
 }

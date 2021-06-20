@@ -12,18 +12,16 @@ export enum TestSlotOutput{
 
 export interface AppConfig {
   outputTests?: TestSlotOutput;
-  monacoEditorOptions?: unknown,
   useContentTypeAsNotebookOutputRendererMime?: boolean;
   mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>;
   preferNotebookOutputRenderer?: Record<string, string>;
-  saveWithEmptyFirstline?: boolean;
+  saveWithOutputs?: boolean;
   saveWithRegionDelimiter?: boolean;
-  readonly [key: string]: unknown;
 }
 
 
 export function getConfigSetting() : AppConfig {
-  return vscode.workspace.getConfiguration(APP_NAME);
+  return vscode.workspace.getConfiguration(APP_NAME) as AppConfig;
 }
 
 export type ConfigWatcher = (appConfig: AppConfig, ...config: Array<Record<string, unknown>>) => void

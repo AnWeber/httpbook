@@ -1,3 +1,10 @@
+## 0.20.0 (2021-06-20)
+
+#### Features
+* update monaco-editor
+* remove enable proposed api
+* saving outputs can be disabled
+
 ## 0.19.0 (2021-06-11)
 
 #### Features

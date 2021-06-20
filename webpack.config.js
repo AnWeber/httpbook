@@ -7,66 +7,68 @@ const devServerPort = 8111;
 
 module.exports = [(env, argv) => {
 
-  /**@type {import('webpack').Configuration}*/
-  const config = {
-    target: 'node',
-    mode: 'none',
+    /**@type {import('webpack').Configuration}*/
+    const config = {
+      target: 'node',
+      mode: 'none',
 
-    entry: './src/extension/extension.ts',
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'extension.js',
-      library: {
-        type: 'commonjs2',
-      },
-    },
-    devtool: argv.mode === 'development' ? 'eval-cheap-module-source-map' : 'nosources-source-map',
-    externals: {
-      vscode: 'commonjs vscode',
-      httpyac: 'httpyac'
-    },
-    resolve: {
-      extensions: ['.ts', '.js']
-    },
-    module: {
-      rules: [
-        {
-          test: /\.ts$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: 'thread-loader',
-            },
-            {
-              loader: 'ts-loader',
-              options: {
-                happyPackMode: true
-              }
-            }
-          ]
-        }
-      ]
-    },
-    plugins: [
-      new ForkTsCheckerWebpackPlugin({
-        async: true,
-        typescript: {
-          diagnosticOptions: {
-            semantic: true,
-            syntactic: true,
-          },
+      entry: './src/extension/extension.ts',
+      output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'extension.js',
+        library: {
+          type: 'commonjs2',
         },
-        eslint: {
-          files: ['./src/extension/**/*.{ts,tsx,js,jsx}']
-        }
-      })
-    ],
-    cache: {
-      type: 'memory',
-    },
-  };
-  return config;
-}, (env, argv) => {
+      },
+      devtool: argv.mode === 'development' ? 'eval-cheap-module-source-map' : 'nosources-source-map',
+      externals: {
+        vscode: 'commonjs vscode',
+        httpyac: 'httpyac'
+      },
+      resolve: {
+        extensions: ['.ts', '.js']
+      },
+      module: {
+        rules: [
+          {
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            use: [
+              {
+                loader: 'thread-loader',
+              },
+              {
+                loader: 'ts-loader',
+                options: {
+                  configFile: './src/extension/tsconfig.json',
+                  happyPackMode: true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      plugins: [
+        new ForkTsCheckerWebpackPlugin({
+          async: false,
+          typescript: {
+            configFile: './src/extension/tsconfig.json',
+            diagnosticOptions: {
+              semantic: true,
+              syntactic: true,
+            },
+          },
+          eslint: {
+            files: ['./src/extension/**/*.{ts,tsx,js,jsx}']
+          }
+        })
+      ],
+      cache: {
+        type: 'memory',
+      },
+    };
+    return config;
+  },(env, argv) => {
   /**@type {import('webpack').Configuration}*/
   const config = {
     mode: argv.mode,

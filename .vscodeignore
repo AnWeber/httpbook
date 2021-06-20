@@ -2,7 +2,7 @@
 .vscode-test/**
 out/**
 src/**
-examples/**
+images/**
 node_modules/**
 .gitignore
 .yarnrc

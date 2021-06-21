@@ -40,7 +40,6 @@ module.exports = [(env, argv) => {
               {
                 loader: 'ts-loader',
                 options: {
-                  configFile: './src/extension/tsconfig.json',
                   happyPackMode: true
                 }
               }
@@ -50,9 +49,8 @@ module.exports = [(env, argv) => {
       },
       plugins: [
         new ForkTsCheckerWebpackPlugin({
-          async: false,
+          async: true,
           typescript: {
-            configFile: './src/extension/tsconfig.json',
             diagnosticOptions: {
               semantic: true,
               syntactic: true,

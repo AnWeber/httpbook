@@ -1,3 +1,9 @@
+## 0.21.0 (2021-06-20)
+
+#### Fix
+* outputs are saved correctly
+* monaco editor is only used if not empty body
+
 ## 0.20.0 (2021-06-20)
 
 #### Features

@@ -31,7 +31,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
         HttpNotebookViewType,
         this,
         {
-          transientOutputs: true,
+          transientOutputs: false,
           transientCellMetadata: {
             inputCollapsed: true,
             outputCollapsed: true,
@@ -125,7 +125,8 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     const contents: Array<string> = [];
     let hasPrevCell = false;
     let isPrevCellGlobalScript = false;
-    for (const cell of this.getNotebookCells(document)) {
+    const cells = this.getNotebookCells(document);
+    for (const cell of cells) {
       if (cell.kind === vscode.NotebookCellKind.Code) {
         const sourceFirstLine = this.httpyacExtensionApi.httpyac.utils.toMultiLineArray(cell.value.trim()).shift();
         const startsWithRequestLine = sourceFirstLine

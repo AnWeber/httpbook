@@ -30,7 +30,10 @@ export class MonacoEditorHttpOutputProvider implements HttpOutputProvider {
       }
     }
 
-    if (mimeType && typeof response.body === 'string') {
+    if (mimeType
+      && response.body
+      && typeof response.body === 'string'
+      && response.body.length > 0) {
       return {
         outputItems: vscode.NotebookCellOutputItem.text(response.body, mimeType),
         priority: HttpOutputPriority.Default,

@@ -1,3 +1,8 @@
+## 0.22.0 (2021-06-21)
+
+#### Fix
+* monaco editor supporty application/xml
+
 ## 0.21.0 (2021-06-20)
 
 #### Fix

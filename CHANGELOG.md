@@ -1,3 +1,8 @@
+## 0.23.0 (2021-06-24)
+
+#### Features
+* support cancellation of execution
+
 ## 0.22.0 (2021-06-21)
 
 #### Fix

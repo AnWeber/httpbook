@@ -138,10 +138,24 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     const execution = controller.createNotebookCellExecution(cell);
     execution.executionOrder = ++this.executionOrder;
     execution.start(Date.now());
+
+
     try {
       await this.httpyacExtensionApi.httpyac.httpYacApi.send({
         httpFile,
         httpRegions,
+        progress: {
+          isCanceled: () => execution.token.isCancellationRequested,
+          register: (event: () => void) => {
+            const dispose = execution.token.onCancellationRequested(event);
+            return () => dispose.dispose();
+          },
+          report: () => {
+
+            // empty output
+          },
+
+        }
       });
       const outputs: Array<vscode.NotebookCellOutput> = [];
 

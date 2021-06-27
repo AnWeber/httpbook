@@ -61,7 +61,7 @@ export class MonacoEditor extends Component<MonacoEditorProps,
 
 
   private getLanguageId(mimeType: string): string {
-    if (/^(application|json)\/(.*\+|x-amz-)?json.*$/u.test(mimeType)) {
+    if (/^(application|text)\/(.*\+|x-amz-)?json.*$/u.test(mimeType)) {
       return 'json';
     }
     if (['application/javascript', 'application/x-javascript'].indexOf(mimeType) >= 0) {

@@ -56,21 +56,29 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
           'httpyac.removeCookies',
         ));
       }
-      for (const httpRegion of cellHttpFile.httpRegions) {
 
-        // TODO correct command if cell statusbar items are working with command
+      for (const httpRegion of cellHttpFile.httpRegions) {
+        const args = [cell.document.uri, httpRegion.symbol.startLine];
         if (httpRegion.response) {
           result.push(this.createNotebookCellStatusBarItem(
             '$(save)',
             vscode.NotebookCellStatusBarAlignment.Left,
-            'httpyac.save',
-            'save'
+            {
+              command: 'httpyac.save',
+              title: '$(save)',
+              tooltip: 'save',
+              arguments: args
+            }
           ));
           result.push(this.createNotebookCellStatusBarItem(
             '$(file-code)',
             vscode.NotebookCellStatusBarAlignment.Left,
-            'httpyac.show',
-            'show in editor'
+            {
+              command: 'httpyac.show',
+              title: '$(file-code)',
+              tooltip: 'show in editor',
+              arguments: args
+            }
           ));
         }
       }

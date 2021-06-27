@@ -1,3 +1,8 @@
+## 0.24.0 (2021-06-27)
+
+#### Fix
+* use args to always open/save correct cell response
+
 ## 0.23.0 (2021-06-24)
 
 #### Features

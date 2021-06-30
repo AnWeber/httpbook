@@ -179,11 +179,21 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
       return true;
     } catch (err) {
       this.httpyacExtensionApi.httpyac.log.error(err);
-      execution.replaceOutput([
-        new vscode.NotebookCellOutput([
-          vscode.NotebookCellOutputItem.error(err),
-        ])
-      ]);
+
+      const quickFix = this.httpyacExtensionApi.getErrorQuickFix(err);
+      if (quickFix) {
+        execution.replaceOutput([
+          new vscode.NotebookCellOutput([
+            vscode.NotebookCellOutputItem.stdout(`${err.stack || `${err.name} -  ${err.message}`}
+
+${quickFix}`)
+          ])
+        ]);
+      } else {
+        execution.replaceOutput([
+          new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.error(err)])
+        ]);
+      }
       execution.end(false, Date.now());
       return false;
     }

@@ -6,11 +6,12 @@ export interface DocumentStore {
   getDocumentPathLike: (document: vscode.TextDocument) => httpyac.PathLike;
   getHttpFile(document: vscode.TextDocument): Promise<httpyac.HttpFile>;
 }
-export interface HttpyacExtensionApi{
+export interface HttpYacExtensionApi{
   httpyac: typeof httpyac,
   httpFileStore: httpyac.HttpFileStore,
   documentStore: DocumentStore,
   httpDocumentSelector: vscode.DocumentSelector,
   refreshCodeLens: vscode.EventEmitter<void>,
   environementChanged: vscode.EventEmitter<string[] | undefined>
+  getErrorQuickFix: (err: Error) => string | undefined;
 }

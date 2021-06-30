@@ -1,4 +1,10 @@
-## 0.24.0 (2021-06-27)
+## 0.24.0 (2021-06-30)
+
+#### Features
+* add new meta data @noRejectUnauthorized, to disable ssl verification
+* add better json schema support in settings and file .httpyac.json
+* improve error for SSL Validation error
+* add completion for new meta data
 
 #### Fix
 * use args to always open/save correct cell response

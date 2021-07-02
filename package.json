@@ -170,7 +170,7 @@
   "dependencies": {
     "file-loader": "^6.2.0",
     "monaco-editor": "^0.25.2",
-    "preact": "^10.5.13",
+    "preact": "^10.5.14",
     "vscode-codicons": "^0.0.17"
   }
 }

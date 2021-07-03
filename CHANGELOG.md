@@ -1,3 +1,8 @@
+## 0.25.0 (2021-07-03)
+
+#### Fix
+* NotebookCellStatusBarItem does not support vscode.uri as argument (microsoft/vscode#124529)
+
 ## 0.24.0 (2021-06-30)
 
 #### Features

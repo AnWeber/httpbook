@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import type * as Httpyac from 'httpyac';
 import { HttpNotebookOutputFactory } from './httpNotebookOutputFactory';
 import { HttpNotebookSerializer, HttpNotebookViewType } from './httpNotebookSerializer';
-import { HttpyacExtensionApi } from '../httpyacExtensionApi';
+import { HttpYacExtensionApi } from '../httpyacExtensionApi';
 
 
 export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvider {
@@ -15,10 +15,10 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
   constructor(
     private readonly httpNotebookOutputFactory: HttpNotebookOutputFactory,
     private readonly httpNotebookSerializer: HttpNotebookSerializer,
-    private readonly httpyacExtensionApi: HttpyacExtensionApi
+    private readonly httpyacExtensionApi: HttpYacExtensionApi
   ) {
     this.onDidChangeCellStatusBarItems = httpyacExtensionApi.refreshCodeLens.event;
-    const controller = vscode.notebooks.createNotebookController('httpbook-kernel', HttpNotebookViewType, 'HttpBook');
+    const controller = vscode.notebooks.createNotebookController('httpbook-kernel', '*', 'HttpBook');
     controller.supportedLanguages = ['http'];
     controller.description = 'a Notebook for sending REST, SOAP, and GraphQL requests';
     controller.executeHandler = this.send.bind(this);

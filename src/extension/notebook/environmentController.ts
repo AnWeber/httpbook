@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { HttpyacExtensionApi } from '../httpyacExtensionApi';
+import { HttpYacExtensionApi } from '../httpyacExtensionApi';
 import { isNotebookDocument } from './notebookUtils';
 
-export function environementChangedFactory(httpyacExtensionApi: HttpyacExtensionApi) {
+export function environementChangedFactory(httpyacExtensionApi: HttpYacExtensionApi) {
   return async function environementChanged(env: string[] | undefined): Promise<void> {
     try {
       const notebookDocument = vscode.window.activeTextEditor?.document;

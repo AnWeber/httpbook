@@ -4,7 +4,7 @@ import { EOL } from 'os';
 import { AppConfig } from '../config';
 import { HttpNotebookOutputFactory } from './httpNotebookOutputFactory';
 import { isNotebookDocument } from './notebookUtils';
-import { HttpyacExtensionApi } from '../httpyacExtensionApi';
+import { HttpYacExtensionApi } from '../httpyacExtensionApi';
 
 export const HttpNotebookViewType = 'http';
 
@@ -21,7 +21,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   private subscriptions: Array<vscode.Disposable>;
   constructor(
     private readonly httpNotebookOutputFactory: HttpNotebookOutputFactory,
-    private readonly httpyacExtensionApi: HttpyacExtensionApi,
+    private readonly httpyacExtensionApi: HttpYacExtensionApi,
     private readonly config: AppConfig
   ) {
 

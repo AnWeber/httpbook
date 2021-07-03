@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as notebook from './notebook';
-import { HttpyacExtensionApi } from './httpyacExtensionApi';
+import { HttpYacExtensionApi } from './httpyacExtensionApi';
 import { HttpBookApi, HttpOutputProvider } from './extensionApi';
 import { AppConfig, watchConfigSettings } from './config';
 
@@ -8,7 +8,7 @@ import { AppConfig, watchConfigSettings } from './config';
 export function activate(context: vscode.ExtensionContext): HttpBookApi | false {
 
   const config: AppConfig = {};
-  const httpyacExtension = vscode.extensions.getExtension<HttpyacExtensionApi>('anweber.vscode-httpyac');
+  const httpyacExtension = vscode.extensions.getExtension<HttpYacExtensionApi>('anweber.vscode-httpyac');
   if (httpyacExtension?.isActive) {
     httpyacExtension.exports.documentStore.getDocumentPathLike = document => {
       if (notebook.isNotebookDocument(document)) {

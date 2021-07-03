@@ -94,7 +94,11 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
   private createNotebookCellStatusBarItem(text: string, alignment: vscode.NotebookCellStatusBarAlignment, command: string | vscode.Command, tooltip?: string) {
     const statusBarItem = new vscode.NotebookCellStatusBarItem(text, alignment);
-    statusBarItem.command = command;
+    if (typeof command === 'string') {
+      statusBarItem.command = command;
+    } else {
+      statusBarItem.command = command.command;
+    }
     statusBarItem.tooltip = tooltip;
     return statusBarItem;
   }

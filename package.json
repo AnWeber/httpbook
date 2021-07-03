@@ -144,7 +144,7 @@
   "devDependencies": {
     "@types/node": "^15.14.1",
     "@types/react": "^17.0.13",
-    "@types/vscode": "^1.57.1",
+    "@types/vscode": "1.57.0",
     "@types/vscode-notebook-renderer": "^1.57.11",
     "@types/webpack-env": "^1.16.2",
     "@typescript-eslint/eslint-plugin": "^4.28.1",

@@ -14,19 +14,19 @@ export class MonacoEditorHttpOutputProvider implements HttpOutputProvider {
     let mimeType: string | undefined;
     if (response.contentType) {
       if (this.httpyac.utils.isMimeTypeJSON(response.contentType)) {
-        mimeType = 'application/json';
+        mimeType = 'x-httpbook/json';
       } else if (this.httpyac.utils.isMimeTypeXml(response.contentType)) {
-        mimeType = 'application/xml';
+        mimeType = 'x-httpbook/xml';
       } else if (this.httpyac.utils.isMimeTypeCSS(response.contentType)) {
-        mimeType = 'text/css';
+        mimeType = 'x-httpbook/css';
       } else if (this.httpyac.utils.isMimeTypeHtml(response.contentType)) {
-        mimeType = 'text/html';
+        mimeType = 'x-httpbook/html';
       } else if (this.httpyac.utils.isMimeTypeJavascript(response.contentType)) {
-        mimeType = 'application/javascript';
+        mimeType = 'x-httpbook/javascript';
       } else if (this.httpyac.utils.isMimeTypeMarkdown(response.contentType)) {
-        mimeType = 'text/markdown';
+        mimeType = 'x-httpbook/markdown';
       } else if (response.contentType.mimeType.startsWith('text')) {
-        mimeType = 'text/plain';
+        mimeType = 'x-httpbook/plain';
       }
     }
 

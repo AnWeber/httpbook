@@ -61,22 +61,22 @@ export class MonacoEditor extends Component<MonacoEditorProps,
 
 
   private getLanguageId(mimeType: string): string {
-    if (/^(application|text)\/(.*\+|x-amz-)?json.*$/u.test(mimeType)) {
+    if (/^(application|text|x-httpbook)\/(.*\+|x-amz-)?json.*$/u.test(mimeType)) {
       return 'json';
     }
-    if (['application/javascript', 'application/x-javascript'].indexOf(mimeType) >= 0) {
+    if (/^(application|x-httpbook)\/(x-)?javascript$/u.test(mimeType)) {
       return 'javascript';
     }
-    if (['image/svg+xml', 'application/xhtml+xml', 'text/xml', 'application/xml'].indexOf(mimeType)) {
+    if (/^(application|text|image|x-httpbook)\/(.*\+)?xml.*$/u.test(mimeType)) {
       return 'xml';
     }
-    if (['text/html'].indexOf(mimeType) >= 0) {
+    if (/^(text|x-httpbook)\/html$/u.test(mimeType)) {
       return 'html';
     }
-    if (['text/css'].indexOf('text/css') >= 0) {
+    if (/^(text|x-httpbook)\/css$/u.test(mimeType)) {
       return 'css';
     }
-    if (mimeType === 'text/markdown') {
+    if (/^(text|x-httpbook)\/markdown$/u.test(mimeType)) {
       return 'markdown';
     }
     return 'plaintext';

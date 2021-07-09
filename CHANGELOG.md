@@ -1,7 +1,9 @@
-## 0.25.0 (2021-07-09)
+## 0.26.0 (2021-07-09)
 
 #### Features
 * workaround for missing default mime renderer (microsoft/vscode#125876)
+
+## 0.25.0 (2021-07-03)
 
 #### Fix
 * NotebookCellStatusBarItem does not support vscode.uri as argument (microsoft/vscode#124529)

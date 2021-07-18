@@ -1,3 +1,9 @@
+## 1.0.0 (2021-07-09)
+
+#### Features
+* update to new extension api of [vscode-httpyac](https://github.com/AnWeber/vscode-httpyac/releases/tag/2.20.0)
+* update monaco editor
+
 ## 0.26.0 (2021-07-09)
 
 #### Features

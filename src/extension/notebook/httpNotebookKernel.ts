@@ -153,7 +153,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
 
     try {
-      const result = await this.httpyacExtensionApi.httpyac.httpYacApi.send({
+      const result = await this.httpyacExtensionApi.sendContext({
         httpFile,
         httpRegions,
         progress: {
@@ -166,7 +166,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
             // empty output
           },
-
         }
       });
       const outputs: Array<vscode.NotebookCellOutput> = [];

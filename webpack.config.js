@@ -1,4 +1,3 @@
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const { DefinePlugin } = require('webpack');
 const path = require('path');
@@ -72,7 +71,6 @@ module.exports = [(env, argv) => {
     mode: argv.mode,
     devtool: argv.mode === 'development' ? 'eval-cheap-module-source-map' : false,
     entry: {
-      monacoRenderer: './src/renderer/monacoRenderer.tsx',
       testResultsRenderer: './src/renderer/testResultsRenderer.tsx',
       rfc7230Renderer: './src/renderer/rfc7230Renderer.tsx',
     },
@@ -136,23 +134,6 @@ module.exports = [(env, argv) => {
       headers: { 'Access-Control-Allow-Origin': '*' },
     },
     plugins: [
-      new MonacoWebpackPlugin({
-        languages: ['css', 'graphql', 'html', 'ini', 'javascript', 'json', 'markdown', 'sql', 'xml', 'yaml'],
-        features: [
-          '!accessibilityHelp', '!anchorSelect', 'bracketMatching', '!caretOperations',
-          'clipboard', 'codeAction', '!codelens', '!colorPicker',
-          '!comment', 'contextmenu', '!coreCommands', '!cursorUndo',
-          '!dnd', '!documentSymbols', 'find', 'folding',
-          '!fontZoom', 'format', '!gotoError', '!gotoLine',
-          '!gotoSymbol', '!hover', '!iPadShowKeyboard', '!inPlaceReplace',
-          'indentation', '!inlineHints', '!inspectTokens', '!linesOperations',
-          '!linkedEditing', 'links', '!multicursor', '!parameterHints',
-          '!quickCommand', '!quickHelp', '!quickOutline', '!referenceSearch',
-          '!rename', '!smartSelect', '!snippets', '!suggest',
-          '!toggleHighContrast', '!toggleTabFocusMode', '!transpose', '!unusualLineTerminators',
-          '!viewportSemanticTokens', 'wordHighlighter', 'wordOperations', 'wordPartOperations'
-        ]
-      }),
       new ForkTsCheckerWebpackPlugin({
         async: true,
         typescript: {

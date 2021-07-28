@@ -9,21 +9,24 @@ import { AppConfig, TestSlotOutput } from '../config';
 export class HttpNotebookOutputFactory {
 
   readonly httpOutputProvider: Array<extensionApi.HttpOutputProvider>;
-
+  readonly nativeOutputProvider: httpOutput.BuiltInHttpOutputProvider;
   constructor(
     private readonly config: AppConfig,
     private readonly httpyac: typeof Httpyac
   ) {
+    this.nativeOutputProvider = new httpOutput.BuiltInHttpOutputProvider(config, this.httpyac);
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
-      new httpOutput.MonacoEditorHttpOutputProvider(config, this.httpyac),
+      this.nativeOutputProvider,
       new httpOutput.Rfc7230HttpOutpoutProvider(config, this.httpyac),
       new httpOutput.ExtensionHttpOutputProvider(),
       new httpOutput.ImageHttpOutputProvider(),
       new httpOutput.ContentTypeHttpOutputProvider(config),
     ];
   }
-
+  public async initiailze(): Promise<void> {
+    await this.nativeOutputProvider.initialize();
+  }
 
   public createHttpRegionOutputs(httpRegion: Httpyac.HttpRegion, httpOutputContext: extensionApi.HttpOutputContext): vscode.NotebookCellOutput[] {
     const outputs: vscode.NotebookCellOutput[] = [];

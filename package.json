@@ -67,21 +67,6 @@
         "mimeTypes": [
           "message/http"
         ]
-      },
-      {
-        "id": "httpbook-monacoeditor",
-        "entrypoint": "./dist/monacoRenderer.js",
-        "displayName": "httpbook",
-        "mimeTypes": [
-          "x-application/httpbook-monaco-editor",
-          "x-httpbook/json",
-          "x-httpbook/css",
-          "x-httpbook/html",
-          "x-httpbook/markdown",
-          "x-httpbook/plain",
-          "x-httpbook/javascript",
-          "x-httpbook/xml"
-        ]
       }
     ],
     "configuration": {
@@ -153,11 +138,10 @@
     "eslint": "^7.31.0",
     "eslint-plugin-node": "^11.1.0",
     "fork-ts-checker-webpack-plugin": "^6.2.12",
-		"httpyac": "^2.20.0",
+    "httpyac": "^2.20.0",
     "husky": "^7.0.1",
     "lint-staged": "^11.0.1",
     "lockfile-lint": "^4.6.2",
-    "monaco-editor-webpack-plugin": "^4.1.1",
     "style-loader": "^3.1.0",
     "svg-sprite-loader": "^6.0.9",
     "thread-loader": "^3.0.4",
@@ -169,7 +153,6 @@
   },
   "dependencies": {
     "file-loader": "^6.2.0",
-    "monaco-editor": "^0.26.1",
     "preact": "^10.5.14",
     "vscode-codicons": "^0.0.17"
   }

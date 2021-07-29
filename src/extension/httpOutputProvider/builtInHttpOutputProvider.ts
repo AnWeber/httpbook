@@ -36,7 +36,7 @@ export class BuiltInHttpOutputProvider implements HttpOutputProvider {
     } else if (this.httpyac.utils.isMimeTypeHtml(response.contentType)) {
       responseMimeType = 'text/html';
     } else if (this.httpyac.utils.isMimeTypeJavascript(response.contentType)) {
-      responseMimeType = 'texxt/javascript';
+      responseMimeType = 'text/javascript';
     } else if (this.httpyac.utils.isMimeTypeMarkdown(response.contentType)) {
       responseMimeType = 'texxt/markdown';
     }

@@ -1,3 +1,9 @@
+## 1.1.0 (2021-07-30)
+
+#### Features
+* prefer built-in renderer (see #27, #29)
+* remove monaco editor renderer in separate extension (https://marketplace.visualstudio.com/items?itemName=anweber.httpbook-monacorenderer)
+
 ## 1.0.0 (2021-07-09)
 
 #### Features

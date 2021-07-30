@@ -41,6 +41,8 @@ export enum HttpOutputPriority{
   High = 1000,
 }
 
+export type HttpOutputReturn = Promise<HttpOutputResult | false> | HttpOutputResult | false;
+
 export interface HttpOutputProvider{
 
   /**
@@ -54,7 +56,7 @@ export interface HttpOutputProvider{
    * @param context HttpOutputContext
    * @returns false if output not valid else NotebookCellOutputItems and priortiy
    */
-  getResponseOutputResult?(response: HttpResponse, context: HttpOutputContext): HttpOutputResult | false;
+  getResponseOutputResult?(response: HttpResponse, context: HttpOutputContext): HttpOutputReturn;
 
   /**
    * create NotebookCellOutputItems with view priority for testResults
@@ -62,7 +64,7 @@ export interface HttpOutputProvider{
    * @param context HttpOutputContext
    * @returns false if output not valid else NotebookCellOutputItems and priortiy
    */
-   getTestResultOutputResult?(testResult: TestResult[], context: HttpOutputContext): HttpOutputResult | false;
+   getTestResultOutputResult?(testResult: TestResult[], context: HttpOutputContext): HttpOutputReturn;
 }
 
 

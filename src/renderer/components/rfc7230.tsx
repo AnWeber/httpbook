@@ -17,7 +17,8 @@ export const RFC7230Response: FunctionComponent<RFC7230Data> = ({ response }) =>
   {response.headers
     && <Headers headers={response.headers} />
   }
-  {typeof response.body === 'string' && (response.body.startsWith('data:') ? <img src={response.body}></img> : <pre><code>{ response.body }</code></pre>)}
+  {response.prettyPrintBody ? <pre><code>{ response.prettyPrintBody}</code></pre>
+    : (typeof response.body === 'string' && (response.body.startsWith('data:') ? <img src={response.body}></img> : <pre><code>{ response.body}</code></pre>))}
 </section>;
 
 

@@ -24,7 +24,6 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
     httpyacExtension.exports.environementChanged.event(environementChanged);
 
     const httpNotebookOutputFactory = new notebook.HttpNotebookOutputFactory(config, httpyacExtension.exports.httpyac);
-    await httpNotebookOutputFactory.initialize();
     const httpNotebookSerialier = new notebook.HttpNotebookSerializer(
       httpNotebookOutputFactory,
       httpyacExtension.exports,

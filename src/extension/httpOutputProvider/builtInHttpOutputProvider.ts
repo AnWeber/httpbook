@@ -9,11 +9,9 @@ export class BuiltInHttpOutputProvider implements HttpOutputProvider {
   vscodeLanguages = new Set<string>();
   constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) { }
 
-  async initialize(): Promise<void> {
-    await vscode.languages.getLanguages().then(languages => languages.forEach(lang => this.vscodeLanguages.add(lang.toLowerCase())));
-  }
 
-  getResponseOutputResult(response: Httpyac.HttpResponse): HttpOutputResult | false {
+  async getResponseOutputResult(response: Httpyac.HttpResponse): Promise<HttpOutputResult | false> {
+
     if (!response.contentType
       || !response.body
       || typeof response.body !== 'string'
@@ -23,7 +21,7 @@ export class BuiltInHttpOutputProvider implements HttpOutputProvider {
 
     if (this.httpyac.utils.isMimeTypeJSON(response.contentType)) {
       return {
-        outputItems: vscode.NotebookCellOutputItem.json(JSON.parse(response.body)),
+        outputItems: vscode.NotebookCellOutputItem.json(response.parsedBody),
         priority: HttpOutputPriority.Default,
       };
     }
@@ -38,16 +36,17 @@ export class BuiltInHttpOutputProvider implements HttpOutputProvider {
     } else if (this.httpyac.utils.isMimeTypeJavascript(response.contentType)) {
       responseMimeType = 'text/javascript';
     } else if (this.httpyac.utils.isMimeTypeMarkdown(response.contentType)) {
-      responseMimeType = 'texxt/markdown';
+      responseMimeType = 'text/markdown';
     }
 
     if (responseMimeType.startsWith('text')) {
-      // Check if VSCode can render this output.
       const currentMime = response.contentType.mimeType.toLowerCase();
       const lang = currentMime.indexOf('/') >= 0 ? currentMime.slice(currentMime.indexOf('/') + 1).trim().toLowerCase() : '';
-      // VS Code can render languages if the format of the mime type is `text/x-<language>`.
+      if (this.vscodeLanguages.size === 0) {
+        const languages = await vscode.languages.getLanguages();
+        languages.forEach(lang => this.vscodeLanguages.add(lang.toLowerCase()));
+      }
       const mimeType = this.vscodeLanguages.has(lang) ? `text/x-${lang}` : 'text/plain';
-
       return {
         outputItems: vscode.NotebookCellOutputItem.text(response.body, mimeType),
         priority: HttpOutputPriority.Default,

@@ -50,7 +50,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
 
       const cells: Array<vscode.NotebookCellData> = [];
       for (const httpRegion of httpFile.httpRegions) {
-        cells.push(...this.createCells(httpRegion, httpFile));
+        cells.push(...(await this.createCells(httpRegion, httpFile)));
       }
       return new vscode.NotebookData(cells);
     } catch (err) {
@@ -72,7 +72,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
 
   onDidChangeNotebookContentOptions?: vscode.Event<vscode.NotebookDocumentContentOptions> | undefined;
 
-  private createCells(httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
+  private async createCells(httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
     const cells: Array<vscode.NotebookCellData> = [];
     if (httpRegion.symbol.children) {
       const sourceLines: Array<string> = [];
@@ -86,10 +86,10 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
         }
       }
       if (sourceLines.length > 0) {
-        cells.push(this.createHttpCodeCell(this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceLines), httpRegion, httpFile));
+        cells.push(await this.createHttpCodeCell(this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceLines), httpRegion, httpFile));
       }
     } else {
-      cells.push(this.createHttpCodeCell(httpRegion.symbol.source || '', httpRegion, httpFile));
+      cells.push(await this.createHttpCodeCell(httpRegion.symbol.source || '', httpRegion, httpFile));
     }
     return cells;
   }
@@ -106,13 +106,13 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     );
   }
 
-  private createHttpCodeCell(source: string, httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
+  private async createHttpCodeCell(source: string, httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
     const cell = new vscode.NotebookCellData(vscode.NotebookCellKind.Code,
       source,
       'http');
 
     if (httpRegion.response) {
-      cell.outputs = this.httpNotebookOutputFactory.createHttpRegionOutputs(httpRegion, {
+      cell.outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(httpRegion, {
         metaData: httpRegion.metaData,
         mimeType: httpRegion.response.contentType?.mimeType,
         httpFile

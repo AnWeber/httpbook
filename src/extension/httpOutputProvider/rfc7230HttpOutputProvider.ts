@@ -10,7 +10,15 @@ export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
   constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}
 
   getResponseOutputResult(response: Httpyac.HttpResponse): HttpOutputResult | false {
-    const httpResponse: Httpyac.HttpResponse = { ...response };
+    const httpResponse: Httpyac.HttpResponse = {
+      ...response,
+      request: response.request && {
+        url: response.request.url,
+        method: response.request.method,
+        headers: response.request.headers,
+        body: response.request.body,
+      }
+    };
     if (response.rawBody
         && this.httpyac.utils.isMimeTypeImage(response.contentType)) {
       httpResponse.body = `data:${response.contentType?.mimeType || 'image/png'};base64,${response.rawBody.toString('base64')}`;

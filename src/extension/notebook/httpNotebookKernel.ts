@@ -171,11 +171,11 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
       const outputs: Array<vscode.NotebookCellOutput> = [];
 
       for (const httpRegion of httpRegions) {
-        outputs.push(...this.httpNotebookOutputFactory.createHttpRegionOutputs(httpRegion, {
+        outputs.push(...(await this.httpNotebookOutputFactory.createHttpRegionOutputs(httpRegion, {
           metaData: httpRegion.metaData,
           mimeType: httpRegion.response?.contentType?.mimeType,
           httpFile
-        }));
+        })));
       }
       if (!result && outputs.length === 0) {
         outputs.push(new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.text('no output result')]));

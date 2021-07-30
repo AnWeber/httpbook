@@ -9,31 +9,29 @@ import { AppConfig, TestSlotOutput } from '../config';
 export class HttpNotebookOutputFactory {
 
   readonly httpOutputProvider: Array<extensionApi.HttpOutputProvider>;
-  readonly nativeOutputProvider: httpOutput.BuiltInHttpOutputProvider;
   constructor(
     private readonly config: AppConfig,
     private readonly httpyac: typeof Httpyac
   ) {
-    this.nativeOutputProvider = new httpOutput.BuiltInHttpOutputProvider(config, this.httpyac);
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
-      this.nativeOutputProvider,
+      new httpOutput.BuiltInHttpOutputProvider(config, this.httpyac),
       new httpOutput.Rfc7230HttpOutpoutProvider(config, this.httpyac),
       new httpOutput.ExtensionHttpOutputProvider(),
       new httpOutput.ImageHttpOutputProvider(),
       new httpOutput.ContentTypeHttpOutputProvider(config),
     ];
   }
-  public async initiailze(): Promise<void> {
-    await this.nativeOutputProvider.initialize();
-  }
 
-  public createHttpRegionOutputs(httpRegion: Httpyac.HttpRegion, httpOutputContext: extensionApi.HttpOutputContext): vscode.NotebookCellOutput[] {
+  public async createHttpRegionOutputs(
+    httpRegion: Httpyac.HttpRegion,
+    httpOutputContext: extensionApi.HttpOutputContext
+  ): Promise<vscode.NotebookCellOutput[]> {
     const outputs: vscode.NotebookCellOutput[] = [];
     if (httpRegion.testResults && this.canShowTestResults(httpRegion.testResults)) {
       const testResults = httpRegion.testResults;
-      const outputItems = this.mapHttpOutputProvider(
-        obj => !!obj.getTestResultOutputResult && obj.getTestResultOutputResult(testResults, httpOutputContext)
+      const outputItems = await this.mapHttpOutputProvider(
+        obj => obj.getTestResultOutputResult?.(testResults, httpOutputContext)
       );
       if (outputItems.length > 0) {
         outputs.push(this.createNotebookCellOutput(outputItems, httpRegion.response?.contentType?.mimeType));
@@ -41,8 +39,8 @@ export class HttpNotebookOutputFactory {
     }
     if (httpRegion.response) {
       const response = httpRegion.response;
-      const outputItems = this.mapHttpOutputProvider(
-        obj => !!obj.getResponseOutputResult && obj.getResponseOutputResult(response, httpOutputContext)
+      const outputItems = await this.mapHttpOutputProvider(
+        obj => obj.getResponseOutputResult?.(response, httpOutputContext)
       );
       if (outputItems.length > 0) {
         const output = this.createNotebookCellOutput(outputItems, response.contentType?.mimeType);
@@ -66,14 +64,19 @@ export class HttpNotebookOutputFactory {
     return false;
   }
 
-  private mapHttpOutputProvider(mapFunc: (obj: extensionApi.HttpOutputProvider) => (extensionApi.HttpOutputResult | false)) {
+  private async mapHttpOutputProvider(mapFunc: (obj: extensionApi.HttpOutputProvider) => extensionApi.HttpOutputReturn | undefined) {
     const result: Array<extensionApi.HttpOutputResult> = [];
 
     for (const httpOutputProvider of this.httpOutputProvider) {
       try {
-        const obj = mapFunc(httpOutputProvider);
+        let obj = mapFunc(httpOutputProvider);
         if (obj) {
-          result.push(obj);
+          if (this.httpyac.utils.isPromise(obj)) {
+            obj = await obj;
+          }
+          if (obj) {
+            result.push(obj);
+          }
         }
       } catch (err) {
         this.httpyac.log.error(httpOutputProvider.id, err);

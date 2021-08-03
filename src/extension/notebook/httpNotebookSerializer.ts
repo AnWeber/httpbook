@@ -43,8 +43,8 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   }
   async deserializeNotebook(content: Uint8Array): Promise<vscode.NotebookData> {
     try {
-      const httpFile = await this.httpyacExtensionApi.httpFileStore.parse(
-        vscode.window.activeTextEditor?.document.uri || 'unknown',
+      const httpFile = await this.httpyacExtensionApi.documentStore.parse(
+        vscode.window.activeTextEditor?.document.uri,
         Buffer.from(content).toString('utf-8')
       );
 
@@ -54,7 +54,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       }
       return new vscode.NotebookData(cells);
     } catch (err) {
-      this.httpyacExtensionApi.httpyac.log.trace(err);
+      this.httpyacExtensionApi.httpyac.io.log.trace(err);
       return new vscode.NotebookData([]);
     }
   }
@@ -189,7 +189,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       && event.document.notebook?.notebookType === HttpNotebookViewType
       && vscode.languages.match(this.httpyacExtensionApi.httpDocumentSelector, event.document)) {
       const source = this.getDocumentSource(event.document.notebook);
-      this.httpyacExtensionApi.httpFileStore.getOrCreate(event.document.notebook.uri, () => Promise.resolve(source), event.document.version);
+      this.httpyacExtensionApi.documentStore.getOrCreate(event.document.notebook.uri, () => Promise.resolve(source), event.document.version);
     }
   }
 }

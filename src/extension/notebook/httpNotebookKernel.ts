@@ -41,17 +41,18 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
         'httpyac.toggle-env',
         `current environment: ${cellHttpFile.activeEnvironment || '-'}`,
       ));
-      if (this.httpyacExtensionApi.httpyac.environments.userSessionStore.userSessions.length > 0) {
+      if (this.httpyacExtensionApi.httpyac.store.userSessionStore.userSessions.length > 0) {
         result.push(this.createNotebookCellStatusBarItem(
-          `active session (${this.httpyacExtensionApi.httpyac.environments.userSessionStore.userSessions.length})`,
+          `active session (${this.httpyacExtensionApi.httpyac.store.userSessionStore.userSessions.length})`,
           vscode.NotebookCellStatusBarAlignment.Right,
           'httpyac.logout',
-          `active session (${this.httpyacExtensionApi.httpyac.environments.userSessionStore.userSessions.length})`,
+          `active session (${this.httpyacExtensionApi.httpyac.store.userSessionStore.userSessions.length})`,
         ));
       }
-      if (this.httpyacExtensionApi.httpyac.environments.cookieStore.cookies.length > 0) {
+      const cookies = this.httpyacExtensionApi.httpyac.store.cookieStore.getCookies(cellHttpFile);
+      if (cookies.length > 0) {
         result.push(this.createNotebookCellStatusBarItem(
-          `cookies (${this.httpyacExtensionApi.httpyac.environments.cookieStore.cookies.length})`,
+          `cookies (${cookies.length})`,
           vscode.NotebookCellStatusBarAlignment.Right,
           'httpyac.removeCookies',
         ));
@@ -106,7 +107,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
   private async send(cells: vscode.NotebookCell[], notebook: vscode.NotebookDocument, controller: vscode.NotebookController): Promise<void> {
     try {
-      const httpFile = await this.httpyacExtensionApi.httpFileStore.getOrCreate(
+      const httpFile = await this.httpyacExtensionApi.documentStore.getOrCreate(
         notebook.uri,
         () => Promise.resolve(this.httpNotebookSerializer.getDocumentSource(notebook)),
         notebook.version
@@ -123,10 +124,10 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
           }
         }
       } else {
-        this.httpyacExtensionApi.httpyac.log.error('no http file found');
+        this.httpyacExtensionApi.httpyac.io.log.error('no http file found');
       }
     } catch (err) {
-      this.httpyacExtensionApi.httpyac.log.error(err);
+      this.httpyacExtensionApi.httpyac.io.log.error(err);
     }
   }
 
@@ -184,7 +185,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
       execution.end(true, Date.now());
       return true;
     } catch (err) {
-      this.httpyacExtensionApi.httpyac.log.error(err);
+      this.httpyacExtensionApi.httpyac.io.log.error(err);
 
       const quickFix = this.httpyacExtensionApi.getErrorQuickFix(err);
       if (quickFix) {

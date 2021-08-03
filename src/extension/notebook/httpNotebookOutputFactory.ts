@@ -79,7 +79,7 @@ export class HttpNotebookOutputFactory {
           }
         }
       } catch (err) {
-        this.httpyac.log.error(httpOutputProvider.id, err);
+        this.httpyac.io.log.error(httpOutputProvider.id, err);
       }
     }
     return result;

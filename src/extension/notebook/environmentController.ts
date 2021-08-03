@@ -16,7 +16,7 @@ export function environementChangedFactory(httpyacExtensionApi: HttpYacExtension
         }
       }
     } catch (err) {
-      httpyacExtensionApi.httpyac.log.error(err);
+      httpyacExtensionApi.httpyac.io.log.error(err);
     }
   };
 }

@@ -4,7 +4,7 @@ export interface HttpOutputContext{
 
   mimeType?: string;
 
-  metaData: Record<string, string>;
+  metaData: Record<string, string | undefined>;
 
   [key: string]: unknown;
 }

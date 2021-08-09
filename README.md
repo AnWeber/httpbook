@@ -4,16 +4,17 @@
 
 # Httpbook - Rest Client
 
-Quickly and easily send REST, SOAP, and GraphQL requests directly in Editor
 
-> httpbook uses [vscode-httpyac](https://marketplace.visualstudio.com/items?itemName=anweber.vscode-httpyac) as dependency.
+> httpBook extension (opens new window)provides a Notebook Editor Interface for Http Requests. Send REST, SOAP, and GraphQL requests directly in Notebook Editor. Notebooks allows you to create and share documents that contain live code, equations, visualizations and narrative text.
 
-![example](https://raw.githubusercontent.com/AnWeber/httpbook/main/images/httpbin.gif)
+<p align="center">
+<a href="https://httpyac.github.io/">
+<img src="https://httpyac.github.io/httpyac_site.png" alt="HttpYac" />
+</a>
+<img src="https://raw.githubusercontent.com/AnWeber/httpbook/main/images/httpbin.gif" alt="HttpYac Extension" />
+</p>
 
-> [httpbin.http](https://github.com/AnWeber/httpyac/blob/main/examples/api/httpbin.http)
-
-
-## Examples
+## Example
 
 ```html
 @user = doe
@@ -23,46 +24,11 @@ GET https://httpbin.org/basic-auth/{{user}}/{{password}}
 Authorization: Basic {{user}} {{password}}
 ```
 
-```html
-@host=https://api.spacexdata.com/v4
+more [examples](https://httpyac.github.io/guide/examples) and [guide](https://httpyac.github.io/guide/)
 
-###
+## Configuration
 
-GET /launches/latest
-
-GET /capsules
-```
-
-> [more examples](https://github.com/AnWeber/httpyac/tree/main/examples)
-
-A complete specification / documentation can be found [here](https://github.com/AnWeber/httpyac/tree/main/examples/README.md)
-
-
-## Features
-
-| Feature | httpYac | [Postman](https://www.postman.com/) | [Rest Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) | [Intellij Idea](https://www.jetbrains.com/help/idea/http-client-in-product-code-editor.html) |
-| - | :-: | :-: | :-: | :-: |
-| Send Request and View | ✓ | ✓ | ✓ | ✓ |
-| Variable support | ✓ | ✓ | ✓ | ✓ |
-| [Custom Scripting support](https://github.com/AnWeber/httpyac/blob/main/examples/script/preRequestScript.http) | ✓ | ✓ | - ([pull request](https://github.com/Huachao/vscode-restclient/pull/674)) | partially |
-| [Test/ Assert Response](https://github.com/AnWeber/httpyac/blob/main/examples/script/chai.http) | ✓ | ✓ | - ([pull request](https://github.com/Huachao/vscode-restclient/pull/773)) | ✓ |
-| Authorization support | ✓ | ✓ | partially (no custom auth flow) | - |
-| -- [OAuth2 / Open Id Connect](https://github.com/AnWeber/httpyac/blob/main/examples/auth/oauth2.http) | ✓ | ✓ | - | - |
-| -- [AWS Signature v4](https://github.com/AnWeber/httpyac/blob/main/examples/auth/aws.http) | ✓ | ✓ | ✓ | - |
-| -- [Basic Authentication](https://github.com/AnWeber/httpyac/blob/main/examples/auth/basicAuth.http) | ✓ | ✓ | ✓ | ✓ |
-| -- [Digest Authentication](https://github.com/AnWeber/httpyac/blob/main/examples/auth/digest.http) | ✓ | ✓ | ✓ | ✓ |
-| -- [SSL Client Certificate](https://github.com/AnWeber/httpyac/blob/main/examples/auth/clientCertifcate.http) | ✓ | ✓ | ✓ | - |
-| -- [Custom Authentication](https://github.com/AnWeber/httpyac/blob/main/examples/auth/custom.http) | ✓ | ✓ | - | - |
-| Code Generation | ✓ | ✓ | ✓ | - |
-| Built-in Preview Support (Image, PDF, ...) | ✓ | - | ✓ (only Image) | - |
-| Share workspace | ✓ | paywall | ✓ | ✓ |
-| extensible/ plugin support | ✓ | partially | - | - |
-| [cli support]((https://www.npmjs.com/package/httpyac)) | ✓ | ✓ | - | - |
-
-
-## Next Steps
-
-* fix out more little accidents and just test it
+httpbook uses [vscode-httpyac](https://marketplace.visualstudio.com/items?itemName=anweber.vscode-httpyac) as extension dependency and reuses all of the settings.
 
 ## License
 [MIT License](LICENSE)

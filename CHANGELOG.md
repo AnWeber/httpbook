@@ -1,3 +1,14 @@
+## 1.2.0 (2021-8-09)
+
+#### Features
+* support httpYac v3.0.0
+  * [httpyac plugin support](https://httpyac.github.io/plugins/#getting-started)
+  * [hook api support](https://httpyac.github.io/guide/hooks.html#project-local-hooks)
+  * [better documentation](https://httpyac.github.io/guide)
+  * [new location for examples](https://github.com/httpyac/httpyac.github.io/tree/main/examples)
+  * add requireUncached to script context to clear NodeJS Caching
+
+
 ## 1.1.0 (2021-07-30)
 
 #### Features

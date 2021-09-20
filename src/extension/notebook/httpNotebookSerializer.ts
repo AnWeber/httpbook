@@ -1,7 +1,7 @@
 import type * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
 import { EOL } from 'os';
-import { AppConfig } from '../config';
+import { AppConfig, watchConfigSettings } from '../config';
 import { HttpNotebookOutputFactory } from './httpNotebookOutputFactory';
 import { isNotebookDocument } from './notebookUtils';
 import { HttpYacExtensionApi } from '../httpyacExtensionApi';
@@ -18,6 +18,8 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
 
   options?: vscode.NotebookDocumentContentOptions | undefined;
 
+  notebookSerializerDispose: vscode.Disposable | undefined;
+
   private subscriptions: Array<vscode.Disposable>;
   constructor(
     private readonly httpNotebookOutputFactory: HttpNotebookOutputFactory,
@@ -25,22 +27,34 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     private readonly config: AppConfig
   ) {
 
+
     this.subscriptions = [
-      vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument.bind(this)),
-      vscode.workspace.registerNotebookSerializer(
-        HttpNotebookViewType,
-        this,
-        {
-          transientOutputs: false,
-          transientCellMetadata: {
-            inputCollapsed: true,
-            outputCollapsed: true,
-            with: true,
+      watchConfigSettings(c => {
+        this.disposeNotebookSerializer();
+        this.notebookSerializerDispose = vscode.workspace.registerNotebookSerializer(
+          HttpNotebookViewType,
+          this,
+          {
+            transientOutputs: !c.saveWithOutputs,
+            transientCellMetadata: {
+              inputCollapsed: true,
+              outputCollapsed: true,
+              with: true,
+            }
           }
-        }
-      )
+        );
+      }),
+      vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument.bind(this)),
+
     ];
   }
+  private disposeNotebookSerializer() {
+    if (this.notebookSerializerDispose) {
+      this.notebookSerializerDispose.dispose();
+      this.notebookSerializerDispose = undefined;
+    }
+  }
+
   async deserializeNotebook(content: Uint8Array): Promise<vscode.NotebookData> {
     try {
       const httpFile = await this.httpyacExtensionApi.documentStore.parse(
@@ -63,6 +77,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     return Buffer.from(source);
   }
   public dispose(): void {
+    this.disposeNotebookSerializer();
     if (this.subscriptions) {
       this.subscriptions.forEach(obj => obj.dispose());
       this.subscriptions = [];

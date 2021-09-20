@@ -1,3 +1,13 @@
+## 1.3.0 (2021-09-xx)
+
+#### Features
+* support httpYac v4.0.0
+  * grpc support added
+
+#### Fix
+
+* transientOutputs is set according to saveWithOutputs #31
+
 ## 1.2.0 (2021-8-09)
 
 #### Features

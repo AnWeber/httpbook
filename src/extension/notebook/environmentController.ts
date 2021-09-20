@@ -12,7 +12,6 @@ export function environementChangedFactory(httpyacExtensionApi: HttpYacExtension
             const httpFile = await httpyacExtensionApi.documentStore.getHttpFile(cell.document);
             httpFile.activeEnvironment = env;
           }
-          httpyacExtensionApi.refreshCodeLens.fire();
         }
       }
     } catch (err) {

@@ -24,21 +24,20 @@ export class HttpNotebookOutputFactory {
   }
 
   public async createHttpRegionOutputs(
-    httpRegion: Httpyac.HttpRegion,
+    response: Httpyac.HttpResponse,
+    testResults: Array<Httpyac.TestResult>,
     httpOutputContext: extensionApi.HttpOutputContext
   ): Promise<vscode.NotebookCellOutput[]> {
     const outputs: vscode.NotebookCellOutput[] = [];
-    if (httpRegion.testResults && this.canShowTestResults(httpRegion.testResults)) {
-      const testResults = httpRegion.testResults;
+    if (testResults.length > 0 && this.canShowTestResults(testResults)) {
       const outputItems = await this.mapHttpOutputProvider(
         obj => obj.getTestResultOutputResult?.(testResults, httpOutputContext)
       );
       if (outputItems.length > 0) {
-        outputs.push(this.createNotebookCellOutput(outputItems, httpRegion.response?.contentType?.mimeType));
+        outputs.push(this.createNotebookCellOutput(outputItems, response?.contentType?.mimeType));
       }
     }
-    if (httpRegion.response) {
-      const response = httpRegion.response;
+    if (response) {
       const outputItems = await this.mapHttpOutputProvider(
         obj => obj.getResponseOutputResult?.(response, httpOutputContext)
       );

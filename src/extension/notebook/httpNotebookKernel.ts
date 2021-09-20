@@ -118,7 +118,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
           if (cellHttpFile.httpRegions.length > 0) {
             httpFile.activeEnvironment = cellHttpFile.activeEnvironment;
             if (await this.executeCell(controller, cell, httpFile, cellHttpFile.httpRegions)) {
-              this.httpyacExtensionApi.refreshCodeLens.fire();
               this.refreshFileHttpRegions(cellHttpFile, httpFile);
             }
           }
@@ -154,7 +153,9 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
 
     try {
-      const result = await this.httpyacExtensionApi.sendContext({
+
+      const outputs: Array<vscode.NotebookCellOutput> = [];
+      if (await this.httpyacExtensionApi.documentStore.send({
         httpFile,
         httpRegions,
         progress: {
@@ -167,39 +168,41 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
             // empty output
           },
-        }
-      });
-      const outputs: Array<vscode.NotebookCellOutput> = [];
+        },
+        logResponse: async (response, httpRegion) => {
+          outputs.push(...(await this.httpNotebookOutputFactory.createHttpRegionOutputs(
+            response,
+            httpRegion?.testResults || [],
+            {
+              metaData: httpRegion?.metaData || {},
+              mimeType: response?.contentType?.mimeType,
+              httpFile
+            }
+          )));
+        },
+      })) {
+        execution.replaceOutput(outputs);
+      }
 
-      for (const httpRegion of httpRegions) {
-        outputs.push(...(await this.httpNotebookOutputFactory.createHttpRegionOutputs(httpRegion, {
-          metaData: httpRegion.metaData,
-          mimeType: httpRegion.response?.contentType?.mimeType,
-          httpFile
-        })));
-      }
-      if (!result && outputs.length === 0) {
-        outputs.push(new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.text('no output result')]));
-      }
-      execution.replaceOutput(outputs);
       execution.end(true, Date.now());
       return true;
     } catch (err) {
       this.httpyacExtensionApi.httpyac.io.log.error(err);
-
-      const quickFix = this.httpyacExtensionApi.getErrorQuickFix(err);
-      if (quickFix) {
-        execution.replaceOutput([
-          new vscode.NotebookCellOutput([
-            vscode.NotebookCellOutputItem.stdout(`${err.stack || `${err.name} -  ${err.message}`}
+      if (err instanceof Error) {
+        const quickFix = this.httpyacExtensionApi.getErrorQuickFix(err);
+        if (quickFix) {
+          execution.replaceOutput([
+            new vscode.NotebookCellOutput([
+              vscode.NotebookCellOutputItem.stdout(`${err.stack || `${err.name} -  ${err.message}`}
 
 ${quickFix}`)
-          ])
-        ]);
-      } else {
-        execution.replaceOutput([
-          new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.error(err)])
-        ]);
+            ])
+          ]);
+        } else {
+          execution.replaceOutput([
+            new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.error(err)])
+          ]);
+        }
       }
       execution.end(false, Date.now());
       return false;

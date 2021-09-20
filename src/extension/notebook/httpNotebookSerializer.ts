@@ -127,11 +127,15 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       'http');
 
     if (httpRegion.response) {
-      cell.outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(httpRegion, {
-        metaData: httpRegion.metaData,
-        mimeType: httpRegion.response.contentType?.mimeType,
-        httpFile
-      });
+      cell.outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(
+        httpRegion.response,
+        httpRegion.testResults || [],
+        {
+          metaData: httpRegion.metaData,
+          mimeType: httpRegion.response.contentType?.mimeType,
+          httpFile
+        }
+      );
     }
     return cell;
   }

@@ -30,7 +30,7 @@ export function watchConfigSettings(watcher: ConfigWatcher, ...sections: Array<s
   const rootSections = [APP_NAME, ...sections];
   watcher(getConfigSetting(), ...sections.map(section => vscode.workspace.getConfiguration(section)));
   return vscode.workspace.onDidChangeConfiguration(changeEvent => {
-    if (rootSections.some(section => changeEvent.affectsConfiguration(section))) {
+    if (rootSections.some(section => changeEvent?.affectsConfiguration(section))) {
       watcher(getConfigSetting(), ...sections.map(section => vscode.workspace.getConfiguration(section)));
     }
   });

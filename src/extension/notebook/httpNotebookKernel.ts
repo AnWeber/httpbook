@@ -17,7 +17,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     private readonly httpNotebookSerializer: HttpNotebookSerializer,
     private readonly httpyacExtensionApi: HttpYacExtensionApi
   ) {
-    this.onDidChangeCellStatusBarItems = httpyacExtensionApi.refreshCodeLens.event;
+    this.onDidChangeCellStatusBarItems = httpyacExtensionApi.documentStore.documentStoreChangedEmitter.event;
     const controller = vscode.notebooks.createNotebookController('httpbook-kernel', '*', 'HttpBook');
     controller.supportedLanguages = ['http'];
     controller.description = 'a Notebook for sending REST, SOAP, and GraphQL requests';

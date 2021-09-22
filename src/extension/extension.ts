@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
       return document.uri;
     };
     const environementChanged = notebook.environementChangedFactory(httpyacExtension.exports);
-    httpyacExtension.exports.environementChanged.event(environementChanged);
+    httpyacExtension.exports.environmentChanged(environementChanged);
 
     const httpNotebookOutputFactory = new notebook.HttpNotebookOutputFactory(config, httpyacExtension.exports.httpyac);
     const httpNotebookSerialier = new notebook.HttpNotebookSerializer(
@@ -33,9 +33,9 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
       watchConfigSettings(current => Object.assign(config, current)),
       vscode.workspace.onDidCloseNotebookDocument(notebook => {
         for (const cell of notebook.getCells()) {
-          httpyacExtension.exports.httpFileStore.remove(cell.document.uri);
+          httpyacExtension.exports.documentStore.remove(cell.document);
         }
-        httpyacExtension.exports.httpFileStore.remove(notebook.uri);
+        httpyacExtension.exports.documentStore.httpFileStore.remove(notebook.uri);
       }),
       httpNotebookSerialier,
       new notebook.HttpNotebookKernel(

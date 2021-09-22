@@ -27,6 +27,7 @@ export interface ResponseOutputProcessor{
 }
 
 export interface DocumentStore{
+  readonly documentStoreChangedEmitter: vscode.EventEmitter<void>;
   readonly httpFileStore: httpyac.store.HttpFileStore;
   activeEnvironment: Array<string> | undefined;
   getDocumentPathLike: (document: vscode.TextDocument) => httpyac.PathLike;
@@ -41,7 +42,7 @@ export interface DocumentStore{
 
 export interface ResponseStore {
   readonly historyChanged: vscode.Event<void>;
-  add(response: httpyac.HttpResponse, httpRegion?: httpyac.HttpRegion): Promise<ResponseItem>;
+  add(response: httpyac.HttpResponse, httpRegion?: httpyac.HttpRegion): Promise<void>;
   remove(responseItem: ResponseItem): boolean
   clear(): void;
 }

@@ -204,7 +204,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   }
 
   public onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
-    if (isNotebookDocument(event.document)
+    if (isNotebookDocument(event?.document)
       && event.document.notebook?.notebookType === HttpNotebookViewType
       && vscode.languages.match(this.httpyacExtensionApi.httpDocumentSelector, event.document)) {
       const source = this.getDocumentSource(event.document.notebook);

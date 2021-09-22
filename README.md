@@ -5,7 +5,7 @@
 # Httpbook - Rest Client
 
 
-> httpBook extension (opens new window)provides a Notebook Editor Interface for Http Requests. Send REST, SOAP, and GraphQL requests directly in Notebook Editor. Notebooks allows you to create and share documents that contain live code, equations, visualizations and narrative text.
+> httpBook extension (opens new window)provides a Notebook Editor Interface for Http Requests. Send REST, SOAP, GraphQL and gRPC requests directly in Notebook Editor. Notebooks allows you to create and share documents that contain live code, equations, visualizations and narrative text.
 
 <p align="center">
 <a href="https://httpyac.github.io/">

@@ -33,3 +33,9 @@
 .testline__error{
   padding: 0 1rem;
 }
+
+.testicon{
+  fill: currentColor;
+  height: 1rem;
+  width: 1rem;
+}

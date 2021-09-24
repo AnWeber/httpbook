@@ -140,12 +140,11 @@
     "eslint-plugin-node": "^11.1.0",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^6.3.3",
-    "httpyac": "^4.0.3",
+    "httpyac": "^4.0.4",
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
     "lockfile-lint": "^4.6.2",
     "style-loader": "^3.3.0",
-    "svg-sprite-loader": "^6.0.9",
     "thread-loader": "^3.0.4",
     "ts-loader": "^9.2.6",
     "typescript": "^4.4.3",
@@ -154,7 +153,6 @@
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
-    "preact": "^10.5.14",
-    "vscode-codicons": "^0.0.17"
+    "preact": "^10.5.14"
   }
 }

@@ -154,8 +154,8 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
     try {
 
-      const outputs: Array<vscode.NotebookCellOutput> = [];
-      if (await this.httpyacExtensionApi.documentStore.send({
+      execution.clearOutput();
+      await this.httpyacExtensionApi.documentStore.send({
         httpFile,
         httpRegions,
         progress: {
@@ -170,7 +170,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
           },
         },
         logResponse: async (response, httpRegion) => {
-          outputs.push(...(await this.httpNotebookOutputFactory.createHttpRegionOutputs(
+          const outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(
             response,
             httpRegion?.testResults || [],
             {
@@ -178,11 +178,12 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
               mimeType: response?.contentType?.mimeType,
               httpFile
             }
-          )));
+          );
+          for (const output of outputs) {
+            execution.appendOutput(output);
+          }
         },
-      })) {
-        execution.replaceOutput(outputs);
-      }
+      });
 
       execution.end(true, Date.now());
       return true;

@@ -117,10 +117,6 @@ module.exports = [(env, argv) => {
           ],
         },
         {
-          test: /\.svg$/,
-          loader: 'svg-sprite-loader',
-        },
-        {
           test: /\.ttf$/,
           use: ['file-loader']
         }

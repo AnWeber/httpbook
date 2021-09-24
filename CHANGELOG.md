@@ -1,3 +1,9 @@
+## 2.0.1 (2021-09-24)
+
+#### Fix
+* show intermediate results directly with gRPC and not only at the end of the stream
+* remove svg-sprite-loader to get rid of security warning
+
 ## 2.0.0 (2021-09-22)
 
 #### Features

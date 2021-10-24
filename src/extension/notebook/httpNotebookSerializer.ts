@@ -68,7 +68,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       }
       return new vscode.NotebookData(cells);
     } catch (err) {
-      this.httpyacExtensionApi.httpyac.io.log.trace(err);
+      this.httpyacExtensionApi.httpyac.io.log.error(err);
       return new vscode.NotebookData([]);
     }
   }

@@ -1,3 +1,8 @@
+## 2.1.1 (2021-10-25)
+
+#### Fix
+* fix parsing error if other httpBook is open and active (#33)
+
 ## 2.1.0 (2021-10-24)
 
 #### Features

@@ -58,7 +58,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   async deserializeNotebook(content: Uint8Array): Promise<vscode.NotebookData> {
     try {
       const httpFile = await this.httpyacExtensionApi.documentStore.parse(
-        vscode.window.activeTextEditor?.document.uri,
+        undefined,
         Buffer.from(content).toString('utf-8')
       );
 

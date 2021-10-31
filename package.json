@@ -14,7 +14,7 @@
   },
   "qna": "https://github.com/AnWeber/httpbook/discussions",
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.61.0"
   },
   "categories": [
     "Notebooks"

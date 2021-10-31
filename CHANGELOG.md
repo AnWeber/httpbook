@@ -1,3 +1,9 @@
+## 2.2.0 (2021-10-30)
+
+#### Features
+* log Stream in notebook output
+
+
 ## 2.1.1 (2021-10-25)
 
 #### Fix

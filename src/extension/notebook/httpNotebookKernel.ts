@@ -169,6 +169,11 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
             // empty output
           },
         },
+        logStream: async (_channel, type, message) => {
+          const newOutput = new vscode.NotebookCellOutput([vscode.NotebookCellOutputItem.stdout(`${new Date().toLocaleTimeString()} - ${type}: ${message}\n`)]);
+          execution.appendOutput(newOutput);
+
+        },
         logResponse: async (response, httpRegion) => {
           const outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(
             response,

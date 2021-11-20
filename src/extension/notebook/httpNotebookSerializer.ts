@@ -64,7 +64,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       return new vscode.NotebookData([]);
     }
   }
-  serializeNotebook(data: vscode.NotebookData): Uint8Array | Thenable<Uint8Array> {
+  serializeNotebook(data: vscode.NotebookData): Uint8Array | Promise<Uint8Array> {
     const source = this.getDocumentSource(data);
     return Buffer.from(source);
   }

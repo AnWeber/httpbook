@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
 
-
 export const APP_NAME = 'httpbook';
 
-
-export enum TestSlotOutput{
+export enum TestSlotOutput {
   always = 'always',
   onlyFailed = 'onlyFailed',
   never = 'never',
@@ -19,14 +17,13 @@ export interface AppConfig {
   saveWithRegionDelimiter?: boolean;
 }
 
-
-export function getConfigSetting() : AppConfig {
+export function getConfigSetting(): AppConfig {
   return vscode.workspace.getConfiguration(APP_NAME) as AppConfig;
 }
 
-export type ConfigWatcher = (appConfig: AppConfig, ...config: Array<Record<string, unknown>>) => void
+export type ConfigWatcher = (appConfig: AppConfig, ...config: Array<Record<string, unknown>>) => void;
 
-export function watchConfigSettings(watcher: ConfigWatcher, ...sections: Array<string>) : vscode.Disposable {
+export function watchConfigSettings(watcher: ConfigWatcher, ...sections: Array<string>): vscode.Disposable {
   const rootSections = [APP_NAME, ...sections];
   watcher(getConfigSetting(), ...sections.map(section => vscode.workspace.getConfiguration(section)));
   return vscode.workspace.onDidChangeConfiguration(changeEvent => {

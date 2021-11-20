@@ -6,7 +6,6 @@ import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../ext
 export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
   id = 'httpbook-rfc7230';
 
-
   constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}
 
   getResponseOutputResult(response: Httpyac.HttpResponse): HttpOutputResult | false {
@@ -17,11 +16,12 @@ export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
         method: response.request.method,
         headers: response.request.headers,
         body: response.request.body,
-      }
+      },
     };
-    if (response.rawBody
-        && this.httpyac.utils.isMimeTypeImage(response.contentType)) {
-      httpResponse.body = `data:${response.contentType?.mimeType || 'image/png'};base64,${response.rawBody.toString('base64')}`;
+    if (response.rawBody && this.httpyac.utils.isMimeTypeImage(response.contentType)) {
+      httpResponse.body = `data:${response.contentType?.mimeType || 'image/png'};base64,${response.rawBody.toString(
+        'base64'
+      )}`;
     }
 
     return {

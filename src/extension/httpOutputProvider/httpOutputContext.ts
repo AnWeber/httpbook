@@ -1,7 +1,6 @@
 import type { HttpRegion, HttpFile } from 'httpyac';
 
-export interface HttpOutputContext{
+export interface HttpOutputContext {
   httpRegion: HttpRegion;
   httpFile: HttpFile;
-
 }

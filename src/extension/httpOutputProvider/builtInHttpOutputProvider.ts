@@ -3,19 +3,13 @@ import * as vscode from 'vscode';
 import { AppConfig } from '../config';
 import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../extensionApi';
 
-
 export class BuiltInHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-builtin';
   vscodeLanguages = new Set<string>();
-  constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) { }
-
+  constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}
 
   async getResponseOutputResult(response: Httpyac.HttpResponse): Promise<HttpOutputResult | false> {
-
-    if (!response.contentType
-      || !response.body
-      || typeof response.body !== 'string'
-      || response.body.length === 0) {
+    if (!response.contentType || !response.body || typeof response.body !== 'string' || response.body.length === 0) {
       return false;
     }
 
@@ -41,7 +35,13 @@ export class BuiltInHttpOutputProvider implements HttpOutputProvider {
 
     if (responseMimeType.startsWith('text')) {
       const currentMime = response.contentType.mimeType.toLowerCase();
-      const lang = currentMime.indexOf('/') >= 0 ? currentMime.slice(currentMime.indexOf('/') + 1).trim().toLowerCase() : '';
+      const lang =
+        currentMime.indexOf('/') >= 0
+          ? currentMime
+              .slice(currentMime.indexOf('/') + 1)
+              .trim()
+              .toLowerCase()
+          : '';
       if (this.vscodeLanguages.size === 0) {
         const languages = await vscode.languages.getLanguages();
         languages.forEach(lang => this.vscodeLanguages.add(lang.toLowerCase()));

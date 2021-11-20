@@ -1,7 +1,6 @@
 import { NotebookCellOutputItem } from 'vscode';
 import type { HttpResponse, TestResult } from 'httpyac';
-export interface HttpOutputContext{
-
+export interface HttpOutputContext {
   mimeType?: string;
 
   metaData: Record<string, string | undefined>;
@@ -9,9 +8,7 @@ export interface HttpOutputContext{
   [key: string]: unknown;
 }
 
-
 export interface HttpOutputResult {
-
   /**
    * NotebookCellOutputItem or Array of NotebookCellOutputItem
    */
@@ -23,8 +20,7 @@ export interface HttpOutputResult {
   priority: number;
 }
 
-export enum HttpOutputPriority{
-
+export enum HttpOutputPriority {
   /**
    * used in additional built-in provider like markdown
    */
@@ -43,8 +39,7 @@ export enum HttpOutputPriority{
 
 export type HttpOutputReturn = Promise<HttpOutputResult | false> | HttpOutputResult | false;
 
-export interface HttpOutputProvider{
-
+export interface HttpOutputProvider {
   /**
    * unique id (only for logging)
    */
@@ -64,15 +59,13 @@ export interface HttpOutputProvider{
    * @param context HttpOutputContext
    * @returns false if output not valid else NotebookCellOutputItems and priortiy
    */
-   getTestResultOutputResult?(testResult: TestResult[], context: HttpOutputContext): HttpOutputReturn;
+  getTestResultOutputResult?(testResult: TestResult[], context: HttpOutputContext): HttpOutputReturn;
 }
-
 
 /**
  * Extension Api of httpbook
  */
-export interface HttpBookApi{
-
+export interface HttpBookApi {
   /**
    * register HttpOutputProvider, which gets called after every execution
    * @param obj HttpOutputProvider to register

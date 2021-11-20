@@ -29,7 +29,7 @@ export class ContentTypeHttpOutputProvider implements HttpOutputProvider {
       }
       return {
         outputItems,
-        priority: HttpOutputPriority.Default
+        priority: HttpOutputPriority.Default,
       };
     }
     return false;

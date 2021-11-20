@@ -8,14 +8,13 @@ import { HttpYacExtensionApi } from '../httpyacExtensionApi';
 
 export const HttpNotebookViewType = 'http';
 
-interface HttpCell{
+interface HttpCell {
   value: string;
-  kind: vscode.NotebookCellKind,
-  outputs?: Array<unknown>
+  kind: vscode.NotebookCellKind;
+  outputs?: Array<unknown>;
 }
 
 export class HttpNotebookSerializer implements vscode.NotebookSerializer {
-
   options?: vscode.NotebookDocumentContentOptions | undefined;
 
   notebookSerializerDispose: vscode.Disposable | undefined;
@@ -26,26 +25,19 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     private readonly httpyacExtensionApi: HttpYacExtensionApi,
     private readonly config: AppConfig
   ) {
-
-
     this.subscriptions = [
       watchConfigSettings(c => {
         this.disposeNotebookSerializer();
-        this.notebookSerializerDispose = vscode.workspace.registerNotebookSerializer(
-          HttpNotebookViewType,
-          this,
-          {
-            transientOutputs: !c.saveWithOutputs,
-            transientCellMetadata: {
-              inputCollapsed: true,
-              outputCollapsed: true,
-              with: true,
-            }
-          }
-        );
+        this.notebookSerializerDispose = vscode.workspace.registerNotebookSerializer(HttpNotebookViewType, this, {
+          transientOutputs: !c.saveWithOutputs,
+          transientCellMetadata: {
+            inputCollapsed: true,
+            outputCollapsed: true,
+            with: true,
+          },
+        });
       }),
       vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument.bind(this)),
-
     ];
   }
   private disposeNotebookSerializer() {
@@ -84,7 +76,6 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     }
   }
 
-
   onDidChangeNotebookContentOptions?: vscode.Event<vscode.NotebookDocumentContentOptions> | undefined;
 
   private async createCells(httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
@@ -101,7 +92,13 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
         }
       }
       if (sourceLines.length > 0) {
-        cells.push(await this.createHttpCodeCell(this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceLines), httpRegion, httpFile));
+        cells.push(
+          await this.createHttpCodeCell(
+            this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceLines),
+            httpRegion,
+            httpFile
+          )
+        );
       }
     } else {
       cells.push(await this.createHttpCodeCell(httpRegion.symbol.source || '', httpRegion, httpFile));
@@ -114,17 +111,11 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     if (source.length > 4) {
       src = source.slice(2, source.length - 2).trim();
     }
-    return new vscode.NotebookCellData(
-      vscode.NotebookCellKind.Markup,
-      src,
-      'text/markdown'
-    );
+    return new vscode.NotebookCellData(vscode.NotebookCellKind.Markup, src, 'text/markdown');
   }
 
   private async createHttpCodeCell(source: string, httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
-    const cell = new vscode.NotebookCellData(vscode.NotebookCellKind.Code,
-      source,
-      'http');
+    const cell = new vscode.NotebookCellData(vscode.NotebookCellKind.Code, source, 'http');
 
     if (httpRegion.response) {
       cell.outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(
@@ -133,7 +124,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
         {
           metaData: httpRegion.metaData,
           mimeType: httpRegion.response.contentType?.mimeType,
-          httpFile
+          httpFile,
         }
       );
     }
@@ -148,8 +139,9 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     for (const cell of cells) {
       if (cell.kind === vscode.NotebookCellKind.Code) {
         const sourceFirstLine = this.httpyacExtensionApi.httpyac.utils.toMultiLineArray(cell.value.trim()).shift();
-        const startsWithRequestLine = sourceFirstLine
-          && this.httpyacExtensionApi.httpyac.parser.ParserRegex.request.requestLine.test(sourceFirstLine);
+        const startsWithRequestLine =
+          sourceFirstLine &&
+          this.httpyacExtensionApi.httpyac.parser.ParserRegex.request.requestLine.test(sourceFirstLine);
 
         if (hasPrevCell) {
           if (!startsWithRequestLine || isPrevCellGlobalScript) {
@@ -178,7 +170,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     return contents.join(`${EOL}`);
   }
 
-  private getNotebookCells(document: vscode.NotebookData | vscode.NotebookDocument) : Array<HttpCell> {
+  private getNotebookCells(document: vscode.NotebookData | vscode.NotebookDocument): Array<HttpCell> {
     if (document instanceof vscode.NotebookData) {
       return document.cells.map(obj => {
         const result: HttpCell = {
@@ -204,11 +196,17 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   }
 
   public onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
-    if (isNotebookDocument(event?.document)
-      && event.document.notebook?.notebookType === HttpNotebookViewType
-      && vscode.languages.match(this.httpyacExtensionApi.httpDocumentSelector, event.document)) {
+    if (
+      isNotebookDocument(event?.document) &&
+      event.document.notebook?.notebookType === HttpNotebookViewType &&
+      vscode.languages.match(this.httpyacExtensionApi.httpDocumentSelector, event.document)
+    ) {
       const source = this.getDocumentSource(event.document.notebook);
-      this.httpyacExtensionApi.documentStore.getOrCreate(event.document.notebook.uri, () => Promise.resolve(source), event.document.version);
+      this.httpyacExtensionApi.documentStore.getOrCreate(
+        event.document.notebook.uri,
+        () => Promise.resolve(source),
+        event.document.version
+      );
     }
   }
 }

@@ -5,14 +5,9 @@ import * as httpOutput from '../httpOutputProvider';
 
 import { AppConfig, TestSlotOutput } from '../config';
 
-
 export class HttpNotebookOutputFactory {
-
   readonly httpOutputProvider: Array<extensionApi.HttpOutputProvider>;
-  constructor(
-    private readonly config: AppConfig,
-    private readonly httpyac: typeof Httpyac
-  ) {
+  constructor(private readonly config: AppConfig, private readonly httpyac: typeof Httpyac) {
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutpoutProvider(),
       new httpOutput.BuiltInHttpOutputProvider(config, this.httpyac),
@@ -30,16 +25,16 @@ export class HttpNotebookOutputFactory {
   ): Promise<vscode.NotebookCellOutput[]> {
     const outputs: vscode.NotebookCellOutput[] = [];
     if (testResults.length > 0 && this.canShowTestResults(testResults)) {
-      const outputItems = await this.mapHttpOutputProvider(
-        obj => obj.getTestResultOutputResult?.(testResults, httpOutputContext)
+      const outputItems = await this.mapHttpOutputProvider(obj =>
+        obj.getTestResultOutputResult?.(testResults, httpOutputContext)
       );
       if (outputItems.length > 0) {
         outputs.push(this.createNotebookCellOutput(outputItems, response?.contentType?.mimeType));
       }
     }
     if (response) {
-      const outputItems = await this.mapHttpOutputProvider(
-        obj => obj.getResponseOutputResult?.(response, httpOutputContext)
+      const outputItems = await this.mapHttpOutputProvider(obj =>
+        obj.getResponseOutputResult?.(response, httpOutputContext)
       );
       if (outputItems.length > 0) {
         const output = this.createNotebookCellOutput(outputItems, response.contentType?.mimeType);
@@ -63,7 +58,9 @@ export class HttpNotebookOutputFactory {
     return false;
   }
 
-  private async mapHttpOutputProvider(mapFunc: (obj: extensionApi.HttpOutputProvider) => extensionApi.HttpOutputReturn | undefined) {
+  private async mapHttpOutputProvider(
+    mapFunc: (obj: extensionApi.HttpOutputProvider) => extensionApi.HttpOutputReturn | undefined
+  ) {
     const result: Array<extensionApi.HttpOutputResult> = [];
 
     for (const httpOutputProvider of this.httpOutputProvider) {
@@ -114,7 +111,11 @@ export class HttpNotebookOutputFactory {
     return '';
   }
 
-  private compareHttpOutputResults(obj1: extensionApi.HttpOutputResult, obj2: extensionApi.HttpOutputResult, mime?: string) {
+  private compareHttpOutputResults(
+    obj1: extensionApi.HttpOutputResult,
+    obj2: extensionApi.HttpOutputResult,
+    mime?: string
+  ) {
     if (mime) {
       if (this.hasHttpOutputResultsMime(obj1, mime)) {
         return -1;
@@ -126,7 +127,7 @@ export class HttpNotebookOutputFactory {
     return obj2.priority - obj1.priority;
   }
 
-  private hasHttpOutputResultsMime(obj: extensionApi.HttpOutputResult, mime?: string) : boolean {
+  private hasHttpOutputResultsMime(obj: extensionApi.HttpOutputResult, mime?: string): boolean {
     if (Array.isArray(obj.outputItems)) {
       return obj.outputItems.some(obj => obj.mime === mime);
     }

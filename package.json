@@ -25,7 +25,7 @@
     "GraphQL",
     "gRPC",
     "WebSocket",
-		"EventSource",
+    "EventSource",
     "MQTT",
     "Intellij Http Client",
     "Postman",
@@ -121,13 +121,23 @@
   "extensionDependencies": [
     "anweber.vscode-httpyac"
   ],
+  "lint-staged": {
+    "*.js": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "eslint --cache --fix",
+      "prettier --parser=typescript --write"
+    ]
+  },
   "scripts": {
+    "format": "prettier --write --parser typescript \"src/**/*.ts?(x)\"",
     "vscode:prepublish": "npm run compile",
     "compile": "webpack --mode production --config ./webpack.config.js",
     "watch": "webpack --mode development --watch --config ./webpack.config.js",
     "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
     "eslint": "eslint src --ext ts",
-    "lint": "npm run eslint && npm run lockfile-lint",
+    "lint": "npm run format && npm run eslint && npm run lockfile-lint",
     "precommit": "npm run lint"
   },
   "devDependencies": {
@@ -140,6 +150,7 @@
     "@typescript-eslint/parser": "^5.2.0",
     "css-loader": "^6.5.0",
     "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-node": "^11.1.0",
     "file-loader": "^6.2.0",
     "fork-ts-checker-webpack-plugin": "^6.4.0",
@@ -147,6 +158,7 @@
     "husky": "^7.0.4",
     "lint-staged": "^11.2.6",
     "lockfile-lint": "^4.6.2",
+    "prettier": "^2.4.1",
     "style-loader": "^3.3.1",
     "thread-loader": "^3.0.4",
     "ts-loader": "^9.2.6",

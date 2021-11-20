@@ -5,7 +5,6 @@ import type { HttpResponse } from 'httpyac';
 export class ExtensionHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-extension';
 
-
   getResponseOutputResult(response: HttpResponse): HttpOutputResult | false {
     if (response.contentType?.mimeType && response.rawBody) {
       const rawBody = response.rawBody;
@@ -23,10 +22,9 @@ export class ExtensionHttpOutputProvider implements HttpOutputProvider {
       }
       return {
         outputItems,
-        priority: HttpOutputPriority.Default
+        priority: HttpOutputPriority.Default,
       };
     }
-
 
     return false;
   }

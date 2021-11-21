@@ -3,6 +3,7 @@ root: true
 parser: "@typescript-eslint/parser"
 env:
   node: true
+  browser: true
 settings:
   react:
     pragma: h

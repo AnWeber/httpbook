@@ -2,19 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "pwa-node",
+      "name": "httpbook: launch",
+      "type": "extensionHost",
       "request": "launch",
-      "name": "launch",
-      "skipFiles": [
-        "<node_internals>/**"
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}"
       ],
-      "cwd": "${fileDirname}",
-      "program": "${workspaceFolder}/bin/httpyac.js",
-      "args": ["${fileBasename}", "--all"],
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
-      ],
-      "preLaunchTask": "${defaultBuildTask}"
+      ]
     }
   ]
 }

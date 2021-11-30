@@ -146,8 +146,8 @@
     "@types/vscode": "1.61.0",
     "@types/vscode-notebook-renderer": "^1.60.0",
     "@types/webpack-env": "^1.16.3",
-    "@typescript-eslint/eslint-plugin": "^5.4.0",
-    "@typescript-eslint/parser": "^5.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
     "css-loader": "^6.5.1",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
@@ -167,6 +167,6 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "preact": "^10.6.1"
+    "preact": "^10.6.2"
   }
 }

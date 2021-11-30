@@ -134,25 +134,21 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   public getDocumentSource(document: vscode.NotebookData | vscode.NotebookDocument): string {
     const contents: Array<string> = [];
     let hasPrevCell = false;
-    let isPrevCellGlobalScript = false;
     const cells = this.getNotebookCells(document);
     for (const cell of cells) {
       if (cell.kind === vscode.NotebookCellKind.Code) {
         const sourceFirstLine = this.httpyacExtensionApi.httpyac.utils.toMultiLineArray(cell.value.trim()).shift();
-        const startsWithRequestLine =
-          sourceFirstLine &&
-          this.httpyacExtensionApi.httpyac.parser.ParserRegex.request.requestLine.test(sourceFirstLine);
+
+        const startsWithSeparator =
+          sourceFirstLine && this.httpyacExtensionApi.httpyac.parser.ParserRegex.meta.delimiter.test(sourceFirstLine);
 
         if (hasPrevCell) {
-          if (!startsWithRequestLine || isPrevCellGlobalScript) {
-            contents.push(`${EOL}###${EOL}`);
-          } else if (this.config.saveWithRegionDelimiter) {
+          if (!startsWithSeparator) {
             contents.push(`${EOL}###${EOL}`);
           } else {
             contents.push(`${EOL}`);
           }
         }
-        isPrevCellGlobalScript = !startsWithRequestLine;
         contents.push(cell.value);
         if (cell.outputs && this.config.saveWithOutputs) {
           for (const output of cell.outputs) {

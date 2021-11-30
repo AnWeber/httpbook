@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, Soap, GraphQL, GRPC, MQTT and WebSocket requests directly within Visual Studio Code",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -103,12 +103,6 @@
           "scope": "resource",
           "description": "map content type to NotebookOutputRenderer (regex is possible)"
         },
-        "httpbook.saveWithRegionDelimiter": {
-          "type": "boolean",
-          "default": true,
-          "scope": "resource",
-          "description": "save with Region Delimiter (###). set to true, if compatibilty with Intellij is needed"
-        },
         "httpbook.saveWithOutputs": {
           "type": "boolean",
           "default": true,
@@ -141,7 +135,7 @@
     "precommit": "npm run lint"
   },
   "devDependencies": {
-    "@types/node": "^16.11.10",
+    "@types/node": "^16.11.11",
     "@types/react": "^17.0.37",
     "@types/vscode": "1.61.0",
     "@types/vscode-notebook-renderer": "^1.60.0",
@@ -153,8 +147,8 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-node": "^11.1.0",
     "file-loader": "^6.2.0",
-    "fork-ts-checker-webpack-plugin": "^6.4.2",
-    "httpyac": "^4.7.2",
+    "fork-ts-checker-webpack-plugin": "^6.5.0",
+    "httpyac": "^4.7.3",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.2",
     "lockfile-lint": "^4.6.2",

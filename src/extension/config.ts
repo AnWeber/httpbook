@@ -14,7 +14,6 @@ export interface AppConfig {
   mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>;
   preferNotebookOutputRenderer?: Record<string, string>;
   saveWithOutputs?: boolean;
-  saveWithRegionDelimiter?: boolean;
 }
 
 export function getConfigSetting(): AppConfig {

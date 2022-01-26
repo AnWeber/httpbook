@@ -49,16 +49,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
           )
         );
       }
-      const cookies = this.httpyacExtensionApi.httpyac.store.cookieStore.getCookies(cellHttpFile);
-      if (cookies.length > 0) {
-        result.push(
-          this.createNotebookCellStatusBarItem(
-            `cookies (${cookies.length})`,
-            vscode.NotebookCellStatusBarAlignment.Right,
-            'httpyac.removeCookies'
-          )
-        );
-      }
 
       for (const httpRegion of cellHttpFile.httpRegions) {
         const args = [cell.document.uri, httpRegion.symbol.startLine];

@@ -1,3 +1,9 @@
+## Unreleased
+
+#### Fix
+
+- remove cookiestore NotebookCellStatusBarItem
+
 ## 2.2.1 (2021-11-30)
 
 #### Fix

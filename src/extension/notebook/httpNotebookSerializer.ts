@@ -140,7 +140,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
         const sourceFirstLine = this.httpyacExtensionApi.httpyac.utils.toMultiLineArray(cell.value.trim()).shift();
 
         const startsWithSeparator =
-          sourceFirstLine && this.httpyacExtensionApi.httpyac.parser.ParserRegex.meta.delimiter.test(sourceFirstLine);
+          sourceFirstLine && this.httpyacExtensionApi.httpyac.utils.RegionSeparator.test(sourceFirstLine);
 
         if (hasPrevCell) {
           if (!startsWithSeparator) {

@@ -4,8 +4,8 @@ const path = require('path');
 
 const devServerPort = 8111;
 
-module.exports = [(env, argv) => {
-
+module.exports = [
+  (env, argv) => {
     /**@type {import('webpack').Configuration}*/
     const config = {
       target: 'node',
@@ -22,10 +22,10 @@ module.exports = [(env, argv) => {
       devtool: argv.mode === 'development' ? 'eval-cheap-module-source-map' : 'nosources-source-map',
       externals: {
         vscode: 'commonjs vscode',
-        httpyac: 'httpyac'
+        httpyac: 'httpyac',
       },
       resolve: {
-        extensions: ['.ts', '.js']
+        extensions: ['.ts', '.js'],
       },
       module: {
         rules: [
@@ -39,12 +39,12 @@ module.exports = [(env, argv) => {
               {
                 loader: 'ts-loader',
                 options: {
-                  happyPackMode: true
-                }
-              }
-            ]
-          }
-        ]
+                  happyPackMode: true,
+                },
+              },
+            ],
+          },
+        ],
       },
       plugins: [
         new ForkTsCheckerWebpackPlugin({
@@ -55,98 +55,93 @@ module.exports = [(env, argv) => {
               syntactic: true,
             },
           },
-          eslint: {
-            files: ['./src/extension/**/*.{ts,tsx,js,jsx}']
-          }
-        })
+        }),
       ],
       cache: {
         type: 'memory',
       },
     };
     return config;
-  },(env, argv) => {
-  /**@type {import('webpack').Configuration}*/
-  const config = {
-    mode: argv.mode,
-    devtool: argv.mode === 'development' ? 'eval-cheap-module-source-map' : false,
-    entry: {
-      testResultsRenderer: './src/renderer/testResultsRenderer.tsx',
-      rfc7230Renderer: './src/renderer/rfc7230Renderer.tsx',
-    },
-    output: {
-      path: path.join(__dirname, 'dist'),
-      filename: "[name].js",
-      libraryTarget: 'module',
-    },
-    experiments: {
-      outputModule: true,
-    },
-    resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'],
-    },
-    module: {
-      rules: [
-        {
-          test: /\.tsx?$/,
-          use: [
-            {
-              loader: 'thread-loader',
-            },
-            {
-              loader: 'ts-loader',
-              options: {
-                happyPackMode: true,
-                configFile: 'src/renderer/tsconfig.json',
-                transpileOnly: true,
-                compilerOptions: {
-                  noEmit: false,
+  },
+  (env, argv) => {
+    /**@type {import('webpack').Configuration}*/
+    const config = {
+      mode: argv.mode,
+      devtool: argv.mode === 'development' ? 'eval-cheap-module-source-map' : false,
+      entry: {
+        testResultsRenderer: './src/renderer/testResultsRenderer.tsx',
+        rfc7230Renderer: './src/renderer/rfc7230Renderer.tsx',
+      },
+      output: {
+        path: path.join(__dirname, 'dist'),
+        filename: '[name].js',
+        libraryTarget: 'module',
+      },
+      experiments: {
+        outputModule: true,
+      },
+      resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.css'],
+      },
+      module: {
+        rules: [
+          {
+            test: /\.tsx?$/,
+            use: [
+              {
+                loader: 'thread-loader',
+              },
+              {
+                loader: 'ts-loader',
+                options: {
+                  happyPackMode: true,
+                  configFile: 'src/renderer/tsconfig.json',
+                  transpileOnly: true,
+                  compilerOptions: {
+                    noEmit: false,
+                  },
                 },
               },
-            }
-          ]
-
-        },
-        {
-          test: /\.css$/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader'
-            },
-          ],
-        },
-        {
-          test: /\.ttf$/,
-          use: ['file-loader']
-        }
-      ],
-    },
-    devServer: {
-      port: devServerPort,
-      hot: true,
-      disableHostCheck: true,
-      writeToDisk: true,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-    },
-    plugins: [
-      new ForkTsCheckerWebpackPlugin({
-        async: true,
-        typescript: {
-          tsconfig: 'src/renderer/tsconfig.json',
-          diagnosticOptions: {
-            semantic: true,
-            syntactic: true,
+            ],
           },
-        },
-        eslint: {
-          files: ['./src/renderer/**/*.{ts,tsx,js,jsx}']
-        }
-      }),
-    ],
-    optimization: {
-      minimize: true
-    }
-  };
-  return config;
-}];
+          {
+            test: /\.css$/,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+              },
+            ],
+          },
+          {
+            test: /\.ttf$/,
+            use: ['file-loader'],
+          },
+        ],
+      },
+      devServer: {
+        port: devServerPort,
+        hot: true,
+        disableHostCheck: true,
+        writeToDisk: true,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+      },
+      plugins: [
+        new ForkTsCheckerWebpackPlugin({
+          async: true,
+          typescript: {
+            tsconfig: 'src/renderer/tsconfig.json',
+            diagnosticOptions: {
+              semantic: true,
+              syntactic: true,
+            },
+          },
+        }),
+      ],
+      optimization: {
+        minimize: true,
+      },
+    };
+    return config;
+  },
+];

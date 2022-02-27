@@ -9,9 +9,9 @@ export class HttpNotebookOutputFactory {
   readonly httpOutputProvider: Array<extensionApi.HttpOutputProvider>;
   constructor(private readonly config: AppConfig, private readonly httpyac: typeof Httpyac) {
     this.httpOutputProvider = [
-      new httpOutput.TestResultsMimeOutpoutProvider(),
+      new httpOutput.TestResultsMimeOutputProvider(),
       new httpOutput.BuiltInHttpOutputProvider(config, this.httpyac),
-      new httpOutput.Rfc7230HttpOutpoutProvider(config, this.httpyac),
+      new httpOutput.Rfc7230HttpOutputProvider(config, this.httpyac),
       new httpOutput.ExtensionHttpOutputProvider(),
       new httpOutput.ImageHttpOutputProvider(),
       new httpOutput.ContentTypeHttpOutputProvider(config),

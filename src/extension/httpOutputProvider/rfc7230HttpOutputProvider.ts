@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 import { AppConfig } from '../config';
 import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../extensionApi';
 
-export class Rfc7230HttpOutpoutProvider implements HttpOutputProvider {
+export class Rfc7230HttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-rfc7230';
 
   constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}

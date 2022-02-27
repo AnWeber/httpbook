@@ -2,7 +2,7 @@ import type * as Httpyac from 'httpyac';
 import * as vscode from 'vscode';
 import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../extensionApi';
 
-export class TestResultsMimeOutpoutProvider implements HttpOutputProvider {
+export class TestResultsMimeOutputProvider implements HttpOutputProvider {
   id = 'httpbook-testresults';
 
   getTestResultOutputResult(testResults: Httpyac.TestResult[]): HttpOutputResult | false {

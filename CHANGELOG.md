@@ -1,8 +1,19 @@
+## 5.0.0 (2022-02-27)
+
+#### Breaking Changes
+
+- Setting Got Options directly on the request will be removed in one of the next versions. Got checks in v12 whether only valid options are set. But since options and custom properties are mixed at the request object, such a separation would be difficult. Please change `request[...]` to `request.options[...]`.
+
+#### Features
+
+- added [RabbitMQ Support](http://localhost:8080/guide/request.html#amqp-rabbitmq)
+- update to support httpyac@v5
+
 ## 2.2.2 (2021-01-27)
 
 #### Fix
 
-- remove cookiestore NotebookCellStatusBarItem
+- remove cookie store NotebookCellStatusBarItem
 
 ## 2.2.1 (2021-11-30)
 

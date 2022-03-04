@@ -8,16 +8,6 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
   const config: AppConfig = {};
   const httpyacExtension = vscode.extensions.getExtension<HttpYacExtensionApi>('anweber.vscode-httpyac');
   if (httpyacExtension?.isActive) {
-    httpyacExtension.exports.documentStore.getDocumentPathLike = document => {
-      if (notebook.isNotebookDocument(document)) {
-        return {
-          uri: document.uri,
-          fileUri: document.notebook.uri,
-          toString: () => document.uri.toString(),
-        };
-      }
-      return document.uri;
-    };
     const environmentChanged = notebook.environmentChangedFactory(httpyacExtension.exports);
     httpyacExtension.exports.environmentChanged(environmentChanged);
 

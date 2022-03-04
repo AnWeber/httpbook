@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { EOL } from 'os';
 import { AppConfig, watchConfigSettings } from '../config';
 import { HttpNotebookOutputFactory } from './httpNotebookOutputFactory';
-import { isNotebookDocument } from './notebookUtils';
 import { HttpYacExtensionApi } from '../httpyacExtensionApi';
 
 export const HttpNotebookViewType = 'http';
@@ -189,20 +188,5 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       }
       return result;
     });
-  }
-
-  public onDidChangeTextDocument(event: vscode.TextDocumentChangeEvent): void {
-    if (
-      isNotebookDocument(event?.document) &&
-      event.document.notebook?.notebookType === HttpNotebookViewType &&
-      vscode.languages.match(this.httpyacExtensionApi.httpDocumentSelector, event.document)
-    ) {
-      const source = this.getDocumentSource(event.document.notebook);
-      this.httpyacExtensionApi.documentStore.getOrCreate(
-        event.document.notebook.uri,
-        () => Promise.resolve(source),
-        event.document.version
-      );
-    }
   }
 }

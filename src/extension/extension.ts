@@ -18,11 +18,11 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
       }
       return document.uri;
     };
-    const environementChanged = notebook.environementChangedFactory(httpyacExtension.exports);
-    httpyacExtension.exports.environmentChanged(environementChanged);
+    const environmentChanged = notebook.environmentChangedFactory(httpyacExtension.exports);
+    httpyacExtension.exports.environmentChanged(environmentChanged);
 
     const httpNotebookOutputFactory = new notebook.HttpNotebookOutputFactory(config, httpyacExtension.exports.httpyac);
-    const httpNotebookSerialier = new notebook.HttpNotebookSerializer(
+    const httpNotebookSerializer = new notebook.HttpNotebookSerializer(
       httpNotebookOutputFactory,
       httpyacExtension.exports,
       config
@@ -36,8 +36,8 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
           }
           httpyacExtension.exports.documentStore.httpFileStore.remove(notebook.uri);
         }),
-        httpNotebookSerialier,
-        new notebook.HttpNotebookKernel(httpNotebookOutputFactory, httpNotebookSerialier, httpyacExtension.exports),
+        httpNotebookSerializer,
+        new notebook.HttpNotebookKernel(httpNotebookOutputFactory, httpNotebookSerializer, httpyacExtension.exports),
       ]
     );
     return {

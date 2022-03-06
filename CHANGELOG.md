@@ -1,3 +1,9 @@
+## 3.0.1 (2022-03-06)
+
+#### Fixes
+
+- moved getDocumentPathLike support to vscode-httpyac (AnWeber/vscode-httpyac#106)
+
 ## 3.0.0 (2022-02-27)
 
 #### Breaking Changes

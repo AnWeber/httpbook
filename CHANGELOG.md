@@ -1,3 +1,10 @@
+## 3.0.2 (2022-03-07)
+
+#### Fixes
+
+- execution of code cell is working (#47)
+- explicitly use mime `text/x-json` till microsoft/vscode#144622 is resolved
+
 ## 3.0.1 (2022-03-06)
 
 #### Fixes

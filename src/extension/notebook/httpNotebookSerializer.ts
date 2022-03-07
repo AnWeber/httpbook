@@ -36,7 +36,6 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
           },
         });
       }),
-      vscode.workspace.onDidChangeTextDocument(this.onDidChangeTextDocument.bind(this)),
     ];
   }
   private disposeNotebookSerializer() {

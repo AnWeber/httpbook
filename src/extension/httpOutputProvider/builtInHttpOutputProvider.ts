@@ -15,7 +15,7 @@ export class BuiltInHttpOutputProvider implements HttpOutputProvider {
 
     if (this.httpyac.utils.isMimeTypeJSON(response.contentType)) {
       return {
-        outputItems: vscode.NotebookCellOutputItem.json(response.parsedBody),
+        outputItems: vscode.NotebookCellOutputItem.json(response.parsedBody, 'text/x-json'),
         priority: HttpOutputPriority.Default,
       };
     }

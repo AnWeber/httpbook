@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, Soap, GraphQL, GRPC, MQTT and WebSocket requests directly within Visual Studio Code",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -14,7 +14,7 @@
   },
   "qna": "https://github.com/AnWeber/httpbook/discussions",
   "engines": {
-    "vscode": "^1.61.0"
+    "vscode": "^1.66.0"
   },
   "categories": [
     "Notebooks"
@@ -136,36 +136,39 @@
     "watch": "webpack --mode development --watch --config ./webpack.config.js",
     "lockfile-lint": "lockfile-lint --path package-lock.json --validate-https --allowed-hosts npm --validate-checksum --validate-integrity",
     "eslint": "eslint src --ext ts",
-    "lint": "npm run format && npm run eslint && npm run lockfile-lint",
+    "lint": "npm run format && npm run eslint && npm run lockfile-lint && tsc --noEmit",
     "precommit": "npm run lint"
   },
   "devDependencies": {
-    "@types/node": "^17.0.21",
-    "@types/react": "^17.0.39",
-    "@types/vscode": "1.61.0",
+    "@types/node": "^17.0.23",
+    "@types/react": "^17.0.43",
+    "@types/vscode": "1.66.0",
     "@types/vscode-notebook-renderer": "^1.60.0",
     "@types/webpack-env": "^1.16.3",
-    "@typescript-eslint/eslint-plugin": "^5.13.0",
-    "@typescript-eslint/parser": "^5.13.0",
-    "css-loader": "^6.7.0",
-    "eslint": "^8.10.0",
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
+    "@typescript-eslint/parser": "^5.17.0",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-node": "^11.1.0",
     "file-loader": "^6.2.0",
-    "fork-ts-checker-webpack-plugin": "^7.2.1",
-    "httpyac": "^5.1.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.2",
+    "httpyac": "^5.3.0",
     "husky": "^7.0.4",
-    "lint-staged": "^12.3.5",
-    "lockfile-lint": "^4.6.2",
-    "prettier": "^2.5.1",
+    "lint-staged": "^12.3.7",
+    "lockfile-lint": "^4.7.4",
+    "prettier": "^2.6.2",
     "style-loader": "^3.3.1",
     "thread-loader": "^3.0.4",
-    "ts-loader": "^9.2.7",
-    "typescript": "^4.6.2",
-    "webpack": "^5.70.0",
+    "ts-loader": "^9.2.8",
+    "typescript": "^4.6.3",
+    "webpack": "^5.71.0",
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "preact": "^10.7.0"
+  },
+  "resolutions": {
+    "keyv": "^4.1.1"
   }
 }

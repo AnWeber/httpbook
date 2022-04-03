@@ -1,3 +1,9 @@
+## 3.1.0 (2022-04-03)
+
+#### Features
+
+- update API to vscode-httpyac to support languageId in output channel
+
 ## 3.0.2 (2022-03-07)
 
 #### Fixes

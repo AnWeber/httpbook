@@ -167,8 +167,5 @@
   },
   "dependencies": {
     "preact": "^10.7.0"
-  },
-  "resolutions": {
-    "keyv": "^4.1.1"
   }
 }

@@ -109,7 +109,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     if (source.length > 4) {
       src = source.slice(2, source.length - 2).trim();
     }
-    return new vscode.NotebookCellData(vscode.NotebookCellKind.Markup, src, 'text/markdown');
+    return new vscode.NotebookCellData(vscode.NotebookCellKind.Markup, src, 'markdown');
   }
 
   private async createHttpCodeCell(source: string, httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {

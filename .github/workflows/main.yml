@@ -17,7 +17,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
+      uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
         config-file: ./.github/codeql-config.yml
@@ -29,4 +29,4 @@ jobs:
     - run: npm run lint
     - run: npm run compile
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      uses: github/codeql-action/analyze@v2

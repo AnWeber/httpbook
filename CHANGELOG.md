@@ -1,3 +1,9 @@
+## 3.1.1 (2022-05-28)
+
+#### Fix
+
+- use languageId instead of mimetype for markdown text (#54)
+
 ## 3.1.0 (2022-04-03)
 
 #### Features

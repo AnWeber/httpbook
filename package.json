@@ -166,6 +166,6 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "preact": "^10.8.2"
+    "preact": "^10.10.0"
   }
 }

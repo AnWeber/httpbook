@@ -111,7 +111,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
       if (httpFile) {
         for (const cell of cells) {
           const cellHttpFile = await this.getCellHttpFile(cell);
-          if (cellHttpFile?.httpRegions.length > 0) {
+          if (cellHttpFile && cellHttpFile?.httpRegions.length > 0) {
             httpFile.activeEnvironment = cellHttpFile.activeEnvironment;
             if (await this.executeCell(controller, cell, httpFile, cellHttpFile.httpRegions)) {
               this.refreshFileHttpRegions(cellHttpFile, httpFile);
@@ -178,7 +178,9 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
             response,
             httpRegion?.testResults || [],
             {
-              metaData: httpRegion?.metaData || {},
+              metaData: Object.fromEntries(
+                Object.entries(httpRegion?.metaData || {}).map(([key, value]) => [key, `${value}`])
+              ),
               mimeType: response?.contentType?.mimeType,
               httpFile,
             }

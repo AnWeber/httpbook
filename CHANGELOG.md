@@ -1,3 +1,9 @@
+## 3.1.3 (2022-07-30)
+
+#### Fix
+
+- environment change did not change environment of all notebook cells
+
 ## 3.1.2 (2022-07-30)
 
 #### Fix

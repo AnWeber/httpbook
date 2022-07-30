@@ -27,7 +27,12 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
           httpyacExtension.exports.documentStore.httpFileStore.remove(notebook.uri);
         }),
         httpNotebookSerializer,
-        new notebook.HttpNotebookKernel(httpNotebookOutputFactory, httpNotebookSerializer, httpyacExtension.exports),
+        new notebook.HttpNotebookKernel(
+          config,
+          httpNotebookOutputFactory,
+          httpNotebookSerializer,
+          httpyacExtension.exports
+        ),
       ]
     );
     return {

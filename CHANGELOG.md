@@ -1,3 +1,9 @@
+## 3.1.2 (2022-07-30)
+
+#### Fix
+
+- do not output responses of `@ref` and `@forceRef` (#63). Output all responses only if setting `httpbook.outputAllResponses` is enabled
+
 ## 3.1.1 (2022-05-28)
 
 #### Fix

@@ -3,6 +3,7 @@ import type * as Httpyac from 'httpyac';
 import { HttpNotebookOutputFactory } from './httpNotebookOutputFactory';
 import { HttpNotebookSerializer, HttpNotebookViewType } from './httpNotebookSerializer';
 import { HttpYacExtensionApi } from '../httpyacExtensionApi';
+import { AppConfig } from '../config';
 
 export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvider {
   private executionOrder = 0;
@@ -10,6 +11,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
   private subscriptions: Array<vscode.Disposable>;
   onDidChangeCellStatusBarItems?: vscode.Event<void> | undefined;
   constructor(
+    private readonly config: AppConfig,
     private readonly httpNotebookOutputFactory: HttpNotebookOutputFactory,
     private readonly httpNotebookSerializer: HttpNotebookSerializer,
     private readonly httpyacExtensionApi: HttpYacExtensionApi
@@ -174,19 +176,21 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
           execution.appendOutput(newOutput);
         },
         logResponse: async (response, httpRegion) => {
-          const outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(
-            response,
-            httpRegion?.testResults || [],
-            {
-              metaData: Object.fromEntries(
-                Object.entries(httpRegion?.metaData || {}).map(([key, value]) => [key, `${value}`])
-              ),
-              mimeType: response?.contentType?.mimeType,
-              httpFile,
+          if (this.config.outputAllResponses || (httpRegion && httpRegions.indexOf(httpRegion) >= 0)) {
+            const outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(
+              response,
+              httpRegion?.testResults || [],
+              {
+                metaData: Object.fromEntries(
+                  Object.entries(httpRegion?.metaData || {}).map(([key, value]) => [key, `${value}`])
+                ),
+                mimeType: response?.contentType?.mimeType,
+                httpFile,
+              }
+            );
+            for (const output of outputs) {
+              execution.appendOutput(output);
             }
-          );
-          for (const output of outputs) {
-            execution.appendOutput(output);
           }
         },
       });

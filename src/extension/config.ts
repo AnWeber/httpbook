@@ -10,6 +10,7 @@ export enum TestSlotOutput {
 
 export interface AppConfig {
   outputTests?: TestSlotOutput;
+  outputAllResponses?: TestSlotOutput;
   useContentTypeAsNotebookOutputRendererMime?: boolean;
   mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>;
   preferNotebookOutputRenderer?: Record<string, string>;

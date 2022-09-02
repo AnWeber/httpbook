@@ -1,3 +1,9 @@
+## 3.1.3 (2022-09-02)
+
+#### Fix
+
+- httpBook uses history feature of vscode-httpyac
+
 ## 3.1.3 (2022-07-30)
 
 #### Fix

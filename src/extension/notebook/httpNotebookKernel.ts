@@ -192,6 +192,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
               execution.appendOutput(output);
             }
           }
+          await this.httpyacExtensionApi.responseStore.add(response, httpRegion, false);
         },
       });
 

@@ -1,3 +1,9 @@
+## 3.1.5 (2022-10-04)
+
+#### Fix
+
+- fix order of markdown/ cell blocks (#74)
+
 ## 3.1.3 (2022-09-02)
 
 #### Fix

@@ -80,24 +80,28 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     const cells: Array<vscode.NotebookCellData> = [];
     if (httpRegion.symbol.children) {
       const sourceLines: Array<string> = [];
+
+      const afterCells = [];
       for (const symbol of httpRegion.symbol.children) {
         if (symbol.source) {
           if (symbol.kind === this.httpyacExtensionApi.httpyac.HttpSymbolKind.comment) {
-            cells.push(this.createMarkDownCell(symbol.source));
+            const markdownCell = this.createMarkDownCell(symbol.source);
+            if (sourceLines.length > 0) {
+              afterCells.push(markdownCell);
+            } else {
+              cells.push(markdownCell);
+            }
           } else if (symbol.kind !== this.httpyacExtensionApi.httpyac.HttpSymbolKind.response) {
             sourceLines.push(symbol.source);
           }
         }
       }
       if (sourceLines.length > 0) {
-        cells.push(
-          await this.createHttpCodeCell(
-            this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceLines),
-            httpRegion,
-            httpFile
-          )
-        );
+        const source = this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceLines);
+        if (source.length > 0) cells.push(await this.createHttpCodeCell(source, httpRegion, httpFile));
+        sourceLines.length = 0;
       }
+      cells.push(...afterCells);
     } else {
       cells.push(await this.createHttpCodeCell(httpRegion.symbol.source || '', httpRegion, httpFile));
     }
@@ -114,13 +118,14 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
 
   private async createHttpCodeCell(source: string, httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
     const cell = new vscode.NotebookCellData(vscode.NotebookCellKind.Code, source, 'http');
-
     if (httpRegion.response) {
       cell.outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(
         httpRegion.response,
         httpRegion.testResults || [],
         {
-          metaData: httpRegion.metaData,
+          metaData: Object.fromEntries(
+            Object.entries(httpRegion.metaData).map(([key, val]) => [key, val ? `${val}` : val])
+          ),
           mimeType: httpRegion.response.contentType?.mimeType,
           httpFile,
         }
@@ -142,9 +147,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
 
         if (hasPrevCell) {
           if (!startsWithSeparator) {
-            contents.push(`${EOL}###${EOL}`);
-          } else {
-            contents.push(`${EOL}`);
+            contents.push(`###`);
           }
         }
         contents.push(cell.value);
@@ -158,7 +161,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
         }
         hasPrevCell = true;
       } else if (cell.kind === vscode.NotebookCellKind.Markup) {
-        contents.push(`${EOL}/*${EOL}${cell.value}${EOL}*/${EOL}`);
+        contents.push(`/*${EOL}${cell.value}${EOL}*/`);
       }
     }
     return contents.join(`${EOL}`);

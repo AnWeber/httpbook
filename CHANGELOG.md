@@ -1,3 +1,9 @@
+## 3.1.6 (2022-10-08)
+
+#### Fix
+
+- code cell generation no longer swallows blank lines (#75)
+
 ## 3.1.5 (2022-10-04)
 
 #### Fix

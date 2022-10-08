@@ -79,27 +79,34 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   private async createCells(httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {
     const cells: Array<vscode.NotebookCellData> = [];
     if (httpRegion.symbol.children) {
-      const sourceLines: Array<string> = [];
+      const sourceCellLines: Array<string> = [];
 
       const afterCells = [];
-      for (const symbol of httpRegion.symbol.children) {
-        if (symbol.source) {
-          if (symbol.kind === this.httpyacExtensionApi.httpyac.HttpSymbolKind.comment) {
-            const markdownCell = this.createMarkDownCell(symbol.source);
-            if (sourceLines.length > 0) {
+
+      if (httpRegion.symbol.source) {
+        const sourceLines = this.httpyacExtensionApi.httpyac.utils.toMultiLineArray(httpRegion.symbol.source);
+        for (let index = 0; index < sourceLines.length; index++) {
+          const currentLine = httpRegion.symbol.startLine + index;
+          const childSymbol = httpRegion.symbol.children?.find(
+            child => child.startLine <= currentLine && currentLine < child.endLine
+          );
+          if (childSymbol?.kind === this.httpyacExtensionApi.httpyac.HttpSymbolKind.comment) {
+            const markdownCell = this.createMarkDownCell(childSymbol.description);
+            if (sourceCellLines.some(line => !!line)) {
               afterCells.push(markdownCell);
             } else {
               cells.push(markdownCell);
             }
-          } else if (symbol.kind !== this.httpyacExtensionApi.httpyac.HttpSymbolKind.response) {
-            sourceLines.push(symbol.source);
+            index = childSymbol.endLine;
+          } else if (childSymbol?.kind !== this.httpyacExtensionApi.httpyac.HttpSymbolKind.response) {
+            sourceCellLines.push(sourceLines[index]);
           }
         }
       }
-      if (sourceLines.length > 0) {
-        const source = this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceLines);
+      if (sourceCellLines.length > 0) {
+        const source = this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceCellLines);
         if (source.length > 0) cells.push(await this.createHttpCodeCell(source, httpRegion, httpFile));
-        sourceLines.length = 0;
+        sourceCellLines.length = 0;
       }
       cells.push(...afterCells);
     } else {
@@ -109,11 +116,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   }
 
   private createMarkDownCell(source: string) {
-    let src = source;
-    if (source.length > 4) {
-      src = source.slice(2, source.length - 2).trim();
-    }
-    return new vscode.NotebookCellData(vscode.NotebookCellKind.Markup, src, 'markdown');
+    return new vscode.NotebookCellData(vscode.NotebookCellKind.Markup, source, 'markdown');
   }
 
   private async createHttpCodeCell(source: string, httpRegion: Httpyac.HttpRegion, httpFile: Httpyac.HttpFile) {

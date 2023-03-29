@@ -1,11 +1,10 @@
 {
-  "files": [],
   "references": [
+    {
+      "path": "./src/extension"
+    },
     {
       "path": "./src/renderer"
     },
-    {
-      "path": "./src/extension"
-    }
   ]
 }

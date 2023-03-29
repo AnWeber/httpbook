@@ -2,7 +2,10 @@
   "extends": "../tsconfig-base.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "../../dist/extension",
+    "composite": true,
+    "outDir": "dist",
   },
-  "references": []
+  "include": [
+    "**/*.ts"
+  ]
 }

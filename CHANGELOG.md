@@ -7,6 +7,7 @@
 #### Fix
 
 - `@ref` uses correct httpFile to refernce region (Anweber/httpyac#425)
+- json response is shown after reopen
 
 ## 3.1.6 (2022-10-08)
 

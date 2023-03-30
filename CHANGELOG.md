@@ -1,3 +1,9 @@
+## 3.2.0 (2023-03-30)
+
+#### Fix
+
+- `@ref` uses correct httpFile to refernce region (Anweber/httpyac#425)
+
 ## 3.1.6 (2022-10-08)
 
 #### Fix

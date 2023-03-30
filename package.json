@@ -91,13 +91,26 @@
             "never"
           ],
           "default": "always",
-          "scope": "resource",
+          "scope": "window",
           "description": "are outputs of tests visible"
+        },
+        "httpbook.outputRfc7230": {
+          "type": "string",
+          "enum": [
+            "request_and_response",
+            "request_header_and_response",
+            "response",
+            "only_header",
+            "only_response_header"
+          ],
+          "default": "request_and_response",
+          "scope": "window",
+          "description": "are outputs of rfc7230 visible"
         },
         "httpbook.outputAllResponses": {
           "type": "boolean",
           "default": false,
-          "scope": "resource",
+          "scope": "window",
           "description": "output all responses (@ref and @forceRef included)"
         },
         "httpbook.preferNotebookOutputRenderer": {
@@ -164,7 +177,7 @@
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-node": "^11.1.0",
-    "httpyac": "^6.3.3",
+    "httpyac": "^6.3.4",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
     "lockfile-lint": "^4.10.1",

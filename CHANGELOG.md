@@ -1,5 +1,9 @@
 ## 3.2.0 (2023-03-30)
 
+#### Features
+
+- change output format for rfc7230 output
+
 #### Fix
 
 - `@ref` uses correct httpFile to refernce region (Anweber/httpyac#425)

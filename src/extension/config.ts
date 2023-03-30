@@ -8,9 +8,18 @@ export enum TestSlotOutput {
   never = 'never',
 }
 
+export enum Rfc7230Output {
+  request_and_response = 'request_and_response',
+  request_header_and_response = 'request_header_and_response',
+  response = 'response',
+  only_header = 'only_header',
+  only_response_header = 'only_response_header',
+}
+
 export interface AppConfig {
   outputTests?: TestSlotOutput;
-  outputAllResponses?: TestSlotOutput;
+  outputAllResponses?: boolean;
+  outputRfc7230?: Rfc7230Output;
   useContentTypeAsNotebookOutputRendererMime?: boolean;
   mapContentTypeToNotebookOutputRendererMime?: Record<string, string | Array<string>>;
   preferNotebookOutputRenderer?: Record<string, string>;

@@ -100,9 +100,12 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
             index = childSymbol.endLine;
           } else if (childSymbol?.kind !== this.httpyacExtensionApi.httpyac.HttpSymbolKind.response) {
             sourceCellLines.push(sourceLines[index]);
+          } else {
+            break;
           }
         }
       }
+      this.removeTrailingEmptyLines(sourceCellLines);
       if (sourceCellLines.length > 0) {
         const source = this.httpyacExtensionApi.httpyac.utils.toMultiLineString(sourceCellLines);
         if (source.length > 0) cells.push(await this.createHttpCodeCell(source, httpRegion, httpFile));
@@ -135,6 +138,12 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       );
     }
     return cell;
+  }
+
+  private removeTrailingEmptyLines(lines: Array<string>): void {
+    while (lines.length > 0 && /^(\s*)?$/u.test(lines[lines.length - 1])) {
+      lines.pop();
+    }
   }
 
   public getDocumentSource(document: vscode.NotebookData | vscode.NotebookDocument): string {

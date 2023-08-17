@@ -184,6 +184,9 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
           execution.appendOutput(newOutput);
         },
         logResponse: async (response, httpRegion) => {
+          if (!response) {
+            return;
+          }
           if (this.config.outputAllResponses || (httpRegion && httpRegions.indexOf(httpRegion) >= 0)) {
             const outputs = await this.httpNotebookOutputFactory.createHttpRegionOutputs(
               response,

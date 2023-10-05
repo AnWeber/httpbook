@@ -9,7 +9,7 @@ export function environmentChangedFactory(httpyacExtensionApi: HttpYacExtensionA
         for (const cell of notebook.getCells()) {
           const httpFile = await httpyacExtensionApi.documentStore.getHttpFile(cell.document);
           if (httpFile) {
-            httpFile.activeEnvironment = env;
+            httpyacExtensionApi.documentStore.setActiveEnvironment(httpFile, env);
           }
         }
       }

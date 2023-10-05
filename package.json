@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, Soap, GraphQL, GRPC, MQTT and WebSocket requests directly within Visual Studio Code",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -150,7 +150,7 @@
     ]
   },
   "scripts": {
-    "compile": "npm run esbuild -- --minify",
+    "build": "npm run esbuild -- --minify",
     "esbuild": "node ./buildSrc/esbuild.mjs",
     "eslint": "eslint src --ext ts --ext tsx",
     "format": "prettier --write --parser typescript \"src/**/*.ts?(x)\"",
@@ -163,26 +163,26 @@
     "tsc-lint": "tsc --noEmit --project ./src/extension/tsconfig.json && tsc --noEmit --project ./src/renderer/tsconfig.json",
     "tsc-watch": "tsc --watch",
     "tsc": "tsc --b",
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run build",
     "watch": "npm run esbuild -- --watch"
   },
   "devDependencies": {
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.31",
+    "@types/node": "^20.8.2",
+    "@types/react": "^18.2.25",
     "@types/vscode": "1.71.0",
-    "@types/vscode-notebook-renderer": "^1.72.0",
-    "@typescript-eslint/eslint-plugin": "^5.57.0",
-    "@typescript-eslint/parser": "^5.57.0",
-    "esbuild": "^0.17.14",
-    "eslint": "^8.37.0",
-    "eslint-config-prettier": "^8.8.0",
+    "@types/vscode-notebook-renderer": "^1.72.1",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "esbuild": "^0.19.4",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-node": "^11.1.0",
-    "httpyac": "^6.3.4",
+    "httpyac": "^6.7.1",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.0",
-    "lockfile-lint": "^4.10.1",
-    "prettier": "^2.8.7",
-    "typescript": "^5.0.2"
+    "lint-staged": "^14.0.1",
+    "lockfile-lint": "^4.12.1",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "preact": "^10.18.1"

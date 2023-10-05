@@ -32,7 +32,8 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
 
     const cellHttpFile = await this.getCellHttpFile(cell);
     if (cellHttpFile) {
-      const env = cellHttpFile.activeEnvironment?.join?.(', ') || '-';
+      const activeEnvironment = this.httpyacExtensionApi.documentStore.getActiveEnvironment(cellHttpFile);
+      const env = activeEnvironment?.join?.(', ') || '-';
       result.push(
         this.createNotebookCellStatusBarItem(
           `env: ${env}`,
@@ -114,8 +115,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
         for (const cell of cells) {
           const cellHttpFile = await this.getCellHttpFile(cell);
           if (cellHttpFile && cellHttpFile?.httpRegions.length > 0) {
-            httpFile.activeEnvironment = cellHttpFile.activeEnvironment;
-
             if (
               await this.executeCell(
                 controller,

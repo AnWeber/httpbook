@@ -1,3 +1,9 @@
+## 3.2.1 (2023-10-05)
+
+### Fix
+
+- changing environment of cell is used in send command (#99)
+
 ## 3.2.0 (2023-03-30)
 
 #### Features

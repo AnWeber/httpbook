@@ -4,29 +4,29 @@ on:
     branches:
       - main
   schedule:
-    - cron:  '0 0 * * 1'
+    - cron: '0 0 * * 1'
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        language: [ 'javascript' ]
+        language: ['javascript']
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
-        config-file: ./.github/codeql-config.yml
-    - name: Install Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16
-    - run: npm install
-    - run: npm run lint
-    - run: npm run compile
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+          config-file: ./.github/codeql-config.yml
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2

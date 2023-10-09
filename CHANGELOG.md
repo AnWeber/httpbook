@@ -1,3 +1,9 @@
+## 3.2.2 (2023-10-09)
+
+### Fix
+
+- use cellHttpFile as source of truth for environemnt detection (#99)
+
 ## 3.2.1 (2023-10-05)
 
 ### Fix

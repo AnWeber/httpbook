@@ -120,7 +120,8 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
                 controller,
                 cell,
                 httpFile,
-                cellHttpFile.httpRegions.map(obj => obj.clone(httpFile))
+                cellHttpFile.httpRegions.map(obj => obj.clone(httpFile)),
+                this.httpyacExtensionApi.documentStore.getActiveEnvironment(cellHttpFile)
               )
             ) {
               this.refreshFileHttpRegions(cellHttpFile, httpFile);
@@ -155,7 +156,8 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     controller: vscode.NotebookController,
     cell: vscode.NotebookCell,
     httpFile: Httpyac.HttpFile,
-    httpRegions: Httpyac.HttpRegion[]
+    httpRegions: Httpyac.HttpRegion[],
+    activeEnvironment: Array<string> | undefined
   ) {
     const execution = controller.createNotebookCellExecution(cell);
     execution.executionOrder = ++this.executionOrder;
@@ -164,6 +166,7 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     try {
       execution.clearOutput();
       await this.httpyacExtensionApi.documentStore.send({
+        activeEnvironment,
         httpFile,
         httpRegions,
         progress: {

@@ -6,7 +6,10 @@ import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../ext
 export class Rfc7230HttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-rfc7230';
 
-  constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}
+  constructor(
+    readonly config: AppConfig,
+    readonly httpyac: typeof Httpyac
+  ) {}
 
   getResponseOutputResult(response: Httpyac.HttpResponse): HttpOutputResult | false {
     const httpResponse: Httpyac.HttpResponse = this.prepareHttpResponse(response);

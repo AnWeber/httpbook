@@ -7,7 +7,10 @@ import { AppConfig, TestSlotOutput } from '../config';
 
 export class HttpNotebookOutputFactory {
   readonly httpOutputProvider: Array<extensionApi.HttpOutputProvider>;
-  constructor(private readonly config: AppConfig, private readonly httpyac: typeof Httpyac) {
+  constructor(
+    private readonly config: AppConfig,
+    private readonly httpyac: typeof Httpyac
+  ) {
     this.httpOutputProvider = [
       new httpOutput.TestResultsMimeOutputProvider(),
       new httpOutput.BuiltInHttpOutputProvider(config, this.httpyac),
@@ -25,16 +28,16 @@ export class HttpNotebookOutputFactory {
   ): Promise<vscode.NotebookCellOutput[]> {
     const outputs: vscode.NotebookCellOutput[] = [];
     if (testResults.length > 0 && this.canShowTestResults(testResults)) {
-      const outputItems = await this.mapHttpOutputProvider(obj =>
-        obj.getTestResultOutputResult?.(testResults, httpOutputContext)
+      const outputItems = await this.mapHttpOutputProvider(
+        obj => obj.getTestResultOutputResult?.(testResults, httpOutputContext)
       );
       if (outputItems.length > 0) {
         outputs.push(this.createNotebookCellOutput(outputItems, response?.contentType?.mimeType));
       }
     }
     if (response) {
-      const outputItems = await this.mapHttpOutputProvider(obj =>
-        obj.getResponseOutputResult?.(response, httpOutputContext)
+      const outputItems = await this.mapHttpOutputProvider(
+        obj => obj.getResponseOutputResult?.(response, httpOutputContext)
       );
       if (outputItems.length > 0) {
         const output = this.createNotebookCellOutput(outputItems, response.contentType?.mimeType);

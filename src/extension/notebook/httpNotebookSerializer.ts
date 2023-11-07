@@ -9,6 +9,7 @@ export const HttpNotebookViewType = 'http';
 
 interface HttpCell {
   value: string;
+  index?: number;
   kind: vscode.NotebookCellKind;
   outputs?: Array<unknown>;
 }
@@ -45,7 +46,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     }
   }
 
-  async deserializeNotebook(content: Uint8Array): Promise<vscode.NotebookData> {
+  public async deserializeNotebook(content: Uint8Array): Promise<vscode.NotebookData> {
     try {
       const httpFile = await this.httpyacExtensionApi.documentStore.parse(
         undefined,
@@ -62,7 +63,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       return new vscode.NotebookData([]);
     }
   }
-  serializeNotebook(data: vscode.NotebookData): Uint8Array | Promise<Uint8Array> {
+  public serializeNotebook(data: vscode.NotebookData): Uint8Array | Promise<Uint8Array> {
     const source = this.getDocumentSource(data);
     return Buffer.from(source);
   }
@@ -146,7 +147,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
     }
   }
 
-  public getDocumentSource(document: vscode.NotebookData | vscode.NotebookDocument): string {
+  private getDocumentSource(document: vscode.NotebookData | vscode.NotebookDocument): string {
     const contents: Array<string> = [];
     let hasPrevCell = false;
     const cells = this.getNotebookCells(document);
@@ -162,6 +163,9 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
             contents.push(`###`);
           }
         }
+        if (cell.index !== undefined) {
+          contents.push(`# @cellIndex ${cell.index}`);
+        }
         contents.push(cell.value);
         if (cell.outputs && this.config.saveWithOutputs) {
           for (const output of cell.outputs) {
@@ -170,6 +174,9 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
               contents.push(output);
             }
           }
+        }
+        if (cell.index !== undefined) {
+          contents.push(`# @cellIndexAfter ${cell.index}`);
         }
         hasPrevCell = true;
       } else if (cell.kind === vscode.NotebookCellKind.Markup) {
@@ -196,11 +203,24 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       const result: HttpCell = {
         value: obj.document.getText(),
         kind: obj.kind,
+        index: obj.index,
       };
       if (obj.outputs) {
         result.outputs = obj.outputs.map(output => output.metadata?.source);
       }
       return result;
     });
+  }
+
+  public async getNotebookHttpFile(notebook: vscode.NotebookDocument) {
+    let version = 0;
+    for (const cell of notebook.getCells()) {
+      version += cell.document.version;
+    }
+    return await this.httpyacExtensionApi.documentStore.getOrCreate(
+      notebook.uri,
+      () => Promise.resolve(this.getDocumentSource(notebook)),
+      version
+    );
   }
 }

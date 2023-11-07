@@ -13,7 +13,11 @@ export class ExtensionHttpOutputProvider implements HttpOutputProvider {
         if (extension.isActive && extension.packageJSON?.contributes?.notebookRenderer) {
           for (const notebookRenderer of extension.packageJSON.contributes.notebookRenderer) {
             if (!notebookRenderer.id || notebookRenderer.id.indexOf('httpbook') < 0) {
-              if (notebookRenderer.mimeTypes.indexOf(response.contentType.mimeType) >= 0) {
+              if (
+                notebookRenderer.mimeTypes &&
+                Array.isArray(notebookRenderer.mimeTypes) &&
+                notebookRenderer.mimeTypes.indexOf(response.contentType.mimeType) >= 0
+              ) {
                 outputItems.push(new vscode.NotebookCellOutputItem(rawBody, response.contentType?.mimeType));
               }
             }

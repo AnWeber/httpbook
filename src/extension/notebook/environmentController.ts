@@ -1,16 +1,18 @@
 import * as vscode from 'vscode';
 import { HttpYacExtensionApi } from '../httpyacExtensionApi';
+import { HttpNotebookSerializer } from './httpNotebookSerializer';
 
-export function environmentChangedFactory(httpyacExtensionApi: HttpYacExtensionApi) {
+export function environmentChangedFactory(
+  httpyacExtensionApi: HttpYacExtensionApi,
+  httpNotebookSerializer: HttpNotebookSerializer
+) {
   return async function environmentChanged(env: string[] | undefined): Promise<void> {
     try {
       const notebook = vscode.window.activeNotebookEditor?.notebook;
       if (notebook) {
-        for (const cell of notebook.getCells()) {
-          const httpFile = await httpyacExtensionApi.documentStore.getHttpFile(cell.document);
-          if (httpFile) {
-            httpyacExtensionApi.documentStore.setActiveEnvironment(httpFile, env);
-          }
+        const httpFile = await httpNotebookSerializer.getNotebookHttpFile(notebook);
+        if (httpFile) {
+          httpyacExtensionApi.documentStore.setActiveEnvironment(httpFile, env);
         }
       }
     } catch (err) {

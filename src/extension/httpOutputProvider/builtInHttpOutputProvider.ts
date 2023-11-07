@@ -6,7 +6,10 @@ import { HttpOutputProvider, HttpOutputResult, HttpOutputPriority } from '../ext
 export class BuiltInHttpOutputProvider implements HttpOutputProvider {
   id = 'httpbook-builtin';
   vscodeLanguages = new Set<string>();
-  constructor(readonly config: AppConfig, readonly httpyac: typeof Httpyac) {}
+  constructor(
+    readonly config: AppConfig,
+    readonly httpyac: typeof Httpyac
+  ) {}
 
   async getResponseOutputResult(response: Httpyac.HttpResponse): Promise<HttpOutputResult | false> {
     if (!response.contentType || !response.body || typeof response.body !== 'string' || response.body.length === 0) {

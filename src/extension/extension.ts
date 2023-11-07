@@ -8,15 +8,14 @@ export function activate(context: vscode.ExtensionContext): HttpBookApi | false 
   const config: AppConfig = {};
   const httpyacExtension = vscode.extensions.getExtension<HttpYacExtensionApi>('anweber.vscode-httpyac');
   if (httpyacExtension?.isActive) {
-    const environmentChanged = notebook.environmentChangedFactory(httpyacExtension.exports);
-    httpyacExtension.exports.environmentChanged(environmentChanged);
-
     const httpNotebookOutputFactory = new notebook.HttpNotebookOutputFactory(config, httpyacExtension.exports.httpyac);
     const httpNotebookSerializer = new notebook.HttpNotebookSerializer(
       httpNotebookOutputFactory,
       httpyacExtension.exports,
       config
     );
+    const environmentChanged = notebook.environmentChangedFactory(httpyacExtension.exports, httpNotebookSerializer);
+    httpyacExtension.exports.environmentChanged(environmentChanged);
     context.subscriptions.push(
       ...[
         watchConfigSettings(current => Object.assign(config, current)),

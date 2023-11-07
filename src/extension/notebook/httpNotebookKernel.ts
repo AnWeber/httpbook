@@ -5,6 +5,8 @@ import { HttpNotebookSerializer, HttpNotebookViewType } from './httpNotebookSeri
 import { HttpYacExtensionApi } from '../httpyacExtensionApi';
 import { AppConfig } from '../config';
 
+type ExecuteOptions = { cell: vscode.NotebookCell; httpFile: Httpyac.HttpFile; httpRegions: Httpyac.HttpRegion[] };
+
 export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvider {
   private executionOrder = 0;
 
@@ -30,9 +32,10 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
   async provideCellStatusBarItems(cell: vscode.NotebookCell): Promise<vscode.NotebookCellStatusBarItem[]> {
     const result: vscode.NotebookCellStatusBarItem[] = [];
 
-    const cellHttpFile = await this.getCellHttpFile(cell);
-    if (cellHttpFile) {
-      const activeEnvironment = this.httpyacExtensionApi.documentStore.getActiveEnvironment(cellHttpFile);
+    const httpFile = await this.httpNotebookSerializer.getNotebookHttpFile(cell.notebook);
+
+    if (httpFile) {
+      const activeEnvironment = this.httpyacExtensionApi.documentStore.getActiveEnvironment(httpFile);
       const env = activeEnvironment?.join?.(', ') || '-';
       result.push(
         this.createNotebookCellStatusBarItem(
@@ -51,28 +54,6 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
             `active session (${this.httpyacExtensionApi.httpyac.store.userSessionStore.userSessions.length})`
           )
         );
-      }
-
-      for (const httpRegion of cellHttpFile.httpRegions) {
-        const args = [cell.document.uri, httpRegion.symbol.startLine];
-        if (httpRegion.response) {
-          result.push(
-            this.createNotebookCellStatusBarItem('$(save)', vscode.NotebookCellStatusBarAlignment.Left, {
-              command: 'httpyac.save',
-              title: '$(save)',
-              tooltip: 'save',
-              arguments: args,
-            })
-          );
-          result.push(
-            this.createNotebookCellStatusBarItem('$(file-code)', vscode.NotebookCellStatusBarAlignment.Left, {
-              command: 'httpyac.show',
-              title: '$(file-code)',
-              tooltip: 'show in editor',
-              arguments: args,
-            })
-          );
-        }
       }
     }
     return result;
@@ -106,25 +87,28 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     controller: vscode.NotebookController
   ): Promise<void> {
     try {
-      const httpFile = await this.httpyacExtensionApi.documentStore.getOrCreate(
-        notebook.uri,
-        () => Promise.resolve(this.httpNotebookSerializer.getDocumentSource(notebook)),
-        notebook.version
-      );
+      const httpFile = await this.httpNotebookSerializer.getNotebookHttpFile(notebook);
       if (httpFile) {
-        for (const cell of cells) {
-          const cellHttpFile = await this.getCellHttpFile(cell);
-          if (cellHttpFile && cellHttpFile?.httpRegions.length > 0) {
-            if (
-              await this.executeCell(
-                controller,
-                cell,
-                httpFile,
-                cellHttpFile.httpRegions.map(obj => obj.clone(httpFile)),
-                this.httpyacExtensionApi.documentStore.getActiveEnvironment(cellHttpFile)
-              )
-            ) {
-              this.refreshFileHttpRegions(cellHttpFile, httpFile);
+        let executeOptions: ExecuteOptions | undefined;
+        const httpRegions = [...httpFile.httpRegions];
+        while (httpRegions.length) {
+          const httpRegion = httpRegions.shift();
+          if (httpRegion) {
+            if (!executeOptions) {
+              const cell = cells.find(obj => `${obj.index}` === httpRegion.metaData.cellIndex);
+              if (cell) {
+                executeOptions = {
+                  cell,
+                  httpFile,
+                  httpRegions: [httpRegion],
+                };
+              }
+            } else {
+              executeOptions.httpRegions.push(httpRegion);
+            }
+            if (executeOptions && httpRegion.metaData.cellIndexAfter) {
+              await this.executeCell(controller, executeOptions);
+              executeOptions = undefined;
             }
           }
         }
@@ -136,37 +120,14 @@ export class HttpNotebookKernel implements vscode.NotebookCellStatusBarItemProvi
     }
   }
 
-  private async getCellHttpFile(cell: vscode.NotebookCell) {
-    return await this.httpyacExtensionApi.documentStore.getHttpFile(cell.document);
-  }
-
-  private refreshFileHttpRegions(cellHttpFile: Httpyac.HttpFile, httpFile: Httpyac.HttpFile) {
-    for (const httpRegion of cellHttpFile.httpRegions) {
-      if (httpRegion.metaData.name && httpRegion.response) {
-        const fileHttpRegion = httpFile.httpRegions.find(obj => obj.metaData.name === httpRegion.metaData.name);
-        if (fileHttpRegion) {
-          fileHttpRegion.response = httpRegion.response;
-          fileHttpRegion.testResults = httpRegion.testResults;
-        }
-      }
-    }
-  }
-
-  private async executeCell(
-    controller: vscode.NotebookController,
-    cell: vscode.NotebookCell,
-    httpFile: Httpyac.HttpFile,
-    httpRegions: Httpyac.HttpRegion[],
-    activeEnvironment: Array<string> | undefined
-  ) {
+  private async executeCell(controller: vscode.NotebookController, { cell, httpFile, httpRegions }: ExecuteOptions) {
     const execution = controller.createNotebookCellExecution(cell);
     execution.executionOrder = ++this.executionOrder;
     execution.start(Date.now());
-
     try {
       execution.clearOutput();
       await this.httpyacExtensionApi.documentStore.send({
-        activeEnvironment,
+        activeEnvironment: this.httpyacExtensionApi.documentStore.getActiveEnvironment(httpFile),
         httpFile,
         httpRegions,
         progress: {

@@ -1,3 +1,9 @@
+## 3.2.3 (2023-11-07)
+
+### Fix
+
+- variables carry over between cells (#102)
+
 ## 3.2.2 (2023-10-09)
 
 ### Fix

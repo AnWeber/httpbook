@@ -167,22 +167,22 @@
     "watch": "npm run esbuild -- --watch"
   },
   "devDependencies": {
-    "@types/node": "^20.8.10",
-    "@types/react": "^18.2.36",
+    "@types/node": "^20.12.13",
+    "@types/react": "^18.3.3",
     "@types/vscode": "1.71.0",
     "@types/vscode-notebook-renderer": "^1.72.3",
-    "@typescript-eslint/eslint-plugin": "^6.10.0",
-    "@typescript-eslint/parser": "^6.10.0",
-    "esbuild": "^0.19.5",
-    "eslint": "^8.53.0",
-    "eslint-config-prettier": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "esbuild": "^0.21.4",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-node": "^11.1.0",
-    "httpyac": "^6.9.3",
-    "husky": "^8.0.3",
-    "lint-staged": "^15.0.2",
-    "lockfile-lint": "^4.12.1",
-    "prettier": "^3.0.3",
-    "typescript": "^5.2.2"
+    "httpyac": "^6.13.3",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.5",
+    "lockfile-lint": "^4.13.2",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "preact": "^10.22.0"

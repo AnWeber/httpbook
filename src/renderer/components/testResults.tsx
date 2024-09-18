@@ -1,6 +1,6 @@
 import { h, FunctionComponent, Fragment } from 'preact';
 import './testResults.css';
-import type { TestResult } from 'httpyac';
+import type { TestResult, TestResultStatus } from 'httpyac';
 
 export const TestResults: FunctionComponent<{
   testResults: Array<TestResult>;
@@ -8,11 +8,11 @@ export const TestResults: FunctionComponent<{
   <div class="testresults">
     <div class="testtitle">
       <h4 class="testtitle__cell">
-        <span>{testResults.filter(obj => obj.result).length}</span> Passing Tests
+        <span>{testResults.filter(obj => obj.status === TestResultStatus.SUCCESS).length}</span> Passing Tests
       </h4>
       <h4 class="testtitle__cell">
-        <span className={testResults.filter(obj => !obj.result).length > 0 ? 'is_error' : ''}>
-          {testResults.filter(obj => !obj.result).length}
+        <span className={testResults.filter(obj => obj.status === TestResultStatus.FAILED).length > 0 ? 'is_error' : ''}>
+          {testResults.filter(obj => obj.status === TestResultStatus.FAILED).length}
         </span>{' '}
         Failing Tests
       </h4>

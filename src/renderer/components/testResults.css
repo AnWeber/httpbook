@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 1rem;
-  align-items: center;
+  align-items: flex-start;
 }
 .testtitle__cell svg{
   margin: .1rem;
@@ -23,9 +23,17 @@
   align-items: flex-start;
   padding: .1rem;
 }
+.testline--success{
+  color: var(--vscode-testing-iconPassed)
+}
+.testline--skipped{
+  color: var(--vscode-testing-iconSkipped);
+}
+.testline--failed{
+  color: var(--vscode-testing-iconFailed);
+}
 .testline--error{
-  color: var(--theme-error-foreground);
-  background-color: var(--theme-error-background);
+  color: var(--vscode-testing-iconErrored);
 }
 .testline svg{
   margin: .1rem;

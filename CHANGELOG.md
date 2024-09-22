@@ -1,3 +1,9 @@
+## 3.2.4 (2024-09-22)
+
+### Fix
+
+- fix testResultsRenderer to support Breaking Change of httpyac (#127)
+
 ## 3.2.3 (2023-11-07)
 
 ### Fix

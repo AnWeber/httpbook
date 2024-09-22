@@ -28,16 +28,16 @@ export class HttpNotebookOutputFactory {
   ): Promise<vscode.NotebookCellOutput[]> {
     const outputs: vscode.NotebookCellOutput[] = [];
     if (testResults.length > 0 && this.canShowTestResults(testResults)) {
-      const outputItems = await this.mapHttpOutputProvider(
-        obj => obj.getTestResultOutputResult?.(testResults, httpOutputContext)
+      const outputItems = await this.mapHttpOutputProvider(obj =>
+        obj.getTestResultOutputResult?.(testResults, httpOutputContext)
       );
       if (outputItems.length > 0) {
         outputs.push(this.createNotebookCellOutput(outputItems, response?.contentType?.mimeType));
       }
     }
     if (response) {
-      const outputItems = await this.mapHttpOutputProvider(
-        obj => obj.getResponseOutputResult?.(response, httpOutputContext)
+      const outputItems = await this.mapHttpOutputProvider(obj =>
+        obj.getResponseOutputResult?.(response, httpOutputContext)
       );
       if (outputItems.length > 0) {
         const output = this.createNotebookCellOutput(outputItems, response.contentType?.mimeType);
@@ -54,7 +54,9 @@ export class HttpNotebookOutputFactory {
   private canShowTestResults(testResults: Array<Httpyac.TestResult> | undefined) {
     if (testResults && this.config.outputTests !== TestSlotOutput.never) {
       if (this.config.outputTests === TestSlotOutput.onlyFailed) {
-        return testResults.some(obj => !obj.result);
+        return testResults.some(t =>
+          [this.httpyac.TestResultStatus.ERROR, this.httpyac.TestResultStatus.FAILED].includes(t.status)
+        );
       }
       return true;
     }

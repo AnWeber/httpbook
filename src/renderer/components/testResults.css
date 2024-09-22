@@ -20,30 +20,31 @@
 .testline{
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   padding: .1rem;
-}
-.testline--success{
-  color: var(--vscode-testing-iconPassed)
-}
-.testline--skipped{
-  color: var(--vscode-testing-iconSkipped);
-}
-.testline--failed{
-  color: var(--vscode-testing-iconFailed);
-}
-.testline--error{
-  color: var(--vscode-testing-iconErrored);
-}
-.testline svg{
-  margin: .1rem;
 }
 .testline__error{
   padding: 0 1rem;
 }
 
+.testicon--success{
+  color: var(--vscode-testing-iconPassed)
+}
+.testicon--skipped{
+  color: var(--vscode-testing-iconSkipped);
+}
+.testicon--failed{
+  color: var(--vscode-testing-iconFailed);
+}
+.testicon--error{
+  color: var(--vscode-testing-iconErrored);
+}
+.testline svg{
+  margin: .1rem;
+}
 .testicon{
+  margin: .1rem;
   fill: currentColor;
-  height: 1rem;
-  width: 1rem;
+  height: 1.5rem;
+  width: 1.5rem;
 }

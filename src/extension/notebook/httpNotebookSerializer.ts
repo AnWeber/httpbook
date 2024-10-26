@@ -187,7 +187,7 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   }
 
   private getNotebookCells(document: vscode.NotebookData | vscode.NotebookDocument): Array<HttpCell> {
-    if (document instanceof vscode.NotebookData) {
+    if (this.isNotebookData(document)) {
       return document.cells.map(obj => {
         const result: HttpCell = {
           value: obj.value,
@@ -222,5 +222,13 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
       () => Promise.resolve(this.getDocumentSource(notebook)),
       version
     );
+  }
+
+  private isNotebookData(document: vscode.NotebookData | vscode.NotebookDocument): document is vscode.NotebookData {
+    if (document instanceof vscode.NotebookData) {
+      return true;
+    }
+    const obj = document as unknown as Record<string, unknown>;
+    return Array.isArray(obj.cells) && !obj.getCells;
   }
 }

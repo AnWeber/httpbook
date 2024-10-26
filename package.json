@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, Soap, GraphQL, GRPC, MQTT and WebSocket requests directly within Visual Studio Code",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -167,7 +167,7 @@
     "watch": "npm run esbuild -- --watch"
   },
   "devDependencies": {
-    "@types/node": "^22.5.5",
+    "@types/node": "^22.8.1",
     "@types/react": "^18.3.8",
     "@types/vscode": "1.71.0",
     "@types/vscode-notebook-renderer": "^1.72.3",
@@ -182,7 +182,7 @@
     "lint-staged": "^15.2.10",
     "lockfile-lint": "^4.14.0",
     "prettier": "^3.3.3",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   },
   "dependencies": {
     "preact": "^10.24.3"

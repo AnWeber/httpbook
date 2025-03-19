@@ -1,3 +1,9 @@
+## 3.2.6 (2025-03-19)
+
+### Fix
+
+- use version of instead of sum of cell count to ensure correct update (#143)
+
 ## 3.2.5 (2024-10-26)
 
 ### Fix

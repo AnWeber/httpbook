@@ -213,14 +213,10 @@ export class HttpNotebookSerializer implements vscode.NotebookSerializer {
   }
 
   public async getNotebookHttpFile(notebook: vscode.NotebookDocument) {
-    let version = 0;
-    for (const cell of notebook.getCells()) {
-      version += cell.document.version;
-    }
     return await this.httpyacExtensionApi.documentStore.getOrCreate(
       notebook.uri,
       () => Promise.resolve(this.getDocumentSource(notebook)),
-      version
+      notebook.version
     );
   }
 

@@ -2,7 +2,7 @@
   "name": "httpbook",
   "displayName": "httpBook - Rest Client",
   "description": "Quickly and easily send REST, Soap, GraphQL, GRPC, MQTT and WebSocket requests directly within Visual Studio Code",
-  "version": "3.2.5",
+  "version": "3.2.6",
   "publisher": "anweber",
   "homepage": "https://github.com/AnWeber/httpbook",
   "repository": {
@@ -167,22 +167,22 @@
     "watch": "npm run esbuild -- --watch"
   },
   "devDependencies": {
-    "@types/node": "^22.8.1",
-    "@types/react": "^18.3.8",
+    "@types/node": "^22.13.10",
+    "@types/react": "^18.3.19",
     "@types/vscode": "1.71.0",
     "@types/vscode-notebook-renderer": "^1.72.3",
-    "@typescript-eslint/eslint-plugin": "^7.11.0",
-    "@typescript-eslint/parser": "^7.11.0",
-    "esbuild": "^0.24.0",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "esbuild": "^0.25.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-node": "^11.1.0",
-    "httpyac": "^6.15.1",
-    "husky": "^9.1.6",
-    "lint-staged": "^15.2.10",
+    "httpyac": "^6.16.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
     "lockfile-lint": "^4.14.0",
-    "prettier": "^3.3.3",
-    "typescript": "^5.6.3"
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "preact": "^10.26.4"

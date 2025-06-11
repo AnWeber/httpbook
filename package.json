@@ -185,6 +185,6 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "preact": "^10.26.7"
+    "preact": "^10.26.9"
   }
 }
